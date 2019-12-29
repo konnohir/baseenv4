@@ -1,0 +1,122 @@
+/** Tag Common */
+
+body {
+    min-width: 320px;
+    overflow-y: scroll;
+}
+
+h1 {
+    font-size: 100%;
+    font-weight: normal;
+    margin: 0;
+}
+
+h2 {
+    font-size: 150%;
+    font-weight: normal;
+    margin: 0;
+}
+
+h3 {
+    font-size: 100%;
+    font-weight: normal;
+    margin: 0;
+}
+
+/** customTable  */
+
+.table-wrap {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border: solid 1px black;
+    min-height: 584px;
+}
+
+.table-wrap th, .table-wrap td {
+    border-bottom: solid 1px gray;
+    border-right: solid 1px gray;
+    vertical-align: top
+}
+
+.table-wrap thead th {
+    background: lightsteelblue;
+    color: black;
+    font-weight: normal;
+    border-top-style: none;
+}
+
+.table-wrap tbody tr:hover {
+    background: #CCFFCC;
+}
+
+.table-wrap th:first-child, .table-wrap td:first-child {
+    border-left-style: none;
+}
+
+.table-wrap th:last-child, .table-wrap td:last-child {
+    border-right-style: none;
+}
+
+.table-wrap thead a {
+    color: black;
+    font-weight: normal;
+}
+
+.table-wrap tr:nth-child(even) {
+    background: #eee;
+}
+
+.table-wrap .asc:after {
+    content: '▽';
+    font-size: 50%;
+}
+
+.table-wrap .desc:after {
+    content: '△';
+    font-size: 50%;
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+/** Common layout */
+
+.nav-item:hover {
+    background: darkslategray;
+}
+
+@media (min-width: 768px) {
+    .side-menu {
+        flex: 0 0 139px;
+    }
+}
+
+/** Page */
+
+.form .input-group>label {
+    width: 12em;
+}
+
+.input {
+    margin-bottom: 1em;
+}
+
+.error-message {
+    color: #cc0000;
+    font-size: 85%;
+}
+
+#filter {
+    max-width: 440px;
+}
+
+.pagination-wrap {
+    float: right;
+}
+
+.pagination-wrap+* {
+    clear: both;
+}

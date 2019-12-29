@@ -1,0 +1,47 @@
+#####################
+# ボタン名
+#####################
+msgid "BTN-SEARCH"
+msgstr "検索"
+
+msgid "BTN-CLEAR"
+msgstr "条件クリア"
+
+msgid "BTN-ADD"
+msgstr "新規作成"
+
+msgid "BTN-EDIT"
+msgstr "編集"
+
+msgid "BTN-CSV"
+msgstr "CSV出力"
+
+msgid "BTN-DELETE"
+msgstr "削除"
+
+msgid "BTN-SAVE"
+msgstr "保存"
+
+msgid "BTN-BACK"
+msgstr "戻る"
+
+msgid "BTN-CANCEL"
+msgstr "キャンセル"
+
+msgid "BTN-LOGOUT"
+msgstr "ログアウト"
+
+#####################
+# 画面名
+#####################
+msgid "MCompanies"
+msgstr "企業マスタ"
+
+msgid "Users"
+msgstr "ユーザーマスタ"
+
+msgid "Roles"
+msgstr "権限マスタ"
+
+msgid "RoleDetails"
+msgstr "権限詳細マスタ"

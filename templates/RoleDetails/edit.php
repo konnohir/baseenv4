@@ -24,6 +24,41 @@
             'type' => 'text',
             'label' => __('説明'),
         ]) ?>
+
+        <label><?= __('アクション') ?></label>
+        <ul class="py-4" style="list-style-type: none; border:solid 1px lightgray;border-radius: 6px">
+            <?= $this->Form->hidden('acos._ids') ?>
+            <?php foreach ($acos as $controller) : ?>
+                <li>
+                    <?=
+                        // 権限詳細 (親)
+                        $this->Form->customControl('acos._ids', [
+                            'type' => 'select',
+                            'multiple' => 'checkbox',
+                            'options' => [$controller->id => $controller->alias],
+                            'label' => false,
+                            'hiddenField' => false,
+                            'data-type' => 'controller',
+                        ]) ?>
+                        <ul style="list-style-type: none">
+                            <?php foreach ($controller->children as $action) : ?>
+                                <li>
+                                    <?=
+                                        // 権限詳細 (子)
+                                        $this->Form->customControl('acos._ids', [
+                                            'type' => 'select',
+                                            'multiple' => 'checkbox',
+                                            'label' => false,
+                                            'options' => [$action->id => $action->alias],
+                                            'hiddenField' => false,
+                                        ]) ?>
+                                </li>
+                            <?php endforeach ?>
+                        </ul>
+                </li>
+            <?php endforeach ?>
+        </ul>
+
         <div class="form-group text-center py-4">
             <?= $this->Form->customButton(__('BTN-CANCEL'), [
                 // キャンセル

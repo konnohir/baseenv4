@@ -29,6 +29,8 @@ class UsersTable extends AppTable
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Roles');
+
+        $this->addBehavior('Acl.Acl', ['requester']);
     }
 
     /**

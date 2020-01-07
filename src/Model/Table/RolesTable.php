@@ -7,7 +7,12 @@ namespace App\Model\Table;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use Cake\Datasource\EntityInterface;
+use ArrayObject;
+use Exception;
 
 /**
  * Roles Model
@@ -29,7 +34,14 @@ class RolesTable extends AppTable
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->hasMany('RoleDetails');
+        $this->belongsToMany('RoleDetails', [
+            'conditions' => [
+                'RoleDetails.deleted_at is null',
+            ]
+        ]);
+        $this->hasMany('Users');
+
+        $this->addBehavior('Acl.Acl', ['requester']);
     }
 
     /**
@@ -95,20 +107,6 @@ class RolesTable extends AppTable
      */
     public function findDetail(Query $query, array $options)
     {
-        return $query;
-    }
-
-    /**
-     * エンティティの状態を削除状態に変更する
-     */
-    public function deleteEntity(Entity $entity, array $inputData): Entity
-    {
-        // 削除日付
-        $entity->deleted_at = date('Y-m-d h:i:s');
-
-        // 排他制御
-        $entity->_lock = $inputData['lock'] ?? null;
-
-        return $entity;
+        return $query->contain(['RoleDetails', 'RoleDetails.Acos']);
     }
 }

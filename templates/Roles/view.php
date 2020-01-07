@@ -1,7 +1,9 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Role $role
+ * @var \App\Model\Entity\RoleDetail $roleDetails
  */
 ?>
 <div class="w-50 mx-auto">
@@ -14,6 +16,47 @@
         <tr>
             <th><?= __('説明') ?></th>
             <td><?= nl2br(h($role->description)) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('権限') ?></th>
+            <td>
+                <ul style="list-style-type: none;padding-left:0">
+                    <?php foreach ($roleDetails as $roleDetail) : ?>
+                        <li>
+                            <?=
+                                // 権限詳細 (親)
+                                $this->Form->customControl('role_details._ids', [
+                                    'type' => 'select',
+                                    'multiple' => 'checkbox',
+                                    'options' => [$roleDetail->id => $roleDetail->name],
+                                    'default' => array_column((array)$role->role_details, 'id'),
+                                    'readonly' => true,
+                                    'label' => false,
+                                    'hiddenField' => false,
+                                ]) ?>
+                            <?php if (!empty($roleDetail->children)) : ?>
+                                <ul style="list-style-type: none">
+                                    <?php foreach ($roleDetail->children as $child) : ?>
+                                        <li>
+                                            <?=
+                                                // 権限詳細 (子)
+                                                $this->Form->customControl('role_details._ids', [
+                                                    'type' => 'select',
+                                                    'multiple' => 'checkbox',
+                                                    'label' => false,
+                                                    'options' => [$child->id => $child->name],
+                                                    'default' => array_column((array)$role->role_details, 'id'),
+                                                    'readonly' => true,
+                                                    'hiddenField' => false,
+                                                ]) ?>
+                                        </li>
+                                    <?php endforeach ?>
+                                </ul>
+                            <?php endif ?>
+                        </li>
+                    <?php endforeach ?>
+                </ul>
+            </td>
         </tr>
     </table>
     <div class="btn-group mb-2">

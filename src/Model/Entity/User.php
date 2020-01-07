@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Exception;
 
 /**
  * User Entity
@@ -25,4 +26,16 @@ class User extends AppEntity
     protected $_hidden = [
         'password',
     ];
+    
+    /**
+     * 親ノードを取得する (ACLプラグイン)
+     * ユーザーは権限の子ノードのため、権限IDを返す
+     */
+    public function parentNode()
+    {
+        if (!isset($this->role_id)) {
+            throw new Exception('role_id is required');
+        }
+        return $this->role_id;
+    }
 }

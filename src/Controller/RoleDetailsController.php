@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -25,9 +26,11 @@ class RoleDetailsController extends AppCrudController
     {
         parent::initialize();
 
+        $this->loadComponent('Permission');
+        $this->loadModel('Roles');
         $this->loadModel('RoleDetails');
     }
-    
+
     /**
      * 一覧画面
      *
@@ -57,7 +60,13 @@ class RoleDetailsController extends AppCrudController
             'finder' => 'detail',
         ]);
 
-        $this->set(compact('roleDetail'));
+        // $Acos: Access Control Objectリスト
+        $acos = $this->RoleDetails->Acos->find('threaded')->all();
+        $acos = array_filter($acos->first()->children ?? [], function ($row) {
+            return !empty($row->children);
+        });
+
+        $this->set(compact('roleDetail', 'acos'));
     }
 
     /**
@@ -92,17 +101,36 @@ class RoleDetailsController extends AppCrudController
             $roleDetail = $this->RoleDetails->patchEntity($roleDetail, $this->getRequest()->getData(), [
                 'fields' => [
                     'parent_id', 'name', 'description',
+                    // associated
+                    'acos',
                     // lock flag
                     '_lock,'
                 ],
                 'associated' => [
+                    'Acos' => [
+                        'onlyIds' => true
+                    ],
                 ]
             ]);
-
             $roleDetail->updated_at = new FrozenTime();
             
+            // $result: トランザクション実行結果 (boolean)
+            $result = $this->RoleDetails->getConnection()->transactional(function () use ($roleDetail) {
+                if (!$this->RoleDetails->save($roleDetail)) {
+                    return false;
+                }
+
+                foreach($roleDetail->roles ?? [] as $role) {
+                    if (!$this->Permission->updateACL($role)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
             // DB保存成功時: 詳細画面へ遷移
-            if ($this->RoleDetails->save($roleDetail)) {
+            if ($result) {
                 $this->Flash->success(__('{0}を保存しました。', __($this->title)));
                 return $this->redirect(['action' => 'view', $roleDetail->id]);
             }
@@ -115,10 +143,17 @@ class RoleDetailsController extends AppCrudController
             $this->Flash->error($errorMessage);
         }
 
-        // $roleDetailList: 権限詳細リスト (parent_idがNULLの権限詳細のみ)
+        // $roleDetailList: 権限詳細リスト (parent_idがNULLの権限詳細のリスト)
         $roleDetailList = $this->RoleDetails->find('parentList', ['exclude' => $id])->toArray();
 
-        $this->set(compact('roleDetail', 'roleDetailList'));
+        // $Acos: Access Control Objectリスト (スレッド形式)
+        $acos = $this->RoleDetails->Acos->find('threaded')->all();
+        $acos = array_filter($acos->first()->children ?? [], function ($row) {
+            // アクションが一つも無いコントローラーを除外する
+            return !empty($row->children);
+        });
+
+        $this->set(compact('roleDetail', 'roleDetailList', 'acos'));
     }
 
     /**
@@ -131,7 +166,7 @@ class RoleDetailsController extends AppCrudController
         // $targets: 削除する権限詳細マスタの配列 [ID => 更新日付] (array)
         $targets = $this->getRequest()->getData('targets');
 
-        // $result: トランザクションの結果 (boolean)
+        // $result: トランザクション実行結果 (boolean)
         $result = $this->RoleDetails->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $_lock) {
                 $roleDetail = $this->RoleDetails->get($id, [
@@ -139,7 +174,8 @@ class RoleDetailsController extends AppCrudController
                         'id',
                         'updated_at',
                         'deleted_at',
-                    ]
+                    ],
+                    'contain' => ['Roles'],
                 ]);
 
                 // 排他制御
@@ -156,6 +192,12 @@ class RoleDetailsController extends AppCrudController
                     }
                     $this->Flash->error($errorMessage);
                     return false;
+                }
+
+                foreach($roleDetail->roles ?? [] as $role) {
+                    if (!$this->Permission->updateACL($role)) {
+                        return false;
+                    }
                 }
 
                 // DB保存成功時: 次のデータの処理へ進む

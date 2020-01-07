@@ -24,6 +24,7 @@ class RolesController extends AppCrudController
     {
         parent::initialize();
 
+        $this->loadComponent('Permission');
         $this->loadModel('Roles');
     }
     
@@ -56,7 +57,10 @@ class RolesController extends AppCrudController
             'finder' => 'detail',
         ]);
 
-        $this->set(compact('role'));
+        // $roleDetails: 権限詳細
+        $roleDetails = $this->Roles->RoleDetails->find('overview')->all();
+
+        $this->set(compact('role', 'roleDetails'));
     }
 
     /**
@@ -91,17 +95,34 @@ class RolesController extends AppCrudController
             $role = $this->Roles->patchEntity($role, $this->getRequest()->getData(), [
                 'fields' => [
                     'name', 'description',
+                    // associated
+                    'role_details',
                     // lock flag
                     '_lock,'
                 ],
                 'associated' => [
-                ]
+                    'RoleDetails' => [
+                        'onlyIds' => true
+                    ],
+                ],
             ]);
-
             $role->updated_at = new FrozenTime();
             
+            // $result: トランザクション実行結果 (boolean)
+            $result = $this->Roles->getConnection()->transactional(function () use ($role) {
+                if (!$this->Roles->save($role)) {
+                    return false;
+                }
+
+                if (!$this->Permission->updateACL($role)) {
+                    return false;
+                }
+
+                return true;
+            });
+
             // DB保存成功時: 詳細画面へ遷移
-            if ($this->Roles->save($role)) {
+            if ($result) {
                 $this->Flash->success(__('{0}を保存しました。', __($this->title)));
                 return $this->redirect(['action' => 'view', $role->id]);
             }
@@ -114,7 +135,10 @@ class RolesController extends AppCrudController
             $this->Flash->error($errorMessage);
         }
 
-        $this->set(compact('role'));
+        // $roleDetails: 権限詳細
+        $roleDetails = $this->Roles->RoleDetails->find('overview')->all();
+
+        $this->set(compact('role', 'roleDetails'));
     }
 
     /**
@@ -127,7 +151,7 @@ class RolesController extends AppCrudController
         // $targets: 削除する権限マスタの配列 [ID => 更新日付] (array)
         $targets = $this->getRequest()->getData('targets');
 
-        // $result: トランザクションの結果 (boolean)
+        // $result: トランザクション実行結果 (boolean)
         $result = $this->Roles->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $_lock) {
                 $role = $this->Roles->newEntity([
@@ -143,6 +167,10 @@ class RolesController extends AppCrudController
                         $errorMessage = current($role->getError('_lock'));
                     }
                     $this->Flash->error($errorMessage);
+                    return false;
+                }
+
+                if (!$this->Permission->updateACL($role)) {
                     return false;
                 }
 

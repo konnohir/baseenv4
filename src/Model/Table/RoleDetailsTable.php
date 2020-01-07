@@ -7,6 +7,9 @@ namespace App\Model\Table;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use Cake\Datasource\EntityInterface;
+use ArrayObject;
 
 /**
  * RoleDetails Model
@@ -27,7 +30,11 @@ class RoleDetailsTable extends AppTable
         $this->setTable('role_details');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
-        $this->belongsTo('RoleDetails');
+
+        $this->belongsToMany('Acl.Acos', [
+            'joinTable' => 'role_details_acos'
+        ]);
+        $this->belongsToMany('Roles');
     }
 
     /**
@@ -94,7 +101,7 @@ class RoleDetailsTable extends AppTable
      */
     public function findDetail(Query $query, array $options)
     {
-        return $query;
+        return $query->contain(['Roles', 'Acos']);
     }
 
     /**
@@ -109,7 +116,27 @@ class RoleDetailsTable extends AppTable
         if (isset($exclude_id)) {
             $query->where(['id NOT IN' => $exclude_id]);
         }
-        
+
         return $query;
     }
+
+    // /**
+    //  * エンティティ保存後、コミット前に実行されるイベント
+    //  */
+    // public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    // {
+    //     // 中間テーブル
+    //     $this->hasMany('RoleDetailsRoles');
+
+    //     // $roleIds: この権限詳細を選択している権限のIDの配列
+    //     $roleIds = $this->RoleDetailsRoles->find('list')
+    //         ->select('role_id')
+    //         ->where(['role_detail_id' => $entity->id])
+    //         ->toList();
+
+    //     // RolesモデルにPermissionテーブルの更新を依頼する
+    //     foreach($roleIds as $roleId) {
+    //         $this->Roles->refreshPermission($roleId);
+    //     }
+    // }
 }

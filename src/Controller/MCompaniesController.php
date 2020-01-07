@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -28,7 +29,7 @@ class MCompaniesController extends AppCrudController
         $this->loadModel('MCompanies');
         $this->loadModel('Tags');
     }
-    
+
     /**
      * 一覧画面
      *
@@ -116,7 +117,7 @@ class MCompaniesController extends AppCrudController
             ]);
 
             $mCompany->updated_at = new FrozenTime();
-            
+
             // DB保存成功時: 詳細画面へ遷移
             if ($this->MCompanies->save($mCompany)) {
                 $this->Flash->success(__('{0}を保存しました。', __($this->title)));
@@ -147,7 +148,7 @@ class MCompaniesController extends AppCrudController
         // $targets: 増員する企業マスタの配列 [ID => 更新日付] (array)
         $targets = $this->getRequest()->getData('targets');
 
-        // $result: トランザクションの結果 (boolean)
+        // $result: トランザクション実行結果 (boolean)
         $result = $this->MCompanies->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $_lock) {
                 $mCompany = $this->MCompanies->get($id, [
@@ -164,8 +165,8 @@ class MCompaniesController extends AppCrudController
                     // 排他制御
                     '_lock' => $_lock,
                 ];
-                
-                $mCompany = $this->MCompanies->patchEntity($mCompany, $inputArray ,[
+
+                $mCompany = $this->MCompanies->patchEntity($mCompany, $inputArray, [
                     'fields' => [
                         'staff',
                         '_lock',
@@ -204,7 +205,7 @@ class MCompaniesController extends AppCrudController
         // $targets: 削除する企業マスタの配列 [ID => 更新日付] (array)
         $targets = $this->getRequest()->getData('targets');
 
-        // $result: トランザクションの結果 (boolean)
+        // $result: トランザクション実行結果 (boolean)
         $result = $this->MCompanies->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $_lock) {
                 $mCompany = $this->MCompanies->get($id, [

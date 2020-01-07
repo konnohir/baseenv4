@@ -46,7 +46,7 @@ return [
             'username' => 'my_app',
             'password' => 'secret',
             'database' => 'cakephp4dev',
-            'log' => true,
+            'log' => false,
         ],
 
         /*

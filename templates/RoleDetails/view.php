@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\RoleDetail $roleDetail
@@ -14,6 +15,48 @@
         <tr>
             <th><?= __('説明') ?></th>
             <td><?= nl2br(h($roleDetail->description)) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('アクション') ?></th>
+            <td>
+                <ul style="list-style-type: none;padding-left:0">
+                    <?php foreach ($acos as $controller) : ?>
+                        <li>
+                            <?=
+                                // コントローラー
+                                $this->Form->customControl('acos._ids', [
+                                    'type' => 'select',
+                                    'multiple' => 'checkbox',
+                                    'label' => false,
+                                    'options' => [$controller->id => $controller->alias],
+                                    'default' => array_column((array) $roleDetail->acos, 'id'),
+                                    'readonly' => true,
+                                    'hiddenField' => false,
+                                    'data-type' => 'controller',
+                                ])
+                            ?>
+                            <ul style="list-style-type: none">
+                                <?php foreach ($controller->children as $action) : ?>
+                                    <li>
+                                        <?=
+                                            // アクション
+                                            $this->Form->customControl('acos._ids', [
+                                                'type' => 'select',
+                                                'multiple' => 'checkbox',
+                                                'label' => false,
+                                                'options' => [$action->id => $action->alias],
+                                                'default' => array_column((array) $roleDetail->acos, 'id'),
+                                                'readonly' => true,
+                                                'hiddenField' => false,
+                                            ])
+                                        ?>
+                                    </li>
+                                <?php endforeach ?>
+                            </ul>
+                        </li>
+                    <?php endforeach ?>
+                </ul>
+            </td>
         </tr>
     </table>
     <div class="btn-group mb-2">

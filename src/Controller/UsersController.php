@@ -104,7 +104,6 @@ class UsersController extends AppCrudController
                 'associated' => [
                 ]
             ]);
-
             $user->updated_at = new FrozenTime();
             
             // DB保存成功時: 詳細画面へ遷移

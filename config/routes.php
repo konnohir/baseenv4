@@ -62,12 +62,15 @@ $routes->scope('/', function (RouteBuilder $builder) {
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, templates/Pages/home.php)...
      */
-    $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+    $builder->redirect('/', ['controller' => 'MCompanies', 'action' => 'index']);
 
     /*
      * ...and connect the rest of 'Pages' controller's URLs.
      */
-    $builder->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
+    $builder->connect('/login', ['controller' => 'Homes', 'action' => 'login']);
+    $builder->connect('/logout', ['controller' => 'Homes', 'action' => 'logout']);
+    $builder->connect('/profile', ['controller' => 'Homes', 'action' => 'profile']);
+    $builder->connect('/password', ['controller' => 'Homes', 'action' => 'password']);
 
     /*
      * Connect catchall routes for all controllers.

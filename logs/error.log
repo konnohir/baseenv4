@@ -1,0 +1,5 @@
+2020-01-09 23:42:18 Error: [Cake\Http\Exception\InvalidCsrfTokenException] Missing CSRF token body in C:\Users\sv01e\Documents\my_app_name\vendor\cakephp\cakephp\src\Http\Middleware\CsrfProtectionMiddleware.php on line 236
+Request URL: /login
+Referer URL: http://localhost:8765/login
+
+

@@ -28,6 +28,9 @@ msgstr "戻る"
 msgid "BTN-CANCEL"
 msgstr "キャンセル"
 
+msgid "BTN-LOGIN"
+msgstr "ログイン"
+
 msgid "BTN-LOGOUT"
 msgstr "ログアウト"
 

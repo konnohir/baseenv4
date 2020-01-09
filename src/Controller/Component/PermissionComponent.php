@@ -72,7 +72,7 @@ class PermissionComponent extends Component
     }
 
     /**
-     * ServerRequestイブジェクト取得
+     * ServerRequestオブジェクト取得
      * @return \Cake\Http\ServerRequest
      */
     protected function getRequest()

@@ -5,7 +5,6 @@ namespace App\Controller;
 
 use Cake\Core\Configure;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
 
 /**
  * Roles Controller
@@ -98,7 +97,7 @@ class RolesController extends AppCrudController
                     // associated
                     'role_details',
                     // lock flag
-                    '_lock,'
+                    '_lock',
                 ],
                 'associated' => [
                     'RoleDetails' => [
@@ -106,14 +105,14 @@ class RolesController extends AppCrudController
                     ],
                 ],
             ]);
-            $role->updated_at = new FrozenTime();
             
             // $result: トランザクション実行結果 (boolean)
             $result = $this->Roles->getConnection()->transactional(function () use ($role) {
-                if (!$this->Roles->save($role)) {
-                    return false;
-                }
+                // if (!$this->Roles->save($role)) {
+                //     return false;
+                // }
 
+                // @ACL
                 if (!$this->Permission->updateACL($role)) {
                     return false;
                 }
@@ -154,6 +153,7 @@ class RolesController extends AppCrudController
         // $result: トランザクション実行結果 (boolean)
         $result = $this->Roles->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $_lock) {
+                // $role: 権限マスタ
                 $role = $this->Roles->newEntity([
                     'id' => $id,
                     'deleted_at' => date('Y-m-d h:i:s'),

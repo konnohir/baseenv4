@@ -1,9 +1,9 @@
 <?php
+use Cake\Mailer\Transport\MailTransport;
+use Cake\Mailer\Transport\DebugTransport;
+
 /*
- * Local configuration file to provide any overrides to your app.php configuration.
- * Copy and save this file as app_local.php and make changes as required.
- * Note: It is not recommended to commit files with credentials such as app_local.php
- * into source code version control.
+ * 環境設定
  */
 return [
     /*
@@ -15,18 +15,14 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => false,
+    'debug' => !false,
 
-    /*
-     * Security and encryption configuration
-     *
-     * - salt - A random string used in security hashing methods.
-     *   The salt value is also used as the encryption key.
-     *   You should treat it as extremely sensitive data.
+    /**
+     * DebugKit configuration.
+     * 
+     * DebugKit is Enabled when 'debug' and 'DebugKit' is true.
      */
-    'Security' => [
-        'salt' => 'da9cf479d24fe593d1a5c8800558162cb76a13ddced661ee1c5b561f85552d57',
-    ],
+    'DebugKit' => false,
 
     /*
      * Connection information used by the ORM to connect
@@ -36,13 +32,7 @@ return [
      */
     'Datasources' => [
         'default' => [
-            'host' => 'localhost',
-            /*
-             * CakePHP will use the default DB port based on the driver selected
-             * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
-             * the following line and set the port accordingly
-             */
-            //'port' => 'non_standard_port_number',
+            'host' => '127.0.0.1',
             'username' => 'my_app',
             'password' => 'secret',
             'database' => 'cakephp4dev',
@@ -53,8 +43,7 @@ return [
          * The test connection is used during the test suite.
          */
         'test' => [
-            'host' => 'localhost',
-            //'port' => 'non_standard_port_number',
+            'host' => '127.0.0.1',
             'username' => 'my_app',
             'password' => 'secret',
             'database' => 'test_myapp',
@@ -70,11 +59,23 @@ return [
      */
     'EmailTransport' => [
         'default' => [
-            'host' => 'localhost',
+            'className' => DebugTransport::class,
+            'host' => '127.0.0.1',
             'port' => 25,
             'username' => null,
             'password' => null,
             'client' => null,
         ],
+    ],
+
+    /*
+     * Security and encryption configuration
+     *
+     * - salt - A random string used in security hashing methods.
+     *   The salt value is also used as the encryption key.
+     *   You should treat it as extremely sensitive data.
+     */
+    'Security' => [
+        'salt' => 'da9cf479d24fe593d1a5c8800558162cb76a13ddced661ee1c5b561f85552d57',
     ],
 ];

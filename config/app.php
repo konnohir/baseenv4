@@ -5,20 +5,8 @@ use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
 use Cake\Error\ExceptionRenderer;
 use Cake\Log\Engine\FileLog;
-use Cake\Mailer\Transport\MailTransport;
 
 return [
-    /*
-     * Debug Level:
-     *
-     * Production Mode:
-     * false: No error messages, errors, or warnings shown.
-     *
-     * Development Mode:
-     * true: Errors and warnings shown.
-     */
-    'debug' => true,
-
     /*
      * Configure basic information about the application.
      *
@@ -69,17 +57,6 @@ return [
     ],
 
     /*
-     * Security and encryption configuration
-     *
-     * - salt - A random string used in security hashing methods.
-     *   The salt value is also used as the encryption key.
-     *   You should treat it as extremely sensitive data.
-     */
-    'Security' => [
-        'salt' => '',
-    ],
-
-    /*
      * Apply timestamps with the last modified time to static assets (js, css, images).
      * Will append a querystring parameter containing the time the file was modified.
      * This is useful for busting browser caches.
@@ -89,7 +66,6 @@ return [
      */
     'Asset' => [
         'timestamp' => 'force',
-        // 'cacheTime' => '+1 year'
     ],
 
     /*
@@ -201,13 +177,12 @@ return [
      */
     'EmailTransport' => [
         'default' => [
-            'className' => MailTransport::class,
             /*
              * The keys host, port, timeout, username, password, client and tls
              * are used in SMTP transports
              */
-            'host' => 'localhost',
-            'port' => 25,
+            // 'host' => 'localhost',
+            // 'port' => 25,
             'timeout' => 30,
             /*
              * It is recommended to set these options through your environment or app_local.php
@@ -325,10 +300,10 @@ return [
      * Configures logging options
      */
     'Log' => [
-        'debug' => [
+        'info' => [
             'className' => FileLog::class,
             'path' => LOGS,
-            'file' => 'debug',
+            'file' => 'info',
             'scopes' => false,
             'levels' => ['notice', 'info', 'debug'],
         ],

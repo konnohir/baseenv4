@@ -1,6 +1,6 @@
-#####################
+####################################
 # ボタン名
-#####################
+####################################
 msgid "BTN-SEARCH"
 msgstr "検索"
 
@@ -28,15 +28,27 @@ msgstr "戻る"
 msgid "BTN-CANCEL"
 msgstr "キャンセル"
 
+msgid "BTN-PASSWORD-ISSUE"
+msgstr "パスワード再発行"
+
+msgid "BTN-ACCOUNT-LOCK"
+msgstr "アカウントロック"
+
+msgid "BTN-ACCOUNT-UNLOCK"
+msgstr "ロック解除"
+
+msgid "BTN-PASSWORD-CHANGE"
+msgstr "パスワード変更"
+
 msgid "BTN-LOGIN"
 msgstr "ログイン"
 
 msgid "BTN-LOGOUT"
 msgstr "ログアウト"
 
-#####################
+####################################
 # 画面名
-#####################
+####################################
 msgid "MCompanies"
 msgstr "企業マスタ"
 
@@ -48,3 +60,76 @@ msgstr "権限マスタ"
 
 msgid "RoleDetails"
 msgstr "権限詳細マスタ"
+
+msgid "Login"
+msgstr "ログイン"
+
+msgid "Profile"
+msgstr "プロファイル"
+
+msgid "Password"
+msgstr "パスワード変更"
+
+####################################
+# バリデーションンエラー (共通)
+####################################
+msgid "E-V-REQUIRED"
+msgstr "{0}は必須です。"
+
+msgid "E-V-EMAIL"
+msgstr "{0}はメールアドレス形式で入力してください。"
+
+msgid "E-V-MAX-LENGTH"
+msgstr "{0}は{1}文字以内で入力してください。"
+
+msgid "E-V-SCALAR"
+msgstr "{0}には文字列を入力してください。"
+
+msgid "E-V-NATURAL-NUMBER"
+msgstr "{0}には自然数を入力してください。"
+
+####################################
+# バリデーションンエラー (画面固有)
+####################################
+
+msgid "E-V-WRONG-PASSWORD"
+msgstr "現在のパスワードが一致しません。"
+
+msgid "E-V-SAME-PASSWORD"
+msgstr "新しいパスワードは現在のパスワードと異なる値を入力してください。"
+
+msgid "E-V-RETYPE-WRONG-PASSWORD"
+msgstr "新しいパスワードと同じ値を入力してください。"
+
+msgid "E-V-SAME-PASSWORD-MAIL"
+msgstr "新しいパスワードはメールアドレスと異なる値を入力してください。"
+
+####################################
+# カラム名
+####################################
+msgid "Users.email"
+msgstr "メールアドレス"
+
+msgid "Users.password"
+msgstr "パスワード"
+
+msgid "Users.current_password"
+msgstr "現在のパスワード"
+
+msgid "Users.retype_password"
+msgstr "新しいパスワード（再入力）"
+
+msgid "Users.role_id"
+msgstr "権限"
+
+msgid "Roles.name"
+msgstr "権限名称"
+
+msgid "Roles.description"
+msgstr "説明文"
+
+msgid "RoleDetails.name"
+msgstr "権限名称"
+
+msgid "RoleDetails.description"
+msgstr "説明文"

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\I18n\I18n;
 use Cake\Core\Configure;
 
 /**
@@ -25,6 +26,12 @@ class AppController extends Controller
         $this->loadComponent('Authentication.Authentication');
         $this->loadComponent('Authorization.Authorization');
         $this->loadComponent('Acl.Acl');
+
+        // 言語設定
+        $user = $this->getRequest()->getAttribute('identity');
+        if (isset($user) && !empty($user->language)) {
+            I18n::setLocale($user->language);
+        }
     }
 
 }

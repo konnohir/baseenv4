@@ -6,7 +6,6 @@ namespace App\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\NotFoundException;
 
 /**
  * FilterComponent
@@ -51,12 +50,14 @@ class FilterComponent extends Component
         }
     }
 
-    // indexアクションの場合
+    /**
+     * indexアクションの場合
+     */
     public function filterPaginate()
     {
         // POST送信された場合
         if ($this->getRequest()->is('post')) {
-            // POSTされたデータをクエリ文字列 (URLの?から後ろの部分)にして、そのURLへリダイレクトする
+            // POSTされたデータをクエリ文字列 (URLの?から後ろの部分)にして、生成したURLへリダイレクトする
             return $this->getController()->redirect([
                 'action' => $this->getRequest()->getParam('action'),
                 '?' => array_filter((array)$this->getRequest()->getData('filter'), function ($row) {
@@ -80,7 +81,9 @@ class FilterComponent extends Component
         ];
     }
 
-    // view, edit アクションの場合
+    /**
+     * view, edit アクションの場合
+     */
     public function filterRequestId()
     {
         // $id: URLの1番目の引数
@@ -92,7 +95,9 @@ class FilterComponent extends Component
         }
     }
 
-    // ajax アクションの場合
+    /**
+     * ajax アクションの場合
+     */
     public function filterRequestTarget()
     {
         // アクセスするHTTPメソッドを制限する

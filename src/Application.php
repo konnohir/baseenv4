@@ -25,6 +25,7 @@ use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\Http\ServerRequest;
 use Authorization\AuthorizationService;
 use Authorization\AuthorizationServiceProviderInterface;
@@ -36,9 +37,8 @@ use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use App\Policy\RequestPolicy;
+use Fsi\Policy\RequestPolicy;
 
 /**
  * Application setup class.
@@ -66,8 +66,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
          * Only try to load DebugKit in development mode
          * Debug Kit should not be installed on a production system
          */
-        if (Configure::read('debug')) {
-            // $this->addPlugin('DebugKit');
+        if (Configure::read('debug') && Configure::read('DebugKit')) {
+            $this->addPlugin('DebugKit');
         }
 
         // Load more plugins here
@@ -85,14 +85,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
-            // Catch any exceptions in the lower layers,
-            // and make an error page/response
-            ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
-
-            // Handle plugin/theme assets like CakePHP normally does.
-            ->add(new AssetMiddleware([
-                'cacheTime' => Configure::read('Asset.cacheTime'),
-            ]))
 
             // Add routing middleware.
             // If you have a large number of routes connected, turning on routes
@@ -100,10 +92,16 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // creating the middleware instance specify the cache config name by
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
+            // Handle plugin/theme assets like CakePHP normally does.
+            // ->add(new AssetMiddleware())
+            // Catch any exceptions in the lower layers,
+            // and make an error page/response
+            // ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
             ->add(new RoutingMiddleware($this))
             ->add(new AuthenticationMiddleware($this))
             ->add(new AuthorizationMiddleware($this))
-            ->add(new RequestAuthorizationMiddleware());
+            ->add(new RequestAuthorizationMiddleware())
+            ->add(new CsrfProtectionMiddleware());
 
         return $middlewareQueue;
     }

@@ -10,8 +10,13 @@
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Authorization\Exception\ForbiddenException;
 if (Configure::read('debug')) :
     if ($error instanceof RecordNotFoundException) {
+        $this->extend('error400');
+        return;
+    }
+    if ($error instanceof ForbiddenException) {
         $this->extend('error400');
         return;
     }

@@ -28,6 +28,24 @@
             'class' => 'btn-outline-primary btn-edit'
         ])
         ?>
+        <?= $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
+            // パスワード再発行
+            'data-action' => '/users/password-issue',
+            'class' => 'btn-outline-success btn-jump-api'
+        ])
+        ?>
+        <?= $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [
+            // アカウントロック
+            'data-action' => '/users/account-lock',
+            'class' => 'btn-outline-success btn-jump-api'
+        ])
+        ?>
+        <?= $this->Form->customButton(__('BTN-ACCOUNT-UNLOCK'), [
+            // アカウントロック解除
+            'data-action' => '/users/account-unlock',
+            'class' => 'btn-outline-success btn-jump-api'
+        ])
+        ?>
         <?= $this->Form->customButton(__('BTN-DELETE'), [
             // 削除
             'data-action' => '/users/delete',
@@ -52,6 +70,7 @@
                         <?= $this->Paginator->sort('Users.email', ['label' => __('メールアドレス')]) ?>
                     </th>
                     <th><?= $this->Paginator->sort('Roles.id', ['label' => __('権限')]) ?></th>
+                    <th><?= $this->Paginator->sort('Users.login_failed_count', ['label' => __('アカウントロック')]) ?></th>
                     <th><?= $this->Paginator->sort('Users.password_issue', ['label' => __('パスワード発行')]) ?></th>
                 </tr>
             </thead>
@@ -61,6 +80,7 @@
                     <td><?= $this->Paginator->checkbox($user->id, $user->_lock) ?></td>
                     <td><?= $this->Html->link($user->email, ['action' => 'view', $user->id]) ?></td>
                     <td><?= h($user->role->name ?? null) ?></td>
+                    <td><?= $user->login_failed_count >= 5 ? '〇' : '' ?></td>
                     <td><?= $user->password_issue ? '〇' : '' ?></td>
                 </tr>
                 <?php endforeach ?>

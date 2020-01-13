@@ -6,8 +6,6 @@ namespace App\Controller;
 
 use Cake\Core\Configure;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
 
 /**
  * RoleDetails Controller
@@ -60,7 +58,7 @@ class RoleDetailsController extends AppCrudController
             'finder' => 'detail',
         ]);
 
-        // $Acos: Access Control Objectリスト
+        // $acos: Access Control Objectリスト
         $acos = $this->RoleDetails->Acos->find('threaded')->all();
         $acos = array_filter($acos->first()->children ?? [], function ($row) {
             return !empty($row->children);
@@ -104,7 +102,7 @@ class RoleDetailsController extends AppCrudController
                     // associated
                     'acos',
                     // lock flag
-                    '_lock,'
+                    '_lock',
                 ],
                 'associated' => [
                     'Acos' => [
@@ -112,7 +110,6 @@ class RoleDetailsController extends AppCrudController
                     ],
                 ]
             ]);
-            $roleDetail->updated_at = new FrozenTime();
             
             // $result: トランザクション実行結果 (boolean)
             $result = $this->RoleDetails->getConnection()->transactional(function () use ($roleDetail) {
@@ -120,6 +117,7 @@ class RoleDetailsController extends AppCrudController
                     return false;
                 }
 
+                // @ACL
                 foreach($roleDetail->roles ?? [] as $role) {
                     if (!$this->Permission->updateACL($role)) {
                         return false;
@@ -169,6 +167,7 @@ class RoleDetailsController extends AppCrudController
         // $result: トランザクション実行結果 (boolean)
         $result = $this->RoleDetails->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $_lock) {
+                // $roleDetail: 権限詳細マスタ
                 $roleDetail = $this->RoleDetails->get($id, [
                     'fields' => [
                         'id',

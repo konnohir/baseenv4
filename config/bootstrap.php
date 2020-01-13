@@ -39,9 +39,8 @@ use Cake\Database\TypeFactory;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ConsoleErrorHandler;
 use Cake\Error\ErrorHandler;
-use Cake\Http\ServerRequest;
 use Cake\Log\Log;
-use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
@@ -85,27 +84,9 @@ use Fsi\Database\Type\DateTimeType;
 try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
+    Configure::load('app_local', 'default');
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
-}
-
-/*
- * Load an environment local configuration file to provide overrides to your configuration.
- * Notice: For security reasons app_local.php will not be included in your git repo.
- */
-if (file_exists(CONFIG . 'app_local.php')) {
-    Configure::load('app_local', 'default');
-}
-
-/*
- * When debug = true the metadata cache should only last
- * for a short time.
- */
-if (Configure::read('debug')) {
-    // Configure::write('Cache._cake_model_.duration', '+2 minutes');
-    // Configure::write('Cache._cake_core_.duration', '+2 minutes');
-    // disable router cache during development
-    // Configure::write('Cache._cake_routes_.duration', '+2 seconds');
 }
 
 /*
@@ -136,13 +117,6 @@ if ($isCli) {
 }
 
 /*
- * Include the CLI bootstrap overrides.
- */
-if ($isCli) {
-    require __DIR__ . '/bootstrap_cli.php';
-}
-
-/*
  * Set the full base URL.
  * This URL is used as the base of all absolute links.
  */
@@ -167,62 +141,11 @@ unset($fullBaseUrl);
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
 TransportFactory::setConfig(Configure::consume('EmailTransport'));
-Email::setConfig(Configure::consume('Email'));
+Mailer::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
 
-/*
- * Setup detectors for mobile and tablet.
- */
-// ServerRequest::addDetector('mobile', function ($request) {
-//     $detector = new \Detection\MobileDetect();
-
-//     return $detector->isMobile();
-// });
-// ServerRequest::addDetector('tablet', function ($request) {
-//     $detector = new \Detection\MobileDetect();
-
-//     return $detector->isTablet();
-// });
-
-/*
- * You can set whether the ORM uses immutable or mutable Time types.
- * The default changed in 4.0 to immutable types. You can uncomment
- * below to switch back to mutable types.
- *
- * You can enable default locale format parsing by adding calls
- * to `useLocaleParser()`. This enables the automatic conversion of
- * locale specific date formats. For details see
- * @link https://book.cakephp.org/4/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
- */
-// TypeFactory::build('time')
-//    ->useMutable();
-// TypeFactory::build('date')
-//    ->useMutable();
-// TypeFactory::build('datetime')
-//    ->useMutable();
-// TypeFactory::build('timestamp')
-//    ->useMutable();
-// TypeFactory::build('datetimefractional')
-//    ->useMutable();
-// TypeFactory::build('timestampfractional')
-//    ->useMutable();
-// TypeFactory::build('datetimetimezone')
-//    ->useMutable();
-// TypeFactory::build('timestamptimezone')
-//    ->useMutable();
-
 TypeFactory::map('date', DateType::class);
 TypeFactory::map('datetime', DateTimeType::class);
-
-/*
- * Custom Inflector rules, can be set to correctly pluralize or singularize
- * table, model, controller names or whatever other string is passed to the
- * inflection functions.
- */
-//Inflector::rules('plural', ['/^(inflect)or$/i' => '\1ables']);
-//Inflector::rules('irregular', ['red' => 'redlings']);
-//Inflector::rules('uninflected', ['dontinflectme']);
-//Inflector::rules('transliteration', ['/å/' => 'aa']);
 
 Validator::addDefaultProvider('default', new RulesProvider(CustomValidation::class));

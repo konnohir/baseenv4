@@ -20,7 +20,7 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <?= $this->element('header') ?>
+        <?= $this->element('navbar') ?>
     </header>
     <main class="container-fluid <?= $this->getName() ?> <?= $this->getRequest()->getParam('action') ?>">
         <div class="row flex-md-nowrap">

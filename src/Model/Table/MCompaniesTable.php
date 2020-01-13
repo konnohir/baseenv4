@@ -6,11 +6,6 @@ namespace App\Model\Table;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
-use Cake\I18n\FrozenDate;
-use Cake\Event\Event;
-use Cake\Datasource\EntityInterface;
-use ArrayObject;
-use Exception;
 
 /**
  * MCompanies Model
@@ -31,6 +26,7 @@ class MCompaniesTable extends AppTable
         $this->setTable('m_companies');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
+
         $this->belongsToMany('Tags');
         $this->hasMany('Notices');
     }
@@ -117,7 +113,6 @@ class MCompaniesTable extends AppTable
      */
     public function findOverview(Query $query, array $options)
     {
-
         // $map: 検索マッピング設定 (array)
         $map = [
             'code' => ['type' => 'like'],
@@ -136,6 +131,9 @@ class MCompaniesTable extends AppTable
      */
     public function findDetail(Query $query, array $options)
     {
+        if (isset($options['id'])) {
+            $query->where([$this->getAlias() . '.id' => $options['id']]);
+        }
         return $query->contain([
             'Tags',
             'Notices',

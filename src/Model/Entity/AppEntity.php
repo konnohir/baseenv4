@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use Cake\I18n\FrozenTime;
 
 /**
  * App Entity
@@ -20,7 +19,7 @@ class AppEntity extends Entity
      */
     public function _get_lock(?string $_lock) {
         if (!isset($_lock) && isset($this->updated_at)) {
-            $_lock = $this->_lock = $this->getOriginal('updated_at')->format('Y-m-d H:i:s');
+            $_lock = $this->_lock = $this->getOriginal('updated_at')->format('Y-m-d H:i:s.u');
         }
         return $_lock;
     }
@@ -29,20 +28,10 @@ class AppEntity extends Entity
      * _lockプロパティSetter
      */
     public function _set_lock($value) {
-        return (string)$value;
+        if (isset($value)) {
+            return (string)$value;
+        }
+        return $value;
     }
     
-    // /**
-    //  * created_at
-    //  */
-    // public function _set_created_at($value) {
-    //     return $this->created_at = new FrozenTime($value);
-    // }
-    
-    // /**
-    //  * updated_at
-    //  */
-    // public function _set_updated_at($value) {
-    //     return $this->updated_at = new FrozenTime($value);
-    // }
 }

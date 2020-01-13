@@ -21,7 +21,6 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 
@@ -46,56 +45,16 @@ use Cake\Routing\RouteBuilder;
 $routes->setRouteClass(DashedRoute::class);
 
 $routes->scope('/', function (RouteBuilder $builder) {
-    // Register scoped middleware for in scopes.
-    $builder->registerMiddleware('csrf', new CsrfProtectionMiddleware([
-        'httpOnly' => true,
-    ]));
-
-    /*
-     * Apply a middleware to the current route scope.
-     * Requires middleware to be registered through `Application::routes()` with `registerMiddleware()`
-     */
-    $builder->applyMiddleware('csrf');
-
-    /*
-     * Here, we are connecting '/' (base path) to a controller called 'Pages',
-     * its action called 'display', and we pass a param to select the view file
-     * to use (in this case, templates/Pages/home.php)...
-     */
-    $builder->redirect('/', ['controller' => 'MCompanies', 'action' => 'index']);
-
-    /*
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
+    // トップページ
+    $builder->connect('/', ['controller' => 'Homes', 'action' => 'index']);
+    // ログイン
     $builder->connect('/login', ['controller' => 'Homes', 'action' => 'login']);
+    // ログアウト
     $builder->connect('/logout', ['controller' => 'Homes', 'action' => 'logout']);
+    // プロファイル
     $builder->connect('/profile', ['controller' => 'Homes', 'action' => 'profile']);
+    // パスワード変更
     $builder->connect('/password', ['controller' => 'Homes', 'action' => 'password']);
-
-    /*
-     * Connect catchall routes for all controllers.
-     *
-     * The `fallbacks` method is a shortcut for
-     *
-     * ```
-     * $builder->connect('/:controller', ['action' => 'index']);
-     * $builder->connect('/:controller/:action/*', []);
-     * ```
-     *
-     * You can remove these routes once you've connected the
-     * routes you want in your application.
-     */
+    // ここまで定義したルールに一致しない場合
     $builder->fallbacks();
 });
-
-/*
- * If you need a different set of middleware or none at all,
- * open new scope and define routes there.
- *
- * ```
- * $routes->scope('/api', function (RouteBuilder $builder) {
- *     // No $builder->applyMiddleware() here.
- *     // Connect API actions here.
- * });
- * ```
- */

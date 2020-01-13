@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
 
-use Cake\ORM\Entity;
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Exception;
 
 /**
@@ -26,9 +27,29 @@ class User extends AppEntity
     protected $_hidden = [
         'password',
     ];
-    
+
     /**
-     * 親ノードを取得する (ACLプラグイン)
+     * パスワードセッター
+     * パスワードをハッシュ化する
+     */
+    protected function _setPassword(string $password)
+    {
+        $hasher = new DefaultPasswordHasher();
+        return $hasher->hash($password);
+    }
+
+    /**
+     * パスワード比較
+     * 
+     * @return boolean
+     */
+    public function comparePassword(string $password) {
+        $hasher = new DefaultPasswordHasher();
+        return $hasher->check($password, $this->getOriginal('password'));
+    }
+
+    /**
+     * 親ノードを取得する (@ACLプラグイン)
      * ユーザーは権限の子ノードのため、権限IDを返す
      */
     public function parentNode()

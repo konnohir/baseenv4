@@ -6,8 +6,6 @@ namespace App\Controller;
 
 use Cake\Core\Configure;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
 
 /**
  * MCompanies Controller
@@ -101,7 +99,7 @@ class MCompaniesController extends AppCrudController
                     'tags',
                     'notices',
                     // lock flag
-                    '_lock,'
+                    '_lock',
                 ],
                 'associated' => [
                     'Tags' => [
@@ -115,8 +113,6 @@ class MCompaniesController extends AppCrudController
                     ]
                 ],
             ]);
-
-            $mCompany->updated_at = new FrozenTime();
 
             // DB保存成功時: 詳細画面へ遷移
             if ($this->MCompanies->save($mCompany)) {

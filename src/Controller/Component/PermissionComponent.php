@@ -41,7 +41,6 @@ class PermissionComponent extends Component
     // ACL更新
     public function updateACL(Role $role)
     {
-
         $role->updated_at = new FrozenTime();
         if (!$this->Roles->save($role)) {
             return false;

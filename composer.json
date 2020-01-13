@@ -6,22 +6,25 @@
     "license": "MIT",
     "require": {
         "php": ">=7.2",
+        "cakephp/authentication": "2.0",
+        "cakephp/authorization": "2.0",
         "cakephp/cakephp": "^4.0",
         "cakephp/migrations": "^3.0",
         "cakephp/plugin-installer": "^1.0",
-        "mobiledetect/mobiledetectlib": "2.*"
+        "konnohir/acl": "dev-master"
     },
     "require-dev": {
         "cakephp/bake": "^2.0",
         "cakephp/cakephp-codesniffer": "^4.0",
         "cakephp/debug_kit": "^4.0",
-        "phpunit/phpunit": "^8.0",
         "psy/psysh": "@stable"
     },
     "suggest": {
+        "mobiledetect/mobiledetectlib": "2.*",
         "josegonzalez/dotenv": "3.*",
         "markstory/asset_compress": "An asset compression plugin which provides file concatenation and a flexible filter system for preprocessing and minification.",
-        "dereuromark/cakephp-ide-helper": "After baking your code, this keeps your annotations in sync with the code evolving from there on for maximum IDE and PHPStan/Psalm compatibility."
+        "dereuromark/cakephp-ide-helper": "After baking your code, this keeps your annotations in sync with the code evolving from there on for maximum IDE and PHPStan/Psalm compatibility.",
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -51,5 +54,14 @@
     "config": {
         "sort-packages": true
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./pluings/acl",
+            "options": {
+                "symlink": false
+            }
+        }
+    ]
 }

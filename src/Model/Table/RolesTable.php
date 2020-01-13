@@ -34,13 +34,10 @@ class RolesTable extends AppTable
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->belongsToMany('RoleDetails', [
-            'conditions' => [
-                'RoleDetails.deleted_at is null',
-            ]
-        ]);
+        $this->belongsToMany('RoleDetails');
         $this->hasMany('Users');
 
+        // @ACL
         $this->addBehavior('Acl.Acl', ['requester']);
     }
 
@@ -107,6 +104,9 @@ class RolesTable extends AppTable
      */
     public function findDetail(Query $query, array $options)
     {
+        if (isset($options['id'])) {
+            $query->where([$this->getAlias() . '.id' => $options['id']]);
+        }
         return $query->contain(['RoleDetails', 'RoleDetails.Acos']);
     }
 }

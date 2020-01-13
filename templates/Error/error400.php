@@ -8,6 +8,12 @@
  */
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Utility\Inflector;
+use Authorization\Exception\ForbiddenException;
+
+// fix
+if ($error instanceof ForbiddenException) {
+    $message = 'Forbidden';
+}
 ?>
 <div class="w-50 mx-auto">
     <?php if ($error instanceof RecordNotFoundException): ?>

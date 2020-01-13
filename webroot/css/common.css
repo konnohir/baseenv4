@@ -23,6 +23,10 @@ h3 {
     margin: 0;
 }
 
+header {
+    min-height:40px;
+}
+
 /** customTable  */
 
 .table-wrap {
@@ -32,6 +36,10 @@ h3 {
     -webkit-overflow-scrolling: touch;
     border: solid 1px black;
     min-height: 584px;
+}
+
+.table-wrap table {
+    width: 100%;
 }
 
 .table-wrap th, .table-wrap td {
@@ -100,13 +108,18 @@ h3 {
     width: 12em;
 }
 
-.input {
+form > .input {
     margin-bottom: 1em;
 }
 
 .error-message {
     color: #cc0000;
     font-size: 85%;
+}
+
+.required label::after {
+    color: #cc0000;
+    content: '*';
 }
 
 #filter {

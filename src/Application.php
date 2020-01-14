@@ -84,8 +84,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
+        if (Configure::read('debug') && Configure::read('DebugKit')) {
+            $middlewareQueue->add(new AssetMiddleware());
+        }
         $middlewareQueue
-
             // Add routing middleware.
             // If you have a large number of routes connected, turning on routes
             // caching in production could improve performance. For that when

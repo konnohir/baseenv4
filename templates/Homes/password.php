@@ -28,7 +28,7 @@
             <?= $this->Form->customButton(__('BTN-CANCEL'), [
                 // キャンセル
                 'data-action' => '/profile',
-                'class' => 'btn-secondary btn-cancel'
+                'class' => 'btn-secondary btn-jump'
             ]) ?>
             <?= $this->Form->customButton(__('BTN-SAVE'), [
                 // 保存

@@ -1,0 +1,2 @@
+
+        $a = FrozenTime::createFromFormat("Y-m-d h:i:s", "2019-12-23 1:21:34");

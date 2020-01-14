@@ -38,6 +38,9 @@ class AppCrudController extends AppController
         ],
         'requestTarget' => [
             'delete' => true,
+            'accountLock' => true,
+            'accountUnlock' => true,
+            'passwordIssue' => true,
             'addStaff' => true,
         ],
     ];

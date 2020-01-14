@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Core\Configure;
+use Cake\I18n\FrozenDate;
 
 /**
  * Homes Controller
@@ -55,15 +56,31 @@ class HomesController extends AppController
             // $user: ログイン中のユーザー
             $user = $result->getData();
 
-            // アカウントロックチェック
-            if ($user->login_failed_count >= 5) {
-                // ログイン失敗回数が規定値以上: ログアウトする
-                $this->Flash->error(__('アカウントがロックされています。'));
-                return $this->logout();
-            }elseif($user->login_failed_count >= 1) {
-                // ログイン失敗回数が1回以上: ログイン失敗回数をリセット
-                $user->login_failed_count = 0;
-                $this->Users->saveOrFail($user);
+            if (isset($user->login_failed_count)) {
+                if ($user->login_failed_count >= 5) {
+                    // ログイン失敗回数が規定値以上: ログアウトする
+                    $this->Flash->error(__('アカウントがロックされています。'));
+                    return $this->logout();
+                }
+                
+                if($user->login_failed_count >= 1) {
+                    // ログイン失敗回数が1回以上: ログイン失敗回数をリセットする
+                    $user->login_failed_count = 0;
+                    $this->Users->saveOrFail($user);
+                }
+            }
+
+            if (isset($user->password_expired)) {
+                if ($user->password_expired->diffInDays($user->created_at) === 0) {
+                    // 初期パスワード: パスワード変更画面へ遷移する
+                    $this->Flash->success(__('初期パスワードでログインしました。パスワードを変更してください。'));
+                    return $this->redirect('/password');
+                }
+                if ($user->password_expired->isPast()) {
+                    // パスワード有効期限切れ: パスワード変更画面へ遷移する
+                    $this->Flash->success(__('パスワードの有効期限が切れています。パスワードを変更してください。'));
+                    return $this->redirect('/password');
+                }
             }
 
             // 画面遷移：リダイレクト先URL、またはトップ画面
@@ -79,7 +96,7 @@ class HomesController extends AppController
                 ->first();
 
             // アカウントロックチェック
-            if ($user) {
+            if (isset($user->login_failed_count)) {
                 if ($user->login_failed_count < 5) {
                     // ログイン失敗回数が規定値未満: ログイン失敗回数をインクリメント
                     $user->login_failed_count++;
@@ -131,9 +148,13 @@ class HomesController extends AppController
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->getRequest()->getData(), [
+            $inputData = [
+                'password_expired' => (new FrozenDate())->addMonth(3)
+            ];
+            $inputData += $this->getRequest()->getData();
+            $user = $this->Users->patchEntity($user, $inputData, [
                 'fields' => [
-                    'current_password', 'password', 'retype_password',
+                    'password_expired', 'current_password', 'password', 'retype_password',
                     // lock flag
                     '_lock',
                 ],

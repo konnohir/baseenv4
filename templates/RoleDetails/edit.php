@@ -4,7 +4,7 @@
  * @var \App\Model\Entity\RoleDetail $parentRoleDetailList
  */
 ?>
-<div class="w-50 mx-auto">
+<section>
     <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
     <div class="form">
         <?= $this->Form->create($roleDetail) ?>
@@ -73,4 +73,4 @@
         </div>
         <?= $this->Form->end() ?>
     </div>
-</div>
+</section>

@@ -6,6 +6,7 @@
  * @var string $message
  * @var string $url
  */
+
 use Authorization\Exception\ForbiddenException;
 
 // fix
@@ -13,12 +14,12 @@ if ($error instanceof ForbiddenException) {
     $message = 'Forbidden';
 }
 ?>
-<div class="w-50 mx-auto">
+<section>
     <h2><?= __('システムエラー') ?></h2>
     <p class="error">
         <?= __('お手数ですが最初からやり直してください。') ?>
     </p>
     <small>
-        <?= $code ?> <?= __d('cake',$message) ?>
+        <?= $code ?> <?= __d('cake', $message) ?>
     </small>
-</div>
+</section>

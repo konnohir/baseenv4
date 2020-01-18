@@ -5,7 +5,7 @@
  * @var array $tagList
  */
 ?>
-<div class="w-50 mx-auto">
+<section>
     <h2 class="mb-2"><?= __('MCompanies') ?></h2>
     <table class="table mb-2 table-border border">
         <tr>
@@ -74,4 +74,4 @@
             'class' => 'btn-outline-danger btn-delete'
         ]) ?>
     </div>
-</div>
+</section>

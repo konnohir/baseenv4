@@ -5,7 +5,7 @@
  * @var array $tagList
  */
 ?>
-<div class="w-50 mx-auto">
+<section>
     <h2 class="mb-2"><?= __('MCompanies') ?></h2>
     <div class="form">
         <?= $this->Form->create($mCompany) ?>
@@ -78,4 +78,4 @@
         </div>
         <?= $this->Form->end() ?>
     </div>
-</div>
+</section>

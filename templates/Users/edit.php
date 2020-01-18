@@ -5,7 +5,7 @@
  * @var array $roleList
  */
 ?>
-<div class="w-50 mx-auto">
+<section>
     <h2 class="mb-2"><?= __('Users') ?></h2>
     <div class="form">
         <?= $this->Form->create($user) ?>
@@ -34,4 +34,4 @@
         </div>
         <?= $this->Form->end() ?>
     </div>
-</div>
+</section>

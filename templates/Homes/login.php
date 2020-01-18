@@ -3,24 +3,27 @@
  * @var \App\View\AppView $this
  */
 ?>
-<div class="w-50 mx-auto">
-    <div class="form">
-        <?= $this->Form->create(null) ?>
-        <?= $this->Form->customControl('email', [
+<section>
+    <h2 class="mb-2"><?= __('Login') ?></h2>
+    <?= $this->Form->create() ?>
+    <?php 
+        // メールアドレス
+        echo $this->Form->customControl('email', [
             'type' => 'text',
-            'label' => __('メールアドレス'),
-        ]) ?>
-        <?= $this->Form->customControl('password', [
+            'placeholder' => __('Users.email'),
+            'label' => false,
+        ]);
+        // パスワード
+        echo $this->Form->customControl('password', [
             'type' => 'password',
-            'label' => __('パスワード'),
-        ]) ?>
-        <div class="form-group text-center py-4">
-            <?= $this->Form->customButton(__('BTN-LOGIN'), [
-                // ログイン
-                'type' => 'submit',
-                'class' => 'btn-secondary btn-login'
-            ]) ?>
-        </div>
-        <?= $this->Form->end() ?>
-    </div>
-</div>
+            'placeholder' => __('Users.password'),
+            'label' => false,
+        ]);
+        // ログイン
+        echo $this->Form->customButton(__('BTN-LOGIN'), [
+            'type' => 'submit',
+            'class' => 'btn-success btn-login w-100'
+        ]);
+    ?>
+    <?= $this->Form->end() ?>
+</section>

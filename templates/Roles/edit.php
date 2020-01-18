@@ -6,7 +6,7 @@
  * @var \App\Model\Entity\RoleDetails $role_details
  */
 ?>
-<div class="w-50 mx-auto">
+<section>
     <h2 class="mb-2"><?= __('Roles') ?></h2>
     <div class="form">
         <?= $this->Form->create($role) ?>
@@ -75,4 +75,4 @@
         </div>
         <?= $this->Form->end() ?>
     </div>
-</div>
+</section>

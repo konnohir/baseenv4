@@ -4,23 +4,27 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
-<div class="w-50 mx-auto">
+<section>
     <h2 class="mb-2"><?= __('Profile') ?></h2>
-    <table class="table mb-2 table-border border">
-        <tr>
-            <th><?= __('メールアドレス') ?></th>
-            <td><?= h($user->email) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('権限') ?></th>
-            <td><?= h($user->role->name ?? null) ?></td>
-        </tr>
-    </table>
-    <div class="btn-group mb-2">
-        <?= $this->Form->customButton(__('BTN-PASSWORD-CHANGE'), [
-            // パスワード変更
-            'data-action' => '/password',
-            'class' => 'btn-outline-primary btn-jump'
-        ]) ?>
+    <div class="dl-wrap mb-4">
+        <dl class="row">
+            <?php // メールアドレス ?>
+            <dt class="col-md"><?= __('Users.email') ?></dt>
+            <dd class="col-md"><?= h($user->email) ?></dd>
+        </dl>
+        <dl class="row">
+            <?php // 権限 ?>
+            <dt class="col-md"><?= __('Users.role_id') ?></dt>
+            <dd class="col-md"><?= h($user->role->name ?? null) ?></dd>
+        </dl>
     </div>
-</div>
+    <div class="btn-group mb-2">
+        <?php
+            // パスワード変更
+            echo $this->Form->customButton(__('BTN-PASSWORD-CHANGE'), [
+                'data-action' => '/password',
+                'class' => 'btn-outline-primary btn-jump'
+            ])
+        ?>
+    </div>
+</section>

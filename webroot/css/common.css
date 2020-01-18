@@ -24,7 +24,7 @@ h3 {
 }
 
 header {
-    min-height:40px;
+    min-height: 40px;
 }
 
 /** customTable  */
@@ -86,8 +86,44 @@ header {
     font-size: 50%;
 }
 
+.pagination-wrap {
+    float: right;
+}
+
+.pagination-wrap+* {
+    clear: both;
+}
+
 .pagination {
     margin-bottom: 0;
+}
+
+/** customDl */
+
+.dl-wrap {
+    border-top: solid 1px rgb(222, 226, 230);
+}
+
+.dl-wrap dl {
+    border-bottom: solid 1px rgb(222, 226, 230);
+}
+
+.dl-wrap>.row {
+    margin: 0;
+}
+
+.dl-wrap>.row>dt, .dl-wrap>.row>dd {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.dl-wrap-form dl {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.dl-wrap-form dt {
+    font-weight: normal;
 }
 
 /** Common layout */
@@ -102,13 +138,9 @@ header {
     }
 }
 
-/** Page */
+/** Common style */
 
-.form .input-group>label {
-    width: 12em;
-}
-
-form > .input {
+form>.input {
     margin-bottom: 1em;
 }
 
@@ -122,14 +154,30 @@ form > .input {
     content: '*';
 }
 
-#filter {
-    max-width: 440px;
+.button-wrap {
+    text-align: center;
+    letter-spacing: -0.4em;
 }
 
-.pagination-wrap {
-    float: right;
+.button-wrap .btn {
+    margin: 2px;
+    letter-spacing: normal;
 }
 
-.pagination-wrap+* {
-    clear: both;
+/** Page */
+
+.view, .add, .edit, .Homes.profile, .Homes.password {
+    width: 50%;
+    margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+    .view, .add, .edit, .Homes.profile, .Homes.password {
+        width: 100%;
+    }
+}
+
+.Homes.login {
+    max-width: 320px;
+    margin: 0 auto;
 }

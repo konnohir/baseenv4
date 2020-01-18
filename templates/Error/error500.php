@@ -9,13 +9,8 @@
 
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Authorization\Exception\ForbiddenException;
 if (Configure::read('debug')) :
-    if ($error instanceof RecordNotFoundException) {
-        $this->extend('error400');
-        return;
-    }
     if ($error instanceof ForbiddenException) {
         $this->extend('error400');
         return;
@@ -43,7 +38,12 @@ if (Configure::read('debug')) :
     $this->end();
 endif;
 ?>
-<h2><?= __('サーバーエラー') ?></h2>
-<p class="error">
-    <?= h($message) ?>
-</p>
+<div class="w-50 mx-auto">
+    <h2><?= __('システムエラー') ?></h2>
+    <p class="error">
+        <?= __('お手数ですが最初からやり直してください。') ?>
+    </p>
+    <small>
+        <?= $code ?> <?= __d('cake',$message) ?>
+    </small>
+</div>

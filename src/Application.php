@@ -69,8 +69,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (Configure::read('debug') && Configure::read('DebugKit')) {
             $this->addPlugin('DebugKit');
         }
-
-        // Load more plugins here
         $this->addPlugin('Authentication');
         $this->addPlugin('Authorization');
         $this->addPlugin('Acl');
@@ -128,7 +126,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
-     * Returns a service provider instance.
+     * Return authentication service provider instance.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Request
      * @return \Authentication\AuthenticationServiceInterface
@@ -160,6 +158,13 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         return $service;
     }
+
+    /**
+     * Return authorization service provider instance.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request
+     * @return \Authentication\AuthenticationServiceInterface
+     */
     public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
     {
         $mapResolver = new MapResolver();

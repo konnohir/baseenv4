@@ -13,8 +13,6 @@ use Cake\I18n\FrozenDate;
  */
 class HomesController extends AppController
 {
-    public $title = 'ホーム';
-
     /**
      * 初期化
      *
@@ -26,8 +24,8 @@ class HomesController extends AppController
 
         $this->loadModel('Users');
 
-        // 未認証時にアクセスを許可するアクション
-        // logout はセッションタイムアウト時にログアウトボタンを押したときに
+        // 未認証ユーザーがアクセス出来るアクション
+        // logout はセッションタイムアウト時にログアウトボタンを押した場合に
         // ログイン後のリダイレクト先がlogoutアクションになるのを防ぐため.
         $this->Authentication->allowUnauthenticated(['login', 'logout']);
     }
@@ -62,8 +60,7 @@ class HomesController extends AppController
                     $this->Flash->error(__('アカウントがロックされています。'));
                     return $this->logout();
                 }
-                
-                if($user->login_failed_count >= 1) {
+                if ($user->login_failed_count >= 1) {
                     // ログイン失敗回数が1回以上: ログイン失敗回数をリセットする
                     $user->login_failed_count = 0;
                     $this->Users->saveOrFail($user);
@@ -92,6 +89,7 @@ class HomesController extends AppController
 
             // $user: ログインを試みたユーザー
             $user = $this->Users->find()
+                ->select(['id', 'role_id', 'login_failed_count'])
                 ->where(['email' => $this->getRequest()->getData('email')])
                 ->first();
 
@@ -148,21 +146,9 @@ class HomesController extends AppController
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $inputData = [
-                'password_expired' => (new FrozenDate())->addMonth(3)
-            ];
-            $inputData += $this->getRequest()->getData();
-            $user = $this->Users->patchEntity($user, $inputData, [
-                'fields' => [
-                    'password_expired', 'current_password', 'password', 'retype_password',
-                    // lock flag
-                    '_lock',
-                ],
-                'associated' => [
-                ],
-                'validate' => 'password',
-            ]);
-            
+            // パスワード変更
+            $user = $this->Users->doChangePassword($user, $this->getRequest()->getData());
+
             // DB保存成功時: プロファイル画面へ遷移
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('パスワードを変更しました。'));
@@ -170,23 +156,23 @@ class HomesController extends AppController
             }
 
             // DB保存失敗時: 画面を再表示
-            $errorMessage = __('入力内容に誤りがあります。');
-            if ($user->getError('_lock')) {
-                $errorMessage = current($user->getError('_lock'));
-            }
-            $this->Flash->error($errorMessage);
+            $this->failed($user);
         }
 
         $this->set(compact('user'));
     }
 
     /**
-     * キャッシュ削除 (デバッグ用)
+     * キャッシュ削除API (デバッグ用/非公開)
+     *
+     * @return \Cake\Http\Response|null
      */
-    public function refresh() {
-        foreach(glob(CACHE . 'models' . DS . '*_*') as $file) {
+    public function refresh()
+    {
+        foreach (glob(CACHE . 'models' . DS . '*_*') as $file) {
             @unlink($file);
-        }foreach(glob(CACHE . 'persistent' . DS . '*_*') as $file) {
+        }
+        foreach (glob(CACHE . 'persistent' . DS . '*_*') as $file) {
             @unlink($file);
         }
         return $this->redirect($this->referer());

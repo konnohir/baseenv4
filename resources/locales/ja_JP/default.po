@@ -96,13 +96,13 @@ msgid "E-V-WRONG-PASSWORD"
 msgstr "現在のパスワードが一致しません。"
 
 msgid "E-V-SAME-PASSWORD"
-msgstr "新しいパスワードは現在のパスワードと異なる値を入力してください。"
+msgstr "新しいパスワードは現在のパスワード以外の値を入力してください。"
 
 msgid "E-V-RETYPE-WRONG-PASSWORD"
 msgstr "新しいパスワードと同じ値を入力してください。"
 
 msgid "E-V-SAME-PASSWORD-MAIL"
-msgstr "新しいパスワードはメールアドレスと異なる値を入力してください。"
+msgstr "新しいパスワードはメールアドレス以外の値を入力してください。"
 
 ####################################
 # カラム名

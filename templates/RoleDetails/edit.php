@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\RoleDetail $roleDetail
+ * @var \App\Model\Entity\RoleDetail $parentRoleDetailList
  */
 ?>
 <div class="w-50 mx-auto">
@@ -11,7 +11,7 @@
         <?= $this->Form->hidden('_lock') ?>
         <?= $this->Form->customControl('parent_id', [
             'type' => 'select',
-            'options' => $roleDetailList,
+            'options' => $parentRoleDetailList,
             'empty' => true,
             'label' => __('親権限'),
         ]) ?>

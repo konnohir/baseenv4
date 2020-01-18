@@ -8,10 +8,10 @@ use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 
 /**
- * FilterComponent
- * 各アクションの実行前に共通処理を実行する
+ * RequestFilterComponent
+ * 各アクションの実行前にHTTPリクエストをフィルタリングする
  */
-class FilterComponent extends Component
+class RequestFilterComponent extends Component
 {
     /**
      * 設定値
@@ -26,34 +26,41 @@ class FilterComponent extends Component
      */
     public function initialize(array $config): void
     {
-        parent::initialize($config);
-
         $this->config = $config;
     }
 
     /**
      * beforeFilter
-     * 各アクションの実行前にフレームワークが呼び出す。
+     * 各アクションの実行前にトリガーされる
+     * 
+     * @return void
      */
     public function beforeFilter(Event $event)
     {
+        // $action: リクエストされたアクション
         $action = $this->getRequest()->getParam('action');
 
-        if (isset($this->config['paginate'][$action])) {
-            $this->filterPaginate();
+        if (!isset($this->config[$action])) {
+            return;
         }
-        if (isset($this->config['requestId'][$action])) {
-            $this->filterRequestId();
-        }
-        if (isset($this->config['requestTarget'][$action])) {
-            $this->filterRequestTarget();
+
+        foreach($this->config[$action] as $method) {
+            $method .= 'Filter';
+            if ($result = $this->$method()) {
+                $event->stopPropagation();
+                return $result;
+            }
         }
     }
 
     /**
-     * indexアクションの場合
+     * 検索フィルタ
+     * POST送信された検索リクエストをGETリクエストに変換する
+     * (PostRedirectGetパターン)
+     * 
+     * @return \Cake\Http\Response|null
      */
-    public function filterPaginate()
+    public function paginateFilter()
     {
         // POST送信された場合
         if ($this->getRequest()->is('post')) {
@@ -82,9 +89,13 @@ class FilterComponent extends Component
     }
 
     /**
-     * view, edit アクションの場合
+     * IDフィルタ
+     * 第1引数が数値であるかチェックする
+     * 
+     * @throws Cake\Http\Exception\BadRequestException
+     * @return void
      */
-    public function filterRequestId()
+    public function requestIdFilter()
     {
         // $id: URLの1番目の引数
         $id = $this->getRequest()->getParam('pass.0', '');
@@ -96,11 +107,15 @@ class FilterComponent extends Component
     }
 
     /**
-     * ajax アクションの場合
+     * ターゲットフィルタ
+     * targetsキーがPOST送信されているかチェックする
+     * 
+     * @throws Cake\Http\Exception\BadRequestException
+     * @return void
      */
-    public function filterRequestTarget()
+    public function requestTargetFilter()
     {
-        // アクセスするHTTPメソッドを制限する
+        // HTTPメソッドを制限する
         $this->getRequest()->allowMethod(['post']);
 
         // $targets: POSTデータ
@@ -118,6 +133,6 @@ class FilterComponent extends Component
      */
     protected function getRequest()
     {
-        return $this->getController()->getRequest();
+        return $this->_registry->getController()->getRequest();
     }
 }

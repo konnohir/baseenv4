@@ -26,7 +26,7 @@ class RequestPolicy implements RequestPolicyInterface
             return true;
         }
 
-        if ($request->getParam('plugin') !== 'debug_kit') {
+        if ($request->getParam('plugin') === 'debug_kit') {
             return true;
         }
         

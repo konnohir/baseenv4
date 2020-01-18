@@ -92,6 +92,7 @@ $(function () {
 
     // Record view url
     if ($('.view').length) {
+        sessionStorage.removeItem('viewUrl');
         $(window).bind("beforeunload", function () {
             sessionStorage.viewUrl = location.href;
         });
@@ -129,7 +130,7 @@ $(function () {
         if (targets) {
             Object.keys(targets).forEach(function (id) {
                 var lock = targets[id];
-                $form.append('<input type="hidden" name="targets[' + id + ']" value="' + lock + '" />');
+                $form.append('<input type="hidden" name="targets[' + id + '][_lock]" value="' + lock + '" />');
             });
             $form.attr('action', $(this).attr('data-action')).submit();
         }
@@ -149,7 +150,7 @@ $(function () {
         if (targets) {
             Object.keys(targets).forEach(function (id) {
                 var lock = targets[id];
-                $form.append('<input type="hidden" name="targets[' + id + ']" value="' + lock + '" />');
+                $form.append('<input type="hidden" name="targets[' + id + '][_lock]" value="' + lock + '" />');
             });
             $form.attr('action', $(this).attr('data-action')).submit();
         }
@@ -180,7 +181,7 @@ $(function () {
         if (targets) {
             Object.keys(targets).forEach(function (id) {
                 var lock = targets[id];
-                $form.append('<input type="hidden" name="targets[' + id + ']" value="' + lock + '" />');
+                $form.append('<input type="hidden" name="targets[' + id + '][_lock]" value="' + lock + '" />');
             });
             $form.attr('action', $(this).attr('data-action')).submit();
         }

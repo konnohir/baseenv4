@@ -11,7 +11,7 @@ use Cake\Http\Exception\NotFoundException;
  * RoleDetails Controller
  * 権限詳細マスタ
  */
-class RoleDetailsController extends AppCrudController
+class RoleDetailsController extends AppController
 {
     public $title = '権限詳細';
 
@@ -23,9 +23,16 @@ class RoleDetailsController extends AppCrudController
     public function initialize(): void
     {
         parent::initialize();
-
+        
+        // リクエストフィルタ
+        $this->loadComponent('RequestFilter', [
+            'index' => ['paginate'],
+            'view' => ['requestId'],
+            'edit' => ['requestId'],
+            'delete' => ['requestTarget'],
+        ]);
         $this->loadComponent('Permission');
-        $this->loadModel('Roles');
+
         $this->loadModel('RoleDetails');
     }
 
@@ -36,7 +43,7 @@ class RoleDetailsController extends AppCrudController
      */
     public function index()
     {
-        // $roleDetails: 権限詳細マスタの配列
+        // $roleDetails: 権限詳細一覧
         try {
             $roleDetails = $this->paginate($this->RoleDetails);
         } catch (NotFoundException $e) {
@@ -48,17 +55,18 @@ class RoleDetailsController extends AppCrudController
     /**
      * 詳細画面
      *
-     * @param string|null $id 権限詳細マスタ id.
+     * @param string $id 権限詳細 id.
      * @return \Cake\Http\Response|null
      */
-    public function view($id = null)
+    public function view($id)
     {
-        // $roleDetail: 権限詳細マスタ
-        $roleDetail = $this->RoleDetails->get($id, [
-            'finder' => 'detail',
-        ]);
+        // $roleDetail: 権限詳細エンティティ
+        $roleDetail = $this->RoleDetails->find('detail', compact('id'))->first();
+        if ($roleDetail === null) {
+            throw new NotFoundException();
+        }
 
-        // $acos: Access Control Objectリスト
+        // $acos: コントローラー／アクション(Access Control Object)のリスト (スレッド形式)
         $acos = $this->RoleDetails->Acos->find('threaded')->all();
         $acos = array_filter($acos->first()->children ?? [], function ($row) {
             return !empty($row->children);
@@ -80,36 +88,26 @@ class RoleDetailsController extends AppCrudController
     /**
      * 編集画面
      *
-     * @param string|null $id 権限詳細マスタ id.
+     * @param string|null $id 権限詳細 id.
      * @return \Cake\Http\Response|null
      */
     public function edit($id = null)
     {
-        // $roleDetail: 権限詳細マスタ
+        // $roleDetail: 権限詳細エンティティ
         if ($this->isAdd()) {
             $roleDetail = $this->RoleDetails->newEmptyEntity();
         } else {
-            $roleDetail = $this->RoleDetails->get($id, [
-                'finder' => 'detail'
-            ]);
+            $roleDetail = $this->RoleDetails->find('detail', compact('id'))->first();
+        }
+
+        if ($roleDetail === null) {
+            throw new NotFoundException();
         }
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $roleDetail = $this->RoleDetails->patchEntity($roleDetail, $this->getRequest()->getData(), [
-                'fields' => [
-                    'parent_id', 'name', 'description',
-                    // associated
-                    'acos',
-                    // lock flag
-                    '_lock',
-                ],
-                'associated' => [
-                    'Acos' => [
-                        'onlyIds' => true
-                    ],
-                ]
-            ]);
+            // エンティティ編集
+            $roleDetail = $this->RoleDetails->doEditEntity($roleDetail, $this->getRequest()->getData());
             
             // $result: トランザクション実行結果 (boolean)
             $result = $this->RoleDetails->getConnection()->transactional(function () use ($roleDetail) {
@@ -134,24 +132,19 @@ class RoleDetailsController extends AppCrudController
             }
 
             // DB保存失敗時: 画面を再表示
-            $errorMessage = __('入力内容に誤りがあります。');
-            if ($roleDetail->getError('_lock')) {
-                $errorMessage = current($roleDetail->getError('_lock'));
-            }
-            $this->Flash->error($errorMessage);
+            $this->failed($roleDetail);
         }
 
-        // $roleDetailList: 権限詳細リスト (parent_idがNULLの権限詳細のリスト)
-        $roleDetailList = $this->RoleDetails->find('parentList', ['exclude' => $id])->toArray();
+        // $parentRoleDetailList: 親権限詳細リスト
+        $parentRoleDetailList = $this->RoleDetails->find('parentList', ['exclude' => $id])->toArray();
 
-        // $Acos: Access Control Objectリスト (スレッド形式)
+        // $acos: コントローラー／アクション(Access Control Object)のリスト (スレッド形式)
         $acos = $this->RoleDetails->Acos->find('threaded')->all();
         $acos = array_filter($acos->first()->children ?? [], function ($row) {
-            // アクションが一つも無いコントローラーを除外する
             return !empty($row->children);
         });
 
-        $this->set(compact('roleDetail', 'roleDetailList', 'acos'));
+        $this->set(compact('roleDetail', 'parentRoleDetailList', 'acos'));
     }
 
     /**
@@ -161,45 +154,28 @@ class RoleDetailsController extends AppCrudController
      */
     public function delete()
     {
-        // $targets: 削除する権限詳細マスタの配列 [ID => 更新日付] (array)
+        // $targets: 対象データの配列 (array)
         $targets = $this->getRequest()->getData('targets');
 
         // $result: トランザクション実行結果 (boolean)
         $result = $this->RoleDetails->getConnection()->transactional(function () use ($targets) {
-            foreach ($targets as $id => $_lock) {
-                // $roleDetail: 権限詳細マスタ
-                $roleDetail = $this->RoleDetails->get($id, [
-                    'fields' => [
-                        'id',
-                        'updated_at',
-                        'deleted_at',
-                    ],
-                    'contain' => ['Roles'],
-                ]);
+            foreach ($targets as $id => $requestData) {
+                // $roleDetail: 権限詳細エンティティ
+                $roleDetail = $this->RoleDetails->find('detail', compact('id'))->first();
+                if ($roleDetail === null) {
+                    throw new NotFoundException();
+                }
 
-                // 排他制御
-                $roleDetail->_lock = $_lock;
+                // 削除
+                $roleDetail = $this->RoleDetails->doDeleteEntity($roleDetail, $requestData);
 
-                // 削除日付
-                $roleDetail->deleted_at = date('Y-m-d h:i:s');
+                // DB保存成功時: 次の対象データの処理へ進む
+                if ($this->RoleDetails->save($roleDetail)) {
+                    continue;
+                }
 
                 // DB保存失敗時: ロールバック
-                if (!$this->RoleDetails->save($roleDetail)) {
-                    $errorMessage = __('入力内容に誤りがあります。');
-                    if ($roleDetail->getError('_lock')) {
-                        $errorMessage = current($roleDetail->getError('_lock'));
-                    }
-                    $this->Flash->error($errorMessage);
-                    return false;
-                }
-
-                foreach($roleDetail->roles ?? [] as $role) {
-                    if (!$this->Permission->updateACL($role)) {
-                        return false;
-                    }
-                }
-
-                // DB保存成功時: 次のデータの処理へ進む
+                return $this->failed($roleDetail);
             }
 
             $this->Flash->success(__('{0}を削除しました。', __($this->title)));

@@ -11,7 +11,7 @@ use Cake\Http\Exception\NotFoundException;
  * MCompanies Controller
  * 企業マスタ
  */
-class MCompaniesController extends AppCrudController
+class MCompaniesController extends AppController
 {
     public $title = '企業';
 
@@ -23,6 +23,15 @@ class MCompaniesController extends AppCrudController
     public function initialize(): void
     {
         parent::initialize();
+        
+        // リクエストフィルタ
+        $this->loadComponent('RequestFilter', [
+            'index' => ['paginate'],
+            'view' => ['requestId'],
+            'edit' => ['requestId'],
+            'delete' => ['requestTarget'],
+            'addStaff' => ['requestTarget'],
+        ]);
 
         $this->loadModel('MCompanies');
         $this->loadModel('Tags');
@@ -141,7 +150,7 @@ class MCompaniesController extends AppCrudController
      */
     public function addStaff()
     {
-        // $targets: 増員する企業マスタの配列 [ID => 更新日付] (array)
+        // $targets: 対象データの配列 (array)
         $targets = $this->getRequest()->getData('targets');
 
         // $result: トランザクション実行結果 (boolean)
@@ -198,7 +207,7 @@ class MCompaniesController extends AppCrudController
      */
     public function delete()
     {
-        // $targets: 削除する企業マスタの配列 [ID => 更新日付] (array)
+        // $targets: 対象データの配列 (array)
         $targets = $this->getRequest()->getData('targets');
 
         // $result: トランザクション実行結果 (boolean)

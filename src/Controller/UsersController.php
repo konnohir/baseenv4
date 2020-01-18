@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -10,7 +11,7 @@ use Cake\Http\Exception\NotFoundException;
  * Users Controller
  * ユーザーマスタ
  */
-class UsersController extends AppCrudController
+class UsersController extends AppController
 {
     public $title = 'ユーザー';
 
@@ -23,9 +24,20 @@ class UsersController extends AppCrudController
     {
         parent::initialize();
 
+        // リクエストフィルタ
+        $this->loadComponent('RequestFilter', [
+            'index' => ['paginate'],
+            'view' => ['requestId'],
+            'edit' => ['requestId'],
+            'delete' => ['requestTarget'],
+            'accountLock' => ['requestTarget'],
+            'accountUnlock' => ['requestTarget'],
+            'passwordIssue' => ['requestTarget'],
+        ]);
+
         $this->loadModel('Users');
     }
-    
+
     /**
      * 一覧画面
      *
@@ -33,7 +45,7 @@ class UsersController extends AppCrudController
      */
     public function index()
     {
-        // $users: ユーザーマスタの配列
+        // $users: ユーザー一覧
         try {
             $users = $this->paginate($this->Users, [
                 'sortWhitelist' => [
@@ -52,16 +64,16 @@ class UsersController extends AppCrudController
     /**
      * 詳細画面
      *
-     * @param string|null $id ユーザーマスタ id.
+     * @param string $id ユーザーエンティティ id.
      * @return \Cake\Http\Response|null
      */
-    public function view($id = null)
+    public function view($id)
     {
-        // $user: ユーザーマスタ
-        $user = $this->Users->get($id, [
-            'finder' => 'detail',
-        ]);
-
+        // $user: ユーザーエンティティ
+        $user = $this->Users->find('detail', compact('id'))->first();
+        if ($user === null) {
+            throw new NotFoundException();
+        }
         $this->set(compact('user'));
     }
 
@@ -78,32 +90,27 @@ class UsersController extends AppCrudController
     /**
      * 編集画面
      *
-     * @param string|null $id ユーザーマスタ id.
+     * @param string|null $id ユーザーエンティティ id.
      * @return \Cake\Http\Response|null
      */
     public function edit($id = null)
     {
-        // $user: ユーザーマスタ
+        // $user: ユーザーエンティティ
         if ($this->isAdd()) {
             $user = $this->Users->newEmptyEntity();
         } else {
-            $user = $this->Users->get($id, [
-                'finder' => 'detail'
-            ]);
+            $user = $this->Users->find('detail', compact('id'))->first();
+        }
+
+        if ($user === null) {
+            throw new NotFoundException();
         }
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->getRequest()->getData(), [
-                'fields' => [
-                    'email', 'role_id',
-                    // lock flag
-                    '_lock',
-                ],
-                'associated' => [
-                ]
-            ]);
-            
+            // エンティティ編集
+            $user = $this->Users->doEditEntity($user, $this->getRequest()->getData());
+
             // DB保存成功時: 詳細画面へ遷移
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('{0}を保存しました。', __($this->title)));
@@ -111,75 +118,13 @@ class UsersController extends AppCrudController
             }
 
             // DB保存失敗時: 画面を再表示
-            $errorMessage = __('入力内容に誤りがあります。');
-            if ($user->getError('_lock')) {
-                $errorMessage = current($user->getError('_lock'));
-            }
-            $this->Flash->error($errorMessage);
+            $this->failed($user);
         }
 
+        // $roleList: 権限リスト
         $roleList = $this->Users->Roles->find('list')->toArray();
 
         $this->set(compact('user', 'roleList'));
-    }
-
-    /**
-     * パスワード再発行API
-     *
-     * @return \Cake\Http\Response|null
-     */
-    public function passwordIssue()
-    {
-        // $targets: 削除するユーザーマスタの配列 [ID => 更新日付] (array)
-        $targets = $this->getRequest()->getData('targets');
-
-        // $result: トランザクションの結果 (boolean|array)
-        $result = $this->Users->getConnection()->transactional(function () use ($targets) {
-            $csv = [['Email', 'Password']];
-            foreach ($targets as $id => $_lock) {
-                // $user: ユーザーマスタ
-                $user = $this->Users->get($id, [
-                    'fields' => [
-                        'id',
-                        'email',
-                        'role_id',
-                        'updated_at',
-                        'deleted_at',
-                    ]
-                ]);
-
-                // 排他制御
-                $user->_lock = $_lock;
-
-                // パスワード
-                $password = 'pass#12345';
-                $user->password = $password;
-                $csv[] = [$user->email, $password];
-
-                // DB保存失敗時: ロールバック
-                if (!$this->Users->save($user)) {
-                    $errorMessage = __('入力内容に誤りがあります。');
-                    if ($user->getError('_lock')) {
-                        $errorMessage = current($user->getError('_lock'));
-                    }
-                    $this->Flash->error($errorMessage);
-                    return false;
-                }
-
-                // DB保存成功時: 次のデータの処理へ進む
-            }
-
-            return $csv;
-        });
-
-        if ($result) {
-            // CSV ダウンロード
-            $this->viewBuilder()->setClassName('Csv');
-            $this->set('csv', $result);
-            return;
-        }
-
-        return $this->redirect($this->referer());
     }
 
     /**
@@ -189,39 +134,28 @@ class UsersController extends AppCrudController
      */
     public function accountLock()
     {
-        // $targets: 削除するユーザーマスタの配列 [ID => 更新日付] (array)
+        // $targets: 対象データの配列 (array)
         $targets = $this->getRequest()->getData('targets');
 
         // $result: トランザクションの結果 (boolean)
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
-            foreach ($targets as $id => $_lock) {
-                // $user: ユーザーマスタ
-                $user = $this->Users->get($id, [
-                    'fields' => [
-                        'id',
-                        'role_id',
-                        'updated_at',
-                        'deleted_at',
-                    ]
-                ]);
-
-                // 排他制御
-                $user->_lock = $_lock;
-
-                // ログイン失敗回数
-                $user->login_failed_count = 99;
-
-                // DB保存失敗時: ロールバック
-                if (!$this->Users->save($user)) {
-                    $errorMessage = __('入力内容に誤りがあります。');
-                    if ($user->getError('_lock')) {
-                        $errorMessage = current($user->getError('_lock'));
-                    }
-                    $this->Flash->error($errorMessage);
-                    return false;
+            foreach ($targets as $id => $requestData) {
+                // $user: ユーザーエンティティ
+                $user = $this->Users->find('detail', compact('id'))->first();
+                if ($user === null) {
+                    throw new NotFoundException();
                 }
 
-                // DB保存成功時: 次のデータの処理へ進む
+                // アカウントロック
+                $user = $this->Users->doLockAccount($user, $requestData);
+
+                // DB保存成功時: 次の対象データの処理へ進む
+                if ($this->Users->save($user)) {
+                    continue;
+                }
+
+                // DB保存失敗時: ロールバック
+                return $this->failed($user);
             }
 
             $this->Flash->success(__('アカウントをロックしました。'));
@@ -239,40 +173,28 @@ class UsersController extends AppCrudController
      */
     public function accountUnlock()
     {
-        // $targets: 削除するユーザーマスタの配列 [ID => 更新日付] (array)
+        // $targets: 対象データの配列 (array)
         $targets = $this->getRequest()->getData('targets');
 
         // $result: トランザクションの結果 (boolean)
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
-            foreach ($targets as $id => $_lock) {
-                // $user: ユーザーマスタ
-                $user = $this->Users->get($id, [
-                    'fields' => [
-                        'id',
-                        'role_id',
-                        'updated_at',
-                        'deleted_at',
-                    ]
-                ]);
-
-                // 排他制御
-                $user->_lock = $_lock;
-
-                // ログイン失敗回数
-                $user->login_failed_count = 0;
-
-                // DB保存失敗時: ロールバック
-                if (!$this->Users->save($user)) {
-                    $errorMessage = __('入力内容に誤りがあります。');
-                    $errorMessage .= "\n・" . current(current($user->getErrors()));
-                    if ($user->getError('_lock')) {
-                        $errorMessage = current($user->getError('_lock'));
-                    }
-                    $this->Flash->error($errorMessage);
-                    return false;
+            foreach ($targets as $id => $requestData) {
+                // $user: ユーザーエンティティ
+                $user = $this->Users->find('detail', compact('id'))->first();
+                if ($user === null) {
+                    throw new NotFoundException();
                 }
 
-                // DB保存成功時: 次のデータの処理へ進む
+                // アカウントロック
+                $user = $this->Users->doUnlockAccount($user, $requestData);
+
+                // DB保存成功時: 次の対象データの処理へ進む
+                if ($this->Users->save($user)) {
+                    continue;
+                }
+
+                // DB保存失敗時: ロールバック
+                return $this->failed($user);
             }
 
             $this->Flash->success(__('アカウントロックを解除しました。'));
@@ -284,45 +206,87 @@ class UsersController extends AppCrudController
     }
 
     /**
+     * パスワード発行API
+     * 既にパスワード発行済みの場合、パスワードを上書き（再発行）する
+     *
+     * @return \Cake\Http\Response|null
+     */
+    public function passwordIssue()
+    {
+        // $targets: 対象データの配列 (array)
+        $targets = $this->getRequest()->getData('targets');
+
+        // $csv: CSV出力データの配列
+        $csv = [];
+
+        // $result: トランザクションの結果 (boolean)
+        $result = $this->Users->getConnection()->transactional(function () use ($targets, &$csv) {
+            foreach ($targets as $id => $requestData) {
+                // $user: ユーザーエンティティ
+                $user = $this->Users->find('detail', compact('id'))->first();
+                if ($user === null) {
+                    throw new NotFoundException();
+                }
+
+                // パスワード発行
+                $user = $this->Users->doIssuePassword($user, $requestData);
+
+                // CSV へ出力
+                $csv[] = [$user->id, $user->email, $user->plain_password];
+
+                // DB保存成功時: 次の対象データの処理へ進む
+                if ($this->Users->save($user)) {
+                    continue;
+                }
+
+                // DB保存失敗時: ロールバック
+                return $this->failed($user);
+            }
+
+            return true;
+        });
+
+        if ($result) {
+            // CSVヘッダ
+            array_unshift($csv, ['ID', 'Email', 'Password']);
+            // CSV ダウンロード
+            $this->viewBuilder()->setClassName('Csv');
+            $this->set('csv', $csv);
+            return;
+        }
+
+        return $this->redirect($this->referer());
+    }
+
+    /**
      * 削除API
      *
      * @return \Cake\Http\Response|null
      */
     public function delete()
     {
-        // $targets: 削除するユーザーマスタの配列 [ID => 更新日付] (array)
+        // $targets: 対象データの配列 (array)
         $targets = $this->getRequest()->getData('targets');
 
         // $result: トランザクションの結果 (boolean)
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
-            foreach ($targets as $id => $_lock) {
-                // $user: ユーザーマスタ
-                $user = $this->Users->get($id, [
-                    'fields' => [
-                        'id',
-                        'role_id',
-                        'updated_at',
-                        'deleted_at',
-                    ]
-                ]);
-
-                // 排他制御
-                $user->_lock = $_lock;
-
-                // 削除日付
-                $user->deleted_at = date('Y-m-d h:i:s');
-
-                // DB保存失敗時: ロールバック
-                if (!$this->Users->save($user)) {
-                    $errorMessage = __('入力内容に誤りがあります。');
-                    if ($user->getError('_lock')) {
-                        $errorMessage = current($user->getError('_lock'));
-                    }
-                    $this->Flash->error($errorMessage);
-                    return false;
+            foreach ($targets as $id => $requestData) {
+                // $user: ユーザーエンティティ
+                $user = $this->Users->find('detail', compact('id'))->first();
+                if ($user === null) {
+                    throw new NotFoundException();
                 }
 
-                // DB保存成功時: 次のデータの処理へ進む
+                // 削除
+                $user = $this->Users->doDeleteEntity($user, $requestData);
+
+                // DB保存成功時: 次の対象データの処理へ進む
+                if ($this->Users->save($user)) {
+                    continue;
+                }
+
+                // DB保存失敗時: ロールバック
+                return $this->failed($user);
             }
 
             $this->Flash->success(__('{0}を削除しました。', __($this->title)));

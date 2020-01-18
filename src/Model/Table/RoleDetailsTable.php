@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use Cake\I18n\FrozenTime;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
-use Cake\Event\Event;
-use Cake\Datasource\EntityInterface;
-use ArrayObject;
 
 /**
  * RoleDetails Model
@@ -121,6 +120,56 @@ class RoleDetailsTable extends AppTable
         }
 
         return $query;
+    }
+
+    /**
+     * エンティティ編集
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doEditEntity(Entity $entity, array $input)
+    {
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // user input
+                'parent_id', 'name', 'description',
+                // associated
+                'acos',
+                // lock flag
+                '_lock',
+            ],
+            'associated' => [
+                'Acos' => [
+                    'onlyIds' => true
+                ],
+            ]
+        ]);
+        return $entity;
+    }
+
+    /**
+     * 削除
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doDeleteEntity(Entity $entity, array $input)
+    {
+        $input = array_merge_recursive($input, [
+            // 削除日付
+            'deleted_at' => new FrozenTime(),
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'deleted_at',
+                // lock flag
+                '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
     }
 
 }

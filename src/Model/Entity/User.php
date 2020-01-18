@@ -57,6 +57,9 @@ class User extends AppEntity
         if (!isset($this->role_id)) {
             throw new Exception('role_id is required');
         }
-        return $this->role_id;
+        return [
+            'model' => 'Roles',
+            'foreign_key' => $this->role_id,
+        ];
     }
 }

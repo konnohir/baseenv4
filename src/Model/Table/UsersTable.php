@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
@@ -67,7 +70,7 @@ class UsersTable extends AppTable
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAXLENGTH', $label, 255),
                 'last' => true,
-            ],  
+            ],
         ]);
 
         // パスワード
@@ -86,7 +89,7 @@ class UsersTable extends AppTable
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAX-LENGTH', $label),
                 'last' => true,
-            ],  
+            ],
         ]);
 
         // 権限
@@ -130,7 +133,7 @@ class UsersTable extends AppTable
     public function validationPassword(Validator $validator): Validator
     {
         $this->validationDefault($validator);
-        
+
         // パスワード変更時の必須入力項目
         $validator->requirePresence([
             'current_password',
@@ -154,9 +157,9 @@ class UsersTable extends AppTable
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAX-LENGTH', $label),
                 'last' => true,
-            ],  
+            ],
         ]);
-        
+
         // 新しいパスワード
         $column = 'password';
         $label = __($this->getAlias() . '.' . $column);
@@ -196,10 +199,15 @@ class UsersTable extends AppTable
         return $validator;
     }
 
+    /**
+     * ルール構築
+     * ステートフルなバリデーションルールを定義する
+     */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add(function($entity) {
-            if (!isset($entity->current_password)) {
+        // 現在のパスワード
+        $rules->add(function ($entity) {
+            if (!$entity->isDirty('current_password')) {
                 return true;
             }
             if (!$entity->comparePassword($entity->current_password)) {
@@ -208,8 +216,9 @@ class UsersTable extends AppTable
             return true;
         }, ['errorField' => 'current_password']);
 
-        $rules->add(function($entity) {
-            if (!isset($entity->retype_password)) {
+        // パスワード
+        $rules->add(function ($entity) {
+            if (!$entity->isDirty('password')) {
                 return true;
             }
             if ($entity->retype_password == $entity->email) {
@@ -250,5 +259,154 @@ class UsersTable extends AppTable
             $query->where([$this->getAlias() . '.id' => $options['id']]);
         }
         return $query->contain(['Roles']);
+    }
+
+    /**
+     * エンティティ編集
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doEditEntity(Entity $entity, array $input)
+    {
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // user input
+                'email', 'role_id',
+                // lock flag
+                '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
+    }
+
+    /**
+     * アカウントロック
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doLockAccount(Entity $entity, array $input)
+    {
+        $input = array_merge_recursive($input, [
+            // ログイン失敗回数
+            'login_failed_count' => 99,
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'login_failed_count',
+                // lock flag
+                '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
+    }
+
+    /**
+     * アカウントロック解除
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doUnlockAccount(Entity $entity, array $input)
+    {
+        $input = array_merge_recursive($input, [
+            // ログイン失敗回数
+            'login_failed_count' => 0,
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'login_failed_count',
+                // lock flag
+                '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
+    }
+
+    /**
+     * パスワード発行
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doIssuePassword(Entity $entity, array $input)
+    {
+        // 新しいパスワード
+        $password = 'pass#12345';
+
+        $input = array_merge_recursive($input, [
+            // パスワード
+            'password' => $password,
+            // パスワード (平文: CSV出力用)
+            'plain_password' => $password,
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'password',
+                'plain_password',
+                // lock flag
+                // '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
+    }
+
+    /**
+     * パスワード変更
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doChangePassword(Entity $entity, array $input)
+    {
+        $input = array_merge_recursive($input, [
+            // パスワード有効期限
+            'password_expired' => (new FrozenDate())->addMonth(3)
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'password_expired',
+                // user input
+                'current_password', 'password', 'retype_password',
+                // lock flag
+                '_lock',
+            ],
+            'associated' => [],
+            'validate' => 'password',
+        ]);
+        return $entity;
+    }
+
+    /**
+     * 削除
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doDeleteEntity(Entity $entity, array $input)
+    {
+        $input = array_merge_recursive($input, [
+            // 削除日付
+            'deleted_at' => new FrozenTime(),
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'deleted_at',
+                // lock flag
+                '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
     }
 }

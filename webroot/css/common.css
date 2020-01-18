@@ -23,10 +23,6 @@ h3 {
     margin: 0;
 }
 
-header {
-    min-height: 40px;
-}
-
 /** customTable  */
 
 .table-wrap {
@@ -115,11 +111,12 @@ header {
 .dl-wrap>.row>dt, .dl-wrap>.row>dd {
     padding: 0;
     margin-bottom: 0;
+    min-height: 1.5em;
 }
 
 .dl-wrap-form dl {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .dl-wrap-form dt {
@@ -127,6 +124,10 @@ header {
 }
 
 /** Common layout */
+
+body>header {
+    min-height: 40px;
+}
 
 .nav-item:hover {
     background: darkslategray;
@@ -149,7 +150,7 @@ form>.input {
     font-size: 85%;
 }
 
-.required label::after {
+.required label::after, dt.required::after {
     color: #cc0000;
     content: '*';
 }

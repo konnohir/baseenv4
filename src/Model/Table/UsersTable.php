@@ -205,6 +205,18 @@ class UsersTable extends AppTable
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
+        // メールアドレス
+        $rules->add(function ($entity, $options) {
+            if (!$entity->isDirty('email')) {
+                return true;
+            }
+            $model = $options['repository'];
+            if ($model->find('withInactive')->where(['email' => $entity->email])->count()) {
+                return __('E-V-UNIQUE', __('Users.email'));
+            }
+            return true;
+        }, ['errorField' => 'email']);
+
         // 現在のパスワード
         $rules->add(function ($entity) {
             if (!$entity->isDirty('current_password')) {
@@ -244,7 +256,7 @@ class UsersTable extends AppTable
 
         return $query
             ->select($this)
-            ->select(['password_issue' => 'password is not null'])
+            ->select(['password_issue' => 'password is not null'])  // ソートするためselectで取得する
             ->select(['Roles.name'])
             ->contain(['Roles'])
             ->where($conditions);

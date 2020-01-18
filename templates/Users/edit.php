@@ -7,31 +7,50 @@
 ?>
 <section>
     <h2 class="mb-2"><?= __('Users') ?></h2>
-    <div class="form">
-        <?= $this->Form->create($user) ?>
-        <?= $this->Form->hidden('_lock') ?>
-        <?= $this->Form->customControl('email', [
-            'type' => 'text',
-            'label' => __('メールアドレス'),
-        ]) ?>
-        <?= $this->Form->customControl('role_id', [
-            'type' => 'select',
-            'label' => __('権限'),
-            'options' => $roleList,
-            'empty' => true,
-        ]) ?>
-        <div class="form-group text-center py-4">
-            <?= $this->Form->customButton(__('BTN-CANCEL'), [
-                // キャンセル
-                'data-action' => '/users',
-                'class' => 'btn-secondary btn-cancel'
-            ]) ?>
-            <?= $this->Form->customButton(__('BTN-SAVE'), [
-                // 保存
-                'type' => 'submit',
-                'class' => 'btn-primary'
-            ]) ?>
-        </div>
-        <?= $this->Form->end() ?>
+    <?= $this->Form->create($user) ?>
+    <?php
+        // 排他制御用フィールド
+        echo $this->Form->hidden('_lock');
+    ?>
+    <div class="dl-wrap dl-wrap-form mb-4">
+        <dl class="row">
+            <dt class="col-md required"><?= __('Users.email') ?></dt>
+            <dd class="col-md">
+                <?php
+                    // メールアドレス
+                    echo $this->Form->customControl('email', [
+                        'type' => 'text',
+                        'label' => false,
+                    ]);
+                ?>
+            </dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md required"><?= __('Users.role_id') ?></dt>
+            <dd class="col-md">
+                <?php
+                    // 権限
+                    echo $this->Form->customControl('role_id', [
+                        'type' => 'select',
+                        'options' => $roleList,
+                        'empty' => true,
+                        'label' => false,
+                    ]);
+                ?>
+            </dd>
+        </dl>
     </div>
+    <div class="button-wrap py-4">
+        <?= $this->Form->customButton(__('BTN-CANCEL'), [
+            // キャンセル
+            'data-action' => '/users',
+            'class' => 'btn-secondary btn-cancel'
+        ]) ?>
+        <?= $this->Form->customButton(__('BTN-SAVE'), [
+            // 保存
+            'type' => 'submit',
+            'class' => 'btn-primary'
+        ]) ?>
+    </div>
+    <?= $this->Form->end() ?>
 </section>

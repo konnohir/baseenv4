@@ -29,13 +29,21 @@ class User extends AppEntity
     ];
 
     /**
+     * パスワード発行ゲッター
+     */
+    protected function _getPasswordIssue($value)
+    {
+        return $this->password !== null;
+    }
+
+    /**
      * パスワードセッター
      * パスワードをハッシュ化する
      */
-    protected function _setPassword(string $password)
+    protected function _setPassword(string $value)
     {
         $hasher = new DefaultPasswordHasher();
-        return $hasher->hash($password);
+        return $hasher->hash($value);
     }
 
     /**

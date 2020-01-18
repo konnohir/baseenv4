@@ -23,7 +23,7 @@
         <?= $this->element('navbar') ?>
     </header>
     <main class="container-fluid">
-        <div class="<?= $this->getName() ?> <?= $this->getRequest()->getParam('action') ?> py-4">
+        <div class="<?= $this->getName() ?> <?= $this->getRequest()->getParam('action') ?> py-3">
             <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </div>

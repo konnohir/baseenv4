@@ -168,7 +168,7 @@ class MCompaniesController extends AppController
                     // 従業員数
                     'staff' => $mCompany->staff + 1,
                     // 排他制御
-                    '_lock' => $_lock,
+                    '_lock' => $_lock['_lock'],
                 ];
 
                 $mCompany = $this->MCompanies->patchEntity($mCompany, $inputArray, [
@@ -222,7 +222,7 @@ class MCompaniesController extends AppController
                 ]);
 
                 // 排他制御
-                $mCompany->_lock = $_lock;
+                $mCompany->_lock = $_lock['_lock'];
 
                 // 削除日付
                 $mCompany->deleted_at = date('Y-m-d h:i:s');

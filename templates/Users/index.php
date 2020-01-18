@@ -9,48 +9,44 @@
     <div class="card mb-2">
         <div class="card-body py-1">
             <?= $this->Form->create() ?>
-            <?= $this->Form->customControl('filter.email', ['label' => 'メールアドレス']) ?>
+            <?= $this->Form->customControl('filter.email', ['label' => 'Users.email']) ?>
             <?= $this->Form->customButton(__('BTN-CLEAR'), ['data-action' => '/users', 'class' => 'btn-outline-secondary btn-clear']) ?>
             <?= $this->Form->customButton(__('BTN-SEARCH'), ['type' => 'submit', 'class' => 'btn-outline-info btn-search']) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>
     <div class="btn-group mb-2">
-        <?= $this->Form->customButton(__('BTN-ADD'), [
+        <?php
             // 新規作成
-            'data-action' => '/users/add',
-            'class' => 'btn-outline-primary btn-add'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-EDIT'), [
+            echo $this->Form->customButton(__('BTN-ADD'), [
+                'data-action' => '/users/add',
+                'class' => 'btn-outline-primary btn-add'
+            ]);
             // 編集
-            'data-action' => '/users/edit',
-            'class' => 'btn-outline-primary btn-edit'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
+            echo $this->Form->customButton(__('BTN-EDIT'), [
+                'data-action' => '/users/edit',
+                'class' => 'btn-outline-primary btn-edit'
+            ]);
             // パスワード再発行
-            'data-action' => '/users/password-issue',
-            'class' => 'btn-outline-success btn-jump-api'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [
+            $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
+                'data-action' => '/users/password-issue',
+                'class' => 'btn-outline-success btn-jump-api'
+            ]);
             // アカウントロック
-            'data-action' => '/users/account-lock',
-            'class' => 'btn-outline-success btn-jump-api'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-ACCOUNT-UNLOCK'), [
+            echo $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [
+                'data-action' => '/users/account-lock',
+                'class' => 'btn-outline-success btn-jump-api'
+            ]);
             // アカウントロック解除
-            'data-action' => '/users/account-unlock',
-            'class' => 'btn-outline-success btn-jump-api'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-DELETE'), [
+            echo $this->Form->customButton(__('BTN-ACCOUNT-UNLOCK'), [
+                'data-action' => '/users/account-unlock',
+                'class' => 'btn-outline-success btn-jump-api'
+            ]);
             // 削除
-            'data-action' => '/users/delete',
-            'class' => 'btn-outline-danger btn-delete'
-        ])
+            echo $this->Form->customButton(__('BTN-DELETE'), [
+                'data-action' => '/users/delete',
+                'class' => 'btn-outline-danger btn-delete'
+            ]);
         ?>
     </div>
     <div class="pagination-wrap mb-2">
@@ -67,11 +63,11 @@
                 <tr>
                     <th><?= $this->Paginator->checkboxAll() ?></th>
                     <th class="w-100">
-                        <?= $this->Paginator->sort('Users.email', ['label' => __('メールアドレス')]) ?>
+                        <?= $this->Paginator->sort('Users.email', ['label' => __('Users.email')]) ?>
                     </th>
-                    <th><?= $this->Paginator->sort('Roles.id', ['label' => __('権限')]) ?></th>
-                    <th><?= $this->Paginator->sort('Users.login_failed_count', ['label' => __('アカウントロック')]) ?></th>
-                    <th><?= $this->Paginator->sort('Users.password_issue', ['label' => __('パスワード発行')]) ?></th>
+                    <th><?= $this->Paginator->sort('Roles.id', ['label' => __('Users.role_id')]) ?></th>
+                    <th><?= $this->Paginator->sort('Users.login_failed_count', ['label' => __('Users.account_lock')]) ?></th>
+                    <th><?= $this->Paginator->sort('Users.password_issue', ['label' => __('Users.password_issue')]) ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -80,8 +76,8 @@
                     <td><?= $this->Paginator->checkbox($user->id, $user->_lock) ?></td>
                     <td><?= $this->Html->link($user->email, ['action' => 'view', $user->id]) ?></td>
                     <td><?= h($user->role->name ?? null) ?></td>
-                    <td><?= $user->login_failed_count >= 5 ? '〇' : '' ?></td>
-                    <td><?= $user->password_issue ? '〇' : '' ?></td>
+                    <td><?= h($user->login_failed_count >= 5 ? '〇' : '') ?></td>
+                    <td><?= h($user->password_issue ? '〇' : '') ?></td>
                 </tr>
                 <?php endforeach ?>
             </tbody>

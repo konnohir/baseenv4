@@ -204,6 +204,7 @@ $(function () {
     $('.btn-clear').click(function () {
         location.href = $(this).attr('data-action');
     });
+    
 });
 
 

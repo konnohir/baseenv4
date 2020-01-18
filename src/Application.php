@@ -99,7 +99,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
             ->add(new RoutingMiddleware($this))
             ->add(new AuthenticationMiddleware($this))
-            ->add(new AuthorizationMiddleware($this))
+            ->add(new AuthorizationMiddleware($this, [
+                'unauthorizedHandler' => [
+                    'className' => 'Fsi.Exception',
+                ]]))
             ->add(new RequestAuthorizationMiddleware())
             ->add(new CsrfProtectionMiddleware());
 

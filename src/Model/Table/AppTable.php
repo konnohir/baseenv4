@@ -53,7 +53,7 @@ class AppTable extends Table
      */
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
-        if (!isset($query->withNoActive)) {
+        if (!isset($query->withInactive)) {
             $query->find('active');
         }
         return $query;
@@ -70,9 +70,9 @@ class AppTable extends Table
     /**
      * 有効でないエンティティを含めて取得するscope
      */
-    public function findWithNoActive(Query $query, array $options)
+    public function findWithInactive(Query $query, array $options)
     {
-        $query->withNoActive = true;
+        $query->withInactive = true;
         return $query;
     }
 

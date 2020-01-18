@@ -8,29 +8,22 @@
 <div class="w-100 mx-auto">
     <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
     <div class="btn-group mb-2">
-        <?= $this->Form->customButton(__('BTN-ADD'), [
+        <?php
             // 新規作成
-            'data-action' => '/role-details/add',
-            'class' => 'btn-outline-primary btn-add'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-EDIT'), [
+            echo $this->Form->customButton(__('BTN-ADD'), [
+                'data-action' => '/role-details/add',
+                'class' => 'btn-outline-primary btn-add'
+            ]);
             // 編集
-            'data-action' => '/role-details/edit',
-            'class' => 'btn-outline-primary btn-edit'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('ACO更新'), [
-            // ACO更新
-            'data-action' => '/role-details/refresh',
-            'class' => 'btn-outline-success btn-refresh',
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-DELETE'), [
+            echo $this->Form->customButton(__('BTN-EDIT'), [
+                'data-action' => '/role-details/edit',
+                'class' => 'btn-outline-primary btn-edit'
+            ]);
             // 削除
-            'data-action' => '/role-details/delete',
-            'class' => 'btn-outline-danger btn-delete'
-        ])
+            echo $this->Form->customButton(__('BTN-DELETE'), [
+                'data-action' => '/role-details/delete',
+                'class' => 'btn-outline-danger btn-delete'
+            ]);
         ?>
     </div>
     <div class="pagination-wrap mb-2">

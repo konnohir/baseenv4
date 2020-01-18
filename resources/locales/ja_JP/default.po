@@ -88,6 +88,9 @@ msgstr "{0}には文字列を入力してください。"
 msgid "E-V-NATURAL-NUMBER"
 msgstr "{0}には自然数を入力してください。"
 
+msgid "E-V-UNIQUE"
+msgstr "入力した{0}は既に登録されています。"
+
 ####################################
 # バリデーションンエラー (画面固有)
 ####################################
@@ -116,11 +119,20 @@ msgstr "パスワード"
 msgid "Users.current_password"
 msgstr "現在のパスワード"
 
+msgid "Users.new_password"
+msgstr "新しいパスワード（再入力）"
+
 msgid "Users.retype_password"
 msgstr "新しいパスワード（再入力）"
 
 msgid "Users.role_id"
 msgstr "権限"
+
+msgid "Users.account_lock"
+msgstr "アカウントロック"
+
+msgid "Users.password_issue"
+msgstr "パスワード発行"
 
 msgid "Roles.name"
 msgstr "権限名称"

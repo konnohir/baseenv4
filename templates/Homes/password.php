@@ -13,49 +13,46 @@
     ?>
     <div class="dl-wrap dl-wrap-form mb-4">
         <dl class="row">
-            <dt class="col-md"><?= __('現在のパスワード') ?></dt>
+            <dt class="col-md required"><?= __('Users.current_password') ?></dt>
             <dd class="col-md">
                 <?php
                     // 現在のパスワード
                     echo $this->Form->customControl('current_password', [
                         'type' => 'password',
                         'label' => false,
-                        'required' => true, // required クラスが自動付与されないため追加
                         'value' => false,   // バリデーションエラー時に入力欄をクリアする
                     ]);
                 ?>
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md"><?= __('新しいパスワード') ?></dt>
+            <dt class="col-md required"><?= __('Users.new_password') ?></dt>
             <dd class="col-md">
                 <?php
                     // 新しいパスワード
                     echo $this->Form->customControl('password', [
                         'type' => 'password',
                         'label' => false,
-                        'required' => true, // required クラスが自動付与されないため追加
-                        'value' => false,   // バリデーションエラー時に入力欄をクリアする
+                        'value' => false,
                     ]);
                 ?>
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md"><?= __('新しいパスワード（再入力）') ?></dt>
+            <dt class="col-md required"><?= __('Users.retype_password') ?></dt>
             <dd class="col-md">
                 <?php
                     // 新しいパスワード（再入力）
                     echo $this->Form->customControl('retype_password', [
                         'type' => 'password',
                         'label' => false,
-                        'required' => true, // required クラスが自動付与されないため追加
-                        'value' => false,   // バリデーションエラー時に入力欄をクリアする
+                        'value' => false,
                     ]);
                 ?>
             </dd>
         </dl>
     </div>
-    <div class="button-wrap py-4">
+    <div class="button-wrap my-2">
         <?php
             // キャンセル
             echo $this->Form->customButton(__('BTN-CANCEL'), [

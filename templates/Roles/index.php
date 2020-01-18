@@ -7,23 +7,22 @@
 <div class="w-100 mx-auto">
     <h2 class="mb-2"><?= __('Roles') ?></h2>
     <div class="btn-group mb-2">
-        <?= $this->Form->customButton(__('BTN-ADD'), [
+        <?php
             // 新規作成
-            'data-action' => '/roles/add',
-            'class' => 'btn-outline-primary btn-add'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-EDIT'), [
+            echo $this->Form->customButton(__('BTN-ADD'), [
+                'data-action' => '/roles/add',
+                'class' => 'btn-outline-primary btn-add'
+            ]);
             // 編集
-            'data-action' => '/roles/edit',
-            'class' => 'btn-outline-primary btn-edit'
-        ])
-        ?>
-        <?= $this->Form->customButton(__('BTN-DELETE'), [
+            echo $this->Form->customButton(__('BTN-EDIT'), [
+                'data-action' => '/roles/edit',
+                'class' => 'btn-outline-primary btn-edit'
+            ]);
             // 削除
-            'data-action' => '/roles/delete',
-            'class' => 'btn-outline-danger btn-delete'
-        ])
+            echo $this->Form->customButton(__('BTN-DELETE'), [
+                'data-action' => '/roles/delete',
+                'class' => 'btn-outline-danger btn-delete'
+            ]);
         ?>
     </div>
     <div class="pagination-wrap mb-2">
@@ -39,9 +38,9 @@
             <thead>
                 <tr>
                     <th><?= $this->Paginator->checkboxAll() ?></th>
-                    <th><?= $this->Paginator->sort('name', ['label' => __('名称')]) ?></th>
+                    <th><?= $this->Paginator->sort('name', ['label' => __('Roles.name')]) ?></th>
                     <th class="w-100">
-                        <?= $this->Paginator->sort('description', ['label' => __('説明')]) ?>
+                        <?= $this->Paginator->sort('description', ['label' => __('Roles.description')]) ?>
                     </th>
                 </tr>
             </thead>

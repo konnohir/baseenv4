@@ -6,7 +6,7 @@
 ?>
 <section>
     <h2 class="mb-2"><?= __('Profile') ?></h2>
-    <div class="dl-wrap mb-4">
+    <div class="dl-wrap mb-2">
         <dl class="row">
             <?php // メールアドレス ?>
             <dt class="col-md"><?= __('Users.email') ?></dt>
@@ -18,7 +18,7 @@
             <dd class="col-md"><?= h($user->role->name ?? null) ?></dd>
         </dl>
     </div>
-    <div class="btn-group mb-2">
+    <div class="btn-group my-2">
         <?php
             // パスワード変更
             echo $this->Form->customButton(__('BTN-PASSWORD-CHANGE'), [

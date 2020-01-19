@@ -4,23 +4,36 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\RoleDetail $roleDetail
  */
+$acoParentIds = array_column((array) $roleDetail->acos, 'parent_id', 'parent_id');
+$acoIds = array_column((array) $roleDetail->acos, 'id', 'id');
 ?>
 <section>
     <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
-    <table class="table mb-2 table-border border">
-        <tr>
-            <th><?= __('名称') ?></th>
-            <td><?= h($roleDetail->name) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('説明') ?></th>
-            <td><?= nl2br(h($roleDetail->description)) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('アクション') ?></th>
-            <td>
+    <div class="dl-wrap mb-4">
+        <dl class="row">
+            <?php // 名称 
+            ?>
+            <dt class="col-md"><?= __('RoleDetails.name') ?></dt>
+            <dd class="col-md"><?= h($roleDetail->name) ?></dd>
+        </dl>
+        <dl class="row">
+            <?php // 説明 ?>
+            <dt class="col-md"><?= __('RoleDetails.description') ?></dt>
+            <dd class="col-md"><?= h($roleDetail->description) ?></dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md"><?= __('RoleDetails.acos') ?></dt>
+            <dd class="col-md">
                 <ul style="list-style-type: none;padding-left:0">
                     <?php foreach ($acos as $controller) : ?>
+                        <?php
+                        if (
+                            !isset($acoParentIds[$controller->id]) &&
+                            !isset($acoIds[$controller->id])) {
+                                // 選択されていないコントローラーは表示しない
+                                continue;
+                            }
+                        ?>
                         <li>
                             <?=
                                 // コントローラー
@@ -29,11 +42,11 @@
                                     'multiple' => 'checkbox',
                                     'label' => false,
                                     'options' => [$controller->id => $controller->alias],
-                                    'default' => array_column((array) $roleDetail->acos, 'id'),
+                                    'default' => $acoIds,
                                     'readonly' => true,
                                     'hiddenField' => false,
                                     'data-type' => 'controller',
-                                ])
+                                ]);
                             ?>
                             <ul style="list-style-type: none">
                                 <?php foreach ($controller->children as $action) : ?>
@@ -45,7 +58,7 @@
                                                 'multiple' => 'checkbox',
                                                 'label' => false,
                                                 'options' => [$action->id => $action->alias],
-                                                'default' => array_column((array) $roleDetail->acos, 'id'),
+                                                'default' => $acoIds,
                                                 'readonly' => true,
                                                 'hiddenField' => false,
                                             ])
@@ -56,27 +69,30 @@
                         </li>
                     <?php endforeach ?>
                 </ul>
-            </td>
-        </tr>
-    </table>
-    <div class="btn-group mb-2">
-        <?= $this->Form->customButton(__('BTN-BACK'), [
-            // 戻る
-            'data-action' => '/roles',
+            </dd>
+        </dl>
+    </div>
+    <div class="btn-group my-2">
+        <?php
+        // 戻る
+        echo $this->Form->customButton(__('BTN-BACK'), [
+            'data-action' => '/role-details',
             'class' => 'btn-outline-secondary btn-cancel'
-        ]) ?>
-        <?= $this->Form->customButton(__('BTN-EDIT'), [
-            // 編集
+        ]);
+        // 編集
+        echo $this->Form->customButton(__('BTN-EDIT'), [
             'data-action' => '/role-details/edit',
             'data-id' => $roleDetail->id,
+            'data-lock' => $roleDetail->_lock,
             'class' => 'btn-outline-primary btn-edit'
-        ]) ?>
-        <?= $this->Form->customButton(__('BTN-DELETE'), [
-            // 削除
+        ]);
+        // 削除
+        echo $this->Form->customButton(__('BTN-DELETE'), [
             'data-action' => '/role-details/delete',
             'data-id' => $roleDetail->id,
             'data-lock' => $roleDetail->_lock,
             'class' => 'btn-outline-danger btn-delete'
-        ]) ?>
+        ]);
+        ?>
     </div>
 </section>

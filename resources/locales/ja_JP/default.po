@@ -70,6 +70,9 @@ msgstr "プロファイル"
 msgid "Password"
 msgstr "パスワード変更"
 
+msgid "Error"
+msgstr "システムエラー"
+
 ####################################
 # バリデーションンエラー (共通)
 ####################################
@@ -91,6 +94,12 @@ msgstr "{0}には自然数を入力してください。"
 msgid "E-V-UNIQUE"
 msgstr "入力した{0}は既に登録されています。"
 
+msgid "E-V-LOCK"
+msgstr "データが変更されているため、編集内容を保存できません。"
+
+msgid "E-V-WRONG-INPUT"
+msgstr "入力内容に誤りがあります。"
+
 ####################################
 # バリデーションンエラー (画面固有)
 ####################################
@@ -106,6 +115,45 @@ msgstr "新しいパスワードと同じ値を入力してください。"
 
 msgid "E-V-SAME-PASSWORD-MAIL"
 msgstr "新しいパスワードはメールアドレス以外の値を入力してください。"
+
+####################################
+# インフォメーションメッセージ (共通)
+####################################
+msgid "I-SAVE"
+msgstr "{0}を保存しました。"
+
+msgid "I-DELETE"
+msgstr "{0}を削除しました。"
+
+####################################
+# インフォメーションメッセージ (画面固有)
+####################################
+msgid "I-INITIAL-PASSWORD"
+msgstr "初期パスワードでログインしました。パスワードを変更してください。"
+
+msgid "I-EXPIRED-PASSWORD"
+msgstr "パスワードの有効期限が切れています。パスワードを変更してください。"
+
+msgid "I-PASSWORD-CHANGE"
+msgstr "パスワードを変更しました。"
+
+msgid "I-LOCK-ACCOUNT"
+msgstr "アカウントをロックしました。"
+
+msgid "I-UNLOCK-ACCOUNT"
+msgstr "アカウントロックを解除しました。"
+
+####################################
+# エラーメッセージ (画面固有)
+####################################
+msgid "E-LOGIN-FAILED"
+msgstr "入力内容に誤りがあります。"
+
+msgid "E-LOCK-ACCOUNT"
+msgstr "アカウントがロックされています。"
+
+msgid "I-UNLOCK-ACCOUNT"
+msgstr "アカウントロックを解除しました。"
 
 ####################################
 # カラム名
@@ -134,14 +182,36 @@ msgstr "アカウントロック"
 msgid "Users.password_issue"
 msgstr "パスワード発行"
 
+####################################
+
 msgid "Roles.name"
-msgstr "権限名称"
+msgstr "名称"
 
 msgid "Roles.description"
 msgstr "説明文"
 
+msgid "Roles.role_details"
+msgstr "説明詳細"
+
+####################################
+
+msgid "RoleDetails.parent_id"
+msgstr "親権限"
+
 msgid "RoleDetails.name"
-msgstr "権限名称"
+msgstr "名称"
 
 msgid "RoleDetails.description"
 msgstr "説明文"
+
+msgid "RoleDetails.acos"
+msgstr "アクション"
+
+####################################
+# ラベル
+####################################
+
+msgid "LABEL-SYSTEM-ERROR"
+msgstr "お手数ですが最初からやり直してください。"
+
+####################################

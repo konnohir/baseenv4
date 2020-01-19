@@ -30,12 +30,11 @@
     </div>
     <div class="btn-group my-2">
         <?php
+            // 戻る
             echo $this->Form->customButton(__('BTN-BACK'), [
-                // 戻る
                 'data-action' => '/users',
                 'class' => 'btn-outline-secondary btn-cancel'
             ]);
-            
             // 編集
             echo $this->Form->customButton(__('BTN-EDIT'), [
                 'data-action' => '/users/edit',
@@ -43,7 +42,6 @@
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-primary btn-edit'
             ]);
-            
             // パスワード再発行
             echo $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
                 'data-action' => '/users/password-issue',
@@ -51,23 +49,20 @@
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
-            
             // アカウントロック
             echo $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [
-                'data-action' => '/users/account-lock',
+                'data-action' => '/users/lock-account',
                 'data-id' => $user->id,
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
-            
             // アカウントロック解除
             echo $this->Form->customButton(__('BTN-ACCOUNT-UNLOCK'), [
-                'data-action' => '/users/account-unlock',
+                'data-action' => '/users/unlock-account',
                 'data-id' => $user->id,
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
-            
             // 削除
             echo $this->Form->customButton(__('BTN-DELETE'), [
                 'data-action' => '/users/delete',

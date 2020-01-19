@@ -57,7 +57,8 @@ class HomesController extends AppController
             if (isset($user->login_failed_count)) {
                 if ($user->login_failed_count >= 5) {
                     // ログイン失敗回数が規定値以上: ログアウトする
-                    $this->Flash->error(__('アカウントがロックされています。'));
+                    // E-LOCK-ACCOUNT: アカウントがロックされています。
+                    $this->Flash->error(__('E-LOCK-ACCOUNT'));
                     return $this->logout();
                 }
                 if ($user->login_failed_count >= 1) {
@@ -70,12 +71,14 @@ class HomesController extends AppController
             if (isset($user->password_expired)) {
                 if ($user->password_expired->diffInDays($user->created_at) === 0) {
                     // 初期パスワード: パスワード変更画面へ遷移する
-                    $this->Flash->success(__('初期パスワードでログインしました。パスワードを変更してください。'));
+                    // I-INITIAL-PASSWORD: 初期パスワードでログインしました。パスワードを変更してください。
+                    $this->Flash->success(__('I-INITIAL-PASSWORD'));
                     return $this->redirect('/password');
                 }
                 if ($user->password_expired->isPast()) {
                     // パスワード有効期限切れ: パスワード変更画面へ遷移する
-                    $this->Flash->success(__('パスワードの有効期限が切れています。パスワードを変更してください。'));
+                    // I-EXPIRED-PASSWORD: パスワードの有効期限が切れています。パスワードを変更してください。
+                    $this->Flash->success(__('I-EXPIRED-PASSWORD'));
                     return $this->redirect('/password');
                 }
             }
@@ -85,7 +88,8 @@ class HomesController extends AppController
         }
         if ($this->getRequest()->is('post') && !$result->isValid()) {
             // ログイン失敗
-            $errorMessage = __('入力内容に誤りがあります。');
+            // E-LOGIN-FAILED: 入力内容に誤りがあります。
+            $errorMessage = __('E-LOGIN-FAILED');
 
             // $user: ログインを試みたユーザー
             $user = $this->Users->find()
@@ -102,7 +106,8 @@ class HomesController extends AppController
                 }
                 if ($user->login_failed_count >= 5) {
                     // ログイン失敗回数が規定値以上: アカウントロックメッセージ表示
-                    $errorMessage = __('アカウントがロックされています。');
+                    // E-LOCK-ACCOUNT: アカウントがロックされています。
+                    $errorMessage = __('E-LOCK-ACCOUNT');
                 }
             }
             $this->Flash->error($errorMessage);
@@ -151,7 +156,8 @@ class HomesController extends AppController
 
             // DB保存成功時: プロファイル画面へ遷移
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('パスワードを変更しました。'));
+                // I-PASSWORD-CHANGE: パスワードを変更しました。
+                $this->Flash->success(__('I-PASSWORD-CHANGE'));
                 return $this->redirect(['action' => 'profile']);
             }
 

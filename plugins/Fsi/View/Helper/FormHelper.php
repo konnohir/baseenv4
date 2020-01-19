@@ -65,7 +65,6 @@ class FormHelper extends Helper
             $label = $options['customButton']['label'] ?? '';
             unset($options['customButton']['label']);
             $options['templates'] += [
-                // 'formGroup' => '{{label}}{{input}}<div class="input-group-append">{{button}}</div>'
                 'input' => '<div class="input-group"><input type="{{type}}" name="{{name}}"{{attrs}}/><div class="input-group-append">{{button}}</div></div>',
             ];
             $options['templateVars'] += [
@@ -74,17 +73,6 @@ class FormHelper extends Helper
             unset($options['customButton']);
         }
 
-        // 'inputContainer' => '<div class="input {{type}}{{required}}">{{content}}</div>',
-        // 'formGroup' => '{{label}}{{input}}',
-        // 'input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
-        // 'label' => '<label{{attrs}}>{{text}}</label>',
-
-
-        // $options['templates'] += [
-        //     // 'inputContainer' => '<div style="background:#eee" class=" border-bottom input-group {{type}}{{required}}">{{content}}</div>',
-        //     'inputContainer' => '<div style="background:#eee" class=" border-bottom form-row {{type}}{{required}}">{{content}}</div>',
-        //     'formGroup' => '<div class="col-auto" style="width:12em">{{label}}</div><div class="col">{{input}}</div>',
-        // ];
         $multiple = $options['multiple'] ?? null;
         $type = $options['type'] ?? null;
         if ($multiple !== 'checkbox' && $type !== 'checkbox' && $type !== 'radio'/* && !isset($options['options'])*/) {

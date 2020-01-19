@@ -125,16 +125,12 @@ class MCompaniesController extends AppController
 
             // DB保存成功時: 詳細画面へ遷移
             if ($this->MCompanies->save($mCompany)) {
-                $this->Flash->success(__('{0}を保存しました。', __($this->title)));
+                $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $mCompany->id]);
             }
 
             // DB保存失敗時: 画面を再表示
-            $errorMessage = __('入力内容に誤りがあります。');
-            if ($mCompany->getError('_lock')) {
-                $errorMessage = current($mCompany->getError('_lock'));
-            }
-            $this->Flash->error($errorMessage);
+            $this->failed($mCompany);
         }
 
         // $tagList: タグ一覧
@@ -180,13 +176,7 @@ class MCompaniesController extends AppController
 
                 // DB保存失敗時: ロールバック
                 if (!$this->MCompanies->save($mCompany)) {
-                    $errorMessage = __('入力内容に誤りがあります。');
-                    $errorMessage .= "\n・" . current(current($mCompany->getErrors()));
-                    if ($mCompany->getError('_lock')) {
-                        $errorMessage = current($mCompany->getError('_lock'));
-                    }
-                    $this->Flash->error($errorMessage);
-                    return false;
+                    return $this->failed($mCompany, true);
                 }
 
                 // DB保存成功時: 次のデータの処理へ進む
@@ -229,18 +219,13 @@ class MCompaniesController extends AppController
 
                 // DB保存失敗時: ロールバック
                 if (!$this->MCompanies->save($mCompany)) {
-                    $errorMessage = __('入力内容に誤りがあります。');
-                    if ($mCompany->getError('_lock')) {
-                        $errorMessage = current($mCompany->getError('_lock'));
-                    }
-                    $this->Flash->error($errorMessage);
-                    return false;
+                    return $this->failed($mCompany);
                 }
 
                 // DB保存成功時: 次のデータの処理へ進む
             }
 
-            $this->Flash->success(__('{0}を削除しました。', __($this->title)));
+            $this->Flash->success(__('I-DELETE', __($this->title)));
             return true;
         });
 

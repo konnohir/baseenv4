@@ -40,9 +40,9 @@ if (Configure::read('debug')) :
 endif;
 ?>
 <section>
-    <h2><?= __('システムエラー') ?></h2>
+    <h2><?= __('Error') ?></h2>
     <p class="error">
-        <?= __('お手数ですが最初からやり直してください。') ?>
+        <?= __('LABEL-SYSTEM-ERROR') ?>
     </p>
     <small>
         <?= $code ?> <?= __d('cake', $message) ?>

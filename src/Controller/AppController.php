@@ -68,7 +68,8 @@ class AppController extends Controller
      * @return bool false
      */
     protected function failed($entity, $isShowDetail = false) {
-        $errorMessage = __('入力内容に誤りがあります。');
+        // E-V-WRONG-INPUT: 入力内容に誤りがあります。
+        $errorMessage = __('E-V-WRONG-INPUT');
         if ($isShowDetail) {
             $errorMessage .= "\n・" . current(current($entity->getErrors()));
         }

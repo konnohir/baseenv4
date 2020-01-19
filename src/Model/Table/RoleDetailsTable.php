@@ -54,7 +54,7 @@ class RoleDetailsTable extends AppTable
             ->scalar('name')
             ->maxLength('name', 45)
             ->requirePresence('name', 'create')
-            ->notEmptyString('name', __('{0}は必須です。', '名称'));
+            ->notEmptyString('name', __('E-V-REQUIRED', __('RoleDetails.name')));
 
         // 説明
         $validator

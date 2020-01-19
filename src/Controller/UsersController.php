@@ -113,7 +113,7 @@ class UsersController extends AppController
 
             // DB保存成功時: 詳細画面へ遷移
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('{0}を保存しました。', __($this->title)));
+                $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $user->id]);
             }
 
@@ -132,7 +132,7 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null
      */
-    public function accountLock()
+    public function lockAccount()
     {
         // $targets: 対象データの配列 (array)
         $targets = $this->getRequest()->getData('targets');
@@ -158,7 +158,7 @@ class UsersController extends AppController
                 return $this->failed($user);
             }
 
-            $this->Flash->success(__('アカウントをロックしました。'));
+            $this->Flash->success(__('I-LOCK-ACCOUNT'));
             return true;
         });
 
@@ -171,7 +171,7 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null
      */
-    public function accountUnlock()
+    public function unlockAccount()
     {
         // $targets: 対象データの配列 (array)
         $targets = $this->getRequest()->getData('targets');
@@ -197,7 +197,7 @@ class UsersController extends AppController
                 return $this->failed($user);
             }
 
-            $this->Flash->success(__('アカウントロックを解除しました。'));
+            $this->Flash->success(__('I-UNLOCK-ACCOUNT'));
             return true;
         });
 
@@ -289,7 +289,7 @@ class UsersController extends AppController
                 return $this->failed($user);
             }
 
-            $this->Flash->success(__('{0}を削除しました。', __($this->title)));
+            $this->Flash->success(__('I-DELETE', __($this->title)));
             return true;
         });
 

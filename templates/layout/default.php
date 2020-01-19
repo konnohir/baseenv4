@@ -32,7 +32,7 @@
     <main class="container-fluid">
         <div class="row flex-md-nowrap">
             <div class="col-md side-menu bg-dark text-white border-top">
-                <ul class="p-0 my-4" style="font-size:80%;list-style-type: none">
+                <ul class="p-0 my-4" style="list-style-type: none">
                     <li>新規作成</li>
                     <li>編集</li>
                     <li>パスワード再発行</li>

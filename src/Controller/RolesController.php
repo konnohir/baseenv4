@@ -133,7 +133,7 @@ class RolesController extends AppController
 
             // DB保存成功時: 詳細画面へ遷移
             if ($result) {
-                $this->Flash->success(__('{0}を保存しました。', __($this->title)));
+                $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $role->id]);
             }
 
@@ -178,7 +178,7 @@ class RolesController extends AppController
                 return $this->failed($role);
             }
 
-            $this->Flash->success(__('{0}を削除しました。', __($this->title)));
+            $this->Flash->success(__('I-DELETE', __($this->title)));
             return true;
         });
 

@@ -9,7 +9,7 @@
     <div class="card mb-2">
         <div class="card-body py-1">
             <?= $this->Form->create() ?>
-            <?= $this->Form->customControl('filter.email', ['label' => 'Users.email']) ?>
+            <?= $this->Form->customControl('filter.email', ['label' => __('Users.email')]) ?>
             <?= $this->Form->customButton(__('BTN-CLEAR'), ['data-action' => '/users', 'class' => 'btn-outline-secondary btn-clear']) ?>
             <?= $this->Form->customButton(__('BTN-SEARCH'), ['type' => 'submit', 'class' => 'btn-outline-info btn-search']) ?>
             <?= $this->Form->end() ?>
@@ -28,18 +28,18 @@
                 'class' => 'btn-outline-primary btn-edit'
             ]);
             // パスワード再発行
-            $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
+            echo $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
                 'data-action' => '/users/password-issue',
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // アカウントロック
             echo $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [
-                'data-action' => '/users/account-lock',
+                'data-action' => '/users/lock-account',
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // アカウントロック解除
             echo $this->Form->customButton(__('BTN-ACCOUNT-UNLOCK'), [
-                'data-action' => '/users/account-unlock',
+                'data-action' => '/users/unlock-account',
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // 削除

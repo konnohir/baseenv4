@@ -51,17 +51,16 @@ class MCompaniesTable extends AppTable
             ->scalar('code')
             ->maxLength('code', 6)
             ->requirePresence('code', 'create')
-            ->notEmptyString('code', __('{0}は必須です。', '企業コード'))
+            ->notEmptyString('code', __('E-V-REQUIRE', '企業コード'))
             ->naturalNumber('code')
-            ->add('code', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => __('{0}には重複しない値を入力してください。', 'コード')])
-            ->add('code', 'nop', ['on' => 'update', 'message' => __('{0}は編集できません。', 'コード')]);
+            ->add('code', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => __('E-V-UNIQUE', 'コード')]);
 
         // 名称
         $validator
             ->scalar('name')
             ->maxLength('name', 100)
             ->requirePresence('name', 'create')
-            ->notEmptyString('name', __('{0}は必須です。', '名称'));
+            ->notEmptyString('name', __('E-V-REQUIRE', '名称'));
 
         // 電話番号
         $validator

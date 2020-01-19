@@ -124,7 +124,7 @@ class AppTable extends Table
                 $entity->_lock = null;
                 $success = $entity;
             }else {
-                $entity->setError('_lock', __('データが変更されているため、編集内容を保存できません。'));
+                $entity->setError('_lock', __('E-V-LOCK'));
             }
         }
         $statement->closeCursor();

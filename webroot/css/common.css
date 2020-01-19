@@ -139,11 +139,16 @@ body>header {
     }
 }
 
-/** Common style */
-
+/** fix style */
 form>.input {
     margin-bottom: 1em;
 }
+
+.form-check {
+    padding-left: 0;
+}
+
+/** Common style */
 
 .error-message {
     color: #cc0000;

@@ -37,7 +37,7 @@
                 <tr>
                     <th><?= $this->Paginator->checkboxAll() ?></th>
                     <th class="w-100">
-                        <?= __('権限詳細') ?>
+                        <?= __('RoleDetails.name') ?>
                     </th>
                 </tr>
             </thead>

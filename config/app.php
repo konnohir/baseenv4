@@ -151,7 +151,11 @@ return [
     'Error' => [
         'errorLevel' => E_ALL,
         'exceptionRenderer' => ExceptionRenderer::class,
-        'skipLog' => [],
+        'skipLog' => [
+            \Authorization\Exception\ForbiddenException::class,
+            \Cake\Http\Exception\MissingControllerException::class,
+            \Cake\Controller\Exception\MissingActionException::class,
+        ],
         'log' => true,
         'trace' => false,
     ],
@@ -305,14 +309,14 @@ return [
             'path' => LOGS,
             'file' => 'info',
             'scopes' => false,
-            'levels' => ['notice', 'info', 'debug'],
+            'levels' => ['info', 'debug'],
         ],
         'error' => [
             'className' => FileLog::class,
             'path' => LOGS,
             'file' => 'error',
             'scopes' => false,
-            'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
+            'levels' => ['notice', 'warning', 'error', 'critical', 'alert', 'emergency'],
         ],
         // To enable this dedicated query log, you need set your datasource's log flag to true
         'queries' => [

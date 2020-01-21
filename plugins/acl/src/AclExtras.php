@@ -235,7 +235,7 @@ class AclExtras
      */
     protected function _pluginAlias($plugin)
     {
-        return preg_replace('/\//', '\\', Inflector::camelize($plugin));
+        return preg_replace('/\//', '\\', Inflector::camelize((string)$plugin));
     }
 
     /**
@@ -348,11 +348,11 @@ class AclExtras
     public function getControllerList($plugin = null, $prefix = null)
     {
         if (!$plugin) {
-            $path = App::path('Controller' . (empty($prefix) ? '' : DS . Inflector::camelize($prefix)));
+            $path = App::classPath('Controller' . (empty($prefix) ? '' : DS . Inflector::camelize($prefix)));
             $dir = new Folder($path[0]);
             $controllers = $dir->find('.*Controller\.php');
         } else {
-            $path = App::path('Controller' . (empty($prefix) ? '' : DS . Inflector::camelize($prefix)), $plugin);
+            $path = App::classPath('Controller' . (empty($prefix) ? '' : DS . Inflector::camelize($prefix)), $plugin);
             $dir = new Folder($path[0]);
             $controllers = $dir->find('.*Controller\.php');
         }
@@ -502,7 +502,7 @@ class AclExtras
         $namespace = preg_replace('/(.*)Controller\//', '', $className);
         $namespace = preg_replace('/\//', '\\', $namespace);
         $namespace = preg_replace('/\.php/', '', $namespace);
-        $prefixPath = preg_replace('/\//', '\\', Inflector::camelize($prefixPath));
+        $prefixPath = preg_replace('/\//', '\\', Inflector::camelize((string)$prefixPath));
         if (!$pluginPath) {
             $rootNamespace = Configure::read('App.namespace');
         } else {

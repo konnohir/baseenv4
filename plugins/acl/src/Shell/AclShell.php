@@ -56,7 +56,7 @@ class AclShell extends Shell
      *
      * @return void
      */
-    public function startup()
+    public function startup(): void
     {
         parent::startup();
         if (isset($this->params['connection'])) {
@@ -365,7 +365,7 @@ class AclShell extends Shell
      *
      * @return ConsoleOptionParser
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
 

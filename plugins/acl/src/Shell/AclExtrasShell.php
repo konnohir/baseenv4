@@ -56,7 +56,7 @@ class AclExtrasShell extends Shell
      *
      * @return void
      */
-    public function startup()
+    public function startup(): void
     {
         parent::startup();
         $this->AclExtras->startup();
@@ -100,7 +100,7 @@ class AclExtrasShell extends Shell
      *
      * @return \Cake\Console\ConsoleOptionParser
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
 

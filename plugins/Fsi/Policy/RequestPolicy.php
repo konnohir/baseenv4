@@ -3,12 +3,17 @@ namespace Fsi\Policy;
 
 use Authorization\Policy\RequestPolicyInterface;
 use Cake\Http\ServerRequest;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\TableRegistry;
+use Cake\Core\Configure;
+use Cake\Utility\Inflector;
 
+/**
+ * RequestPolicy class
+ * 
+ * Note: Plugin and Prefix parameters are not supported.
+ */
 class RequestPolicy implements RequestPolicyInterface
 {
-    use ModelAwareTrait;
-
     /**
      * Method to check if the request can be accessed
      *
@@ -18,24 +23,54 @@ class RequestPolicy implements RequestPolicyInterface
      */
     public function canAccess($identity, ServerRequest $request)
     {
-        if (!isset($identity->role_id)) {
+        if (!isset($identity)) {
+            // Authentication middleware handle this request
             return true;
         }
 
-        if ($identity->role_id === 1) {
-            return true;
+        if (Configure::read('debug')) {
+            // Allow DebugKit plugin access
+            if ($request->getParam('plugin') === 'DebugKit') {
+                return true;
+            }
+        }
+        return $this->check($identity->role_id, [
+            'controller' => $request->getParam('controller'),
+            'action' => $request->getParam('action'),
+        ]);
+    }
+
+    /**
+     * Permission check
+     *
+     * @param int $roleId
+     * @param array $routes
+     * @return bool
+     */
+    public static function check($roleId, $routes)
+    {
+        if (!isset($roleId)) {
+            return false;
         }
 
-        if ($request->getParam('plugin') === 'debug_kit') {
-            return true;
+        if (Configure::read('debug')) {
+            // Allow Special role access
+            if ($roleId === 1) {
+                return true;
+            }
         }
+
+        $controller = Inflector::camelize($routes['controller']) ?? '';
+        $action = $routes['action'] ?? 'index';
         
-        $controller = $request->getParam('controller');
-        $action = $request->getParam('action');
+        if (!is_callable('App\\Controller\\' . $controller . 'Controller::'. $action)) {
+            // will be raised NotFoundException
+            return true;
+        }
 
-        $this->loadModel('Roles');
+        $model = TableRegistry::getTableLocator()->get('Roles');
 
-        $count = $this->Roles->find()
+        $count = $model->find()
             ->join([
                 'table' => 'role_details_roles',
                 'alias' => 'a',
@@ -78,7 +113,7 @@ class RequestPolicy implements RequestPolicyInterface
                 ],
             ])
             ->where([
-                'Roles.id' => $identity->role_id,
+                'Roles.id' => $roleId,
                 'OR' => [
                     [
                         'e.alias' => $controller,

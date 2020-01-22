@@ -35,7 +35,9 @@ class AppView extends View
     {
         $this->loadHelper('Authentication.Identity');
         $this->loadHelper('Fsi.Paginator');
+        $this->loadHelper('Fsi.Html');
         $this->loadHelper('Fsi.Form');
+        $this->loadHelper('Fsi.Permission');
     }
     
     /**

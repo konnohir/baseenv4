@@ -10,6 +10,8 @@ use Cake\Http\Exception\NotFoundException;
 /**
  * RoleDetails Controller
  * 権限詳細マスタ
+ * 
+ * @property \App\Model\Table\RoleDetailsTable $RoleDetails
  */
 class RoleDetailsController extends AppController
 {

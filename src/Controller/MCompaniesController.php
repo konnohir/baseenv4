@@ -10,6 +10,8 @@ use Cake\Http\Exception\NotFoundException;
 /**
  * MCompanies Controller
  * 企業マスタ
+ * 
+ * @property \App\Model\Table\MCompaniesTable $MCompanies
  */
 class MCompaniesController extends AppController
 {

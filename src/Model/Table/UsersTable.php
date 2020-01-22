@@ -274,6 +274,17 @@ class UsersTable extends AppTable
     }
 
     /**
+     * ユーザー認証のためのモデルを取得する
+     */
+    public function findAuthentication(Query $query, array $options)
+    {
+        // ここで取得したエンティティは認証後、セッションに格納される
+        // パスワード未発行のユーザーはログイン不可
+        $query->where(['password is not null']);
+        return $query;
+    }
+
+    /**
      * エンティティ編集
      * 
      * @param \Cake\ORM\Entity $entity エンティティ

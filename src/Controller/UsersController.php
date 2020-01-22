@@ -10,6 +10,8 @@ use Cake\Http\Exception\NotFoundException;
 /**
  * Users Controller
  * ユーザーマスタ
+ * 
+ * @property \App\Model\Table\UsersTable $Users
  */
 class UsersController extends AppController
 {

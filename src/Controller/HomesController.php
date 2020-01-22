@@ -10,6 +10,8 @@ use Cake\I18n\FrozenDate;
 /**
  * Homes Controller
  * ホーム
+ * 
+ * @property \App\Model\Table\UsersTable $Users
  */
 class HomesController extends AppController
 {

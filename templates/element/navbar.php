@@ -10,29 +10,64 @@ use Cake\Core\Configure;
 <nav class="collapse navbar-collapse" id="navbar">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-            <a class="nav-link" href="/m-companies"><?= __('MCompanies') ?></a>
+            <?php
+                // 企業マスタ
+                echo $this->Html->customLink(__('MCompanies'), ['controller' => 'MCompanies'], [
+                    'class' => 'nav-link'
+                ]);
+            ?>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/users"><?= __('Users') ?></a>
+            <?php
+                // ユーザーマスタ
+                echo $this->Html->customLink(__('Users'), ['controller' => 'Users'], [
+                    'class' => 'nav-link'
+                ]);
+            ?>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/roles"><?= __('Roles') ?></a>
+            <?php
+                // 権限マスタ
+                echo $this->Html->customLink(__('Roles'), ['controller' => 'Roles'], [
+                    'class' => 'nav-link'
+                ]);
+            ?>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/role-details"><?= __('RoleDetails') ?></a>
+            <?php
+                // 権限詳細マスタ
+                echo $this->Html->customLink(__('RoleDetails'), ['controller' => 'RoleDetails'], [
+                    'class' => 'nav-link'
+                ]);
+            ?>
         </li>
     </ul>
     <ul class="navbar-nav ml-auto">
         <?php if (Configure::read('debug')): ?>
         <li class="nav-item">
-            <a class="nav-link" href="/homes/refresh" title="Cache clear (debug)">🔄</a>
+            <?php
+                // キャッシュクリア (デバッグ用)
+                echo $this->Html->customLink('🔄', ['controller' => 'Homes', 'action' => 'refresh'], [
+                    'class' => 'nav-link'
+                ]);
+            ?>
         </li>
         <?php endif ?>
         <li class="nav-item">
-            <a class="nav-link" href="/profile"><?= $this->Identity->get('email') ?></a>
+            <?php
+                // プロファイル
+                echo $this->Html->customLink($this->Identity->get('email'), ['controller' => 'Homes', 'action' => 'profile'], [
+                    'class' => 'nav-link'
+                ]);
+            ?>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/logout"><?= __('Logout') ?></a>
+            <?php
+                // ログアウト
+                echo $this->Html->customLink(__('BTN-LOGOUT'), ['controller' => 'Homes', 'action' => 'logout'], [
+                    'class' => 'nav-link'
+                ]);
+            ?>
         </li>
     </ul>
 </nav>

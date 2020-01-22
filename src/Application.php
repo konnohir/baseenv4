@@ -148,7 +148,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
                 'username' => 'email',
                 'password' => 'password'
             ],
-            'loginUrl' => '/login'
+            'loginUrl' => '/login',
         ]);
 
         // Load identifiers
@@ -156,7 +156,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'fields' => [
                 'username' => 'email',
                 'password' => 'password'
-            ]
+            ],
+            'resolver' => [
+                'className' => 'Authentication.Orm',
+                'finder' => 'authentication'
+            ],
         ]);
 
         return $service;

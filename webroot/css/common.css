@@ -1,29 +1,17 @@
-/** Tag Common */
+@charset "utf-8";
+/** Common */
 
 body {
     min-width: 320px;
     overflow-y: scroll;
 }
 
-h1 {
-    font-size: 100%;
-    font-weight: normal;
-    margin: 0;
-}
-
-h2 {
+h1, h2, h3 {
     font-size: 150%;
-    font-weight: normal;
     margin: 0;
 }
 
-h3 {
-    font-size: 100%;
-    font-weight: normal;
-    margin: 0;
-}
-
-/** customTable  */
+/** Custom table */
 
 .table-wrap {
     display: block;
@@ -90,11 +78,11 @@ h3 {
     clear: both;
 }
 
-.pagination {
+.pagination-wrap .pagination {
     margin-bottom: 0;
 }
 
-/** customDl */
+/** Custom list */
 
 .dl-wrap {
     border-top: solid 1px rgb(222, 226, 230);
@@ -123,42 +111,7 @@ h3 {
     font-weight: normal;
 }
 
-/** Common layout */
-
-body>header {
-    min-height: 40px;
-}
-
-.nav-item:hover {
-    background: darkslategray;
-}
-
-@media (min-width: 768px) {
-    .side-menu {
-        flex: 0 0 139px;
-    }
-}
-
-/** fix style */
-form>.input {
-    margin-bottom: 1em;
-}
-
-.form-check {
-    padding-left: 0;
-}
-
-/** Common style */
-
-.error-message {
-    color: #cc0000;
-    font-size: 85%;
-}
-
-.required label::after, dt.required::after {
-    color: #cc0000;
-    content: '*';
-}
+/** Button field wrap */
 
 .button-wrap {
     text-align: center;
@@ -170,16 +123,56 @@ form>.input {
     letter-spacing: normal;
 }
 
+/** Global lyout */
+
+body>header h1 {
+    font-size: 100%;
+    line-height: 30px;
+    height: 40px;
+}
+
+body>header .nav-item:hover {
+    background: darkslategray;
+}
+
+@media (min-width: 768px) {
+    .side-menu {
+        flex: 0 0 139px;
+    }
+}
+
+/** Form */
+
+form>.input {
+    margin-bottom: 1em;
+}
+
+.form-check {
+    padding-left: 0;
+}
+
+.error-message {
+    color: #cc0000;
+    font-size: 85%;
+}
+
+.required label::after, dt.required::after {
+    color: #cc0000;
+    content: '*';
+}
+
 /** Page */
 
 .view, .add, .edit, .Homes.profile, .Homes.password {
     width: 50%;
+    min-width: 722px;
     margin: 0 auto;
 }
 
 @media (max-width: 767px) {
     .view, .add, .edit, .Homes.profile, .Homes.password {
         width: 100%;
+        min-width: auto;
     }
 }
 

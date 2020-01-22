@@ -23,7 +23,7 @@ class NoticesTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->setTable('Notices');
+        $this->setTable('notices');
         $this->setDisplayField('message');
         $this->setPrimaryKey('id');
     }

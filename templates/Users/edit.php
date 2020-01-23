@@ -43,7 +43,7 @@
     <div class="button-wrap py-4">
         <?= $this->Form->customButton(__('BTN-CANCEL'), [
             // キャンセル
-            'data-action' => '/users',
+            'data-action' => ['controller' => 'Users', 'action' => 'index'],
             'class' => 'btn-secondary btn-cancel'
         ]) ?>
         <?= $this->Form->customButton(__('BTN-SAVE'), [

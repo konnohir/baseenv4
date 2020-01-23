@@ -30,7 +30,6 @@ use Fsi\Policy\RequestPolicy;
  */
 class HtmlHelper extends Helper
 {
-
     /**
      * Other helpers used by FormHelper
      *

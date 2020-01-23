@@ -22,7 +22,7 @@
         <?php
             // パスワード変更
             echo $this->Form->customButton(__('BTN-PASSWORD-CHANGE'), [
-                'data-action' => '/password',
+                'data-action' => ['controller' => 'password', 'action' => 'index'],
                 'class' => 'btn-outline-primary btn-jump'
             ])
         ?>

@@ -68,19 +68,19 @@ $roleIds = array_column((array) $role->role_details, 'id', 'id');
         <?php
         // 戻る
         echo $this->Form->customButton(__('BTN-BACK'), [
-            'data-action' => '/roles',
+            'data-action' => ['controller' => 'Roles', 'action' => 'index'],
             'class' => 'btn-outline-secondary btn-cancel'
         ]);
         // 編集
         echo $this->Form->customButton(__('BTN-EDIT'), [
-            'data-action' => '/roles/edit',
+            'data-action' => ['controller' => 'Roles', 'action' => 'edit'],
             'data-id' => $role->id,
             'data-lock' => $role->_lock,
             'class' => 'btn-outline-primary btn-edit'
         ]);
         // 削除
         echo $this->Form->customButton(__('BTN-DELETE'), [
-            'data-action' => '/roles/delete',
+            'data-action' => ['controller' => 'Roles', 'action' => 'delete'],
             'data-id' => $role->id,
             'data-lock' => $role->_lock,
             'class' => 'btn-outline-danger btn-delete'

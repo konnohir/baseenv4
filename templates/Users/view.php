@@ -32,40 +32,40 @@
         <?php
             // 戻る
             echo $this->Form->customButton(__('BTN-BACK'), [
-                'data-action' => '/users',
+                'data-action' => ['controller' => 'Users', 'action' => 'index'],
                 'class' => 'btn-outline-secondary btn-cancel'
             ]);
             // 編集
             echo $this->Form->customButton(__('BTN-EDIT'), [
-                'data-action' => '/users/edit',
+                'data-action' => ['controller' => 'Users', 'action' => 'edit'],
                 'data-id' => $user->id,
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-primary btn-edit'
             ]);
             // パスワード再発行
             echo $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
-                'data-action' => '/users/password-issue',
+                'data-action' => ['controller' => 'Users', 'action' => 'passwordIssue'],
                 'data-id' => $user->id,
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // アカウントロック
             echo $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [
-                'data-action' => '/users/lock-account',
+                'data-action' => ['controller' => 'Users', 'action' => 'lockAccount'],
                 'data-id' => $user->id,
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // アカウントロック解除
             echo $this->Form->customButton(__('BTN-ACCOUNT-UNLOCK'), [
-                'data-action' => '/users/unlock-account',
+                'data-action' => ['controller' => 'Users', 'action' => 'unlockAccount'],
                 'data-id' => $user->id,
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // 削除
             echo $this->Form->customButton(__('BTN-DELETE'), [
-                'data-action' => '/users/delete',
+                'data-action' => ['controller' => 'Users', 'action' => 'delete'],
                 'data-id' => $user->id,
                 'data-lock' => $user->_lock,
                 'class' => 'btn-outline-danger btn-delete'

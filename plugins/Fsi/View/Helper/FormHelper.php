@@ -37,6 +37,12 @@ use Cake\View\View;
  */
 class FormHelper extends Helper
 {
+    /**
+     * Other helpers used by FormHelper
+     *
+     * @var array
+     */
+    public $helpers = ['Url', 'Html', 'Permission'];
 
     public function __construct(View $view, array $config = [])
     {
@@ -47,6 +53,14 @@ class FormHelper extends Helper
 
     public function customButton(string $fieldName, array $options = []): string
     {
+        if (isset($options['data-action'])) {
+            if (is_array($options['data-action'])) {
+                if (!$this->Permission->check($options['data-action'])) {
+                    return '';
+                }
+            }
+            $options['data-action'] = $this->Url->build($options['data-action']);
+        }
 
         $options += [
             'type' => 'button',

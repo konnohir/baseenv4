@@ -10,7 +10,7 @@
         <div class="card-body py-1">
             <?= $this->Form->create() ?>
             <?= $this->Form->customControl('filter.email', ['label' => __('Users.email')]) ?>
-            <?= $this->Form->customButton(__('BTN-CLEAR'), ['data-action' => '/users', 'class' => 'btn-outline-secondary btn-clear']) ?>
+            <?= $this->Form->customButton(__('BTN-CLEAR'), ['data-action' => ['controller' => 'Users', 'action' => 'index'], 'class' => 'btn-outline-secondary btn-clear']) ?>
             <?= $this->Form->customButton(__('BTN-SEARCH'), ['type' => 'submit', 'class' => 'btn-outline-info btn-search']) ?>
             <?= $this->Form->end() ?>
         </div>
@@ -19,32 +19,32 @@
         <?php
             // 新規作成
             echo $this->Form->customButton(__('BTN-ADD'), [
-                'data-action' => '/users/add',
+                'data-action' => ['controller' => 'Users', 'action' => 'add'],
                 'class' => 'btn-outline-primary btn-add'
             ]);
             // 編集
             echo $this->Form->customButton(__('BTN-EDIT'), [
-                'data-action' => '/users/edit',
+                'data-action' => ['controller' => 'Users', 'action' => 'edit'],
                 'class' => 'btn-outline-primary btn-edit'
             ]);
             // パスワード再発行
             echo $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
-                'data-action' => '/users/password-issue',
+                'data-action' => ['controller' => 'Users', 'action' => 'passwordIssue'],
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // アカウントロック
             echo $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [
-                'data-action' => '/users/lock-account',
+                'data-action' => ['controller' => 'Users', 'action' => 'lockAccount'],
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // アカウントロック解除
             echo $this->Form->customButton(__('BTN-ACCOUNT-UNLOCK'), [
-                'data-action' => '/users/unlock-account',
+                'data-action' => ['controller' => 'Users', 'action' => 'unlockAccount'],
                 'class' => 'btn-outline-success btn-jump-api'
             ]);
             // 削除
             echo $this->Form->customButton(__('BTN-DELETE'), [
-                'data-action' => '/users/delete',
+                'data-action' => ['controller' => 'Users', 'action' => 'delete'],
                 'class' => 'btn-outline-danger btn-delete'
             ]);
         ?>

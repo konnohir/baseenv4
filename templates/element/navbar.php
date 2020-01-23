@@ -12,7 +12,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // 企業マスタ
-                echo $this->Html->customLink(__('MCompanies'), ['controller' => 'MCompanies'], [
+                echo $this->Html->customLink(__('MCompanies'), ['controller' => 'MCompanies', 'action' => 'index'], [
                     'class' => 'nav-link'
                 ]);
             ?>
@@ -20,7 +20,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // ユーザーマスタ
-                echo $this->Html->customLink(__('Users'), ['controller' => 'Users'], [
+                echo $this->Html->customLink(__('Users'), ['controller' => 'Users', 'action' => 'index'], [
                     'class' => 'nav-link'
                 ]);
             ?>
@@ -28,7 +28,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // 権限マスタ
-                echo $this->Html->customLink(__('Roles'), ['controller' => 'Roles'], [
+                echo $this->Html->customLink(__('Roles'), ['controller' => 'Roles', 'action' => 'index'], [
                     'class' => 'nav-link'
                 ]);
             ?>
@@ -36,7 +36,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // 権限詳細マスタ
-                echo $this->Html->customLink(__('RoleDetails'), ['controller' => 'RoleDetails'], [
+                echo $this->Html->customLink(__('RoleDetails'), ['controller' => 'RoleDetails', 'action' => 'index'], [
                     'class' => 'nav-link'
                 ]);
             ?>

@@ -95,7 +95,7 @@ msgid "E-V-UNIQUE"
 msgstr "入力した{0}は既に登録されています。"
 
 msgid "E-V-LOCK"
-msgstr "データが変更されているため、編集内容を保存できません。"
+msgstr "データが変更されているため、保存できません。"
 
 msgid "E-V-WRONG-INPUT"
 msgstr "入力内容に誤りがあります。"
@@ -147,13 +147,10 @@ msgstr "アカウントロックを解除しました。"
 # エラーメッセージ (画面固有)
 ####################################
 msgid "E-LOGIN-FAILED"
-msgstr "入力内容に誤りがあります。"
+msgstr "ログインに失敗しました。"
 
 msgid "E-LOCK-ACCOUNT"
 msgstr "アカウントがロックされています。"
-
-msgid "I-UNLOCK-ACCOUNT"
-msgstr "アカウントロックを解除しました。"
 
 ####################################
 # カラム名

@@ -76,19 +76,19 @@ $acoIds = array_column((array) $roleDetail->acos, 'id', 'id');
         <?php
         // 戻る
         echo $this->Form->customButton(__('BTN-BACK'), [
-            'data-action' => '/role-details',
+            'data-action' => ['controller' => 'RoleDetails', 'action' => 'index'],
             'class' => 'btn-outline-secondary btn-cancel'
         ]);
         // 編集
         echo $this->Form->customButton(__('BTN-EDIT'), [
-            'data-action' => '/role-details/edit',
+            'data-action' => ['controller' => 'RoleDetails', 'action' => 'edit'],
             'data-id' => $roleDetail->id,
             'data-lock' => $roleDetail->_lock,
             'class' => 'btn-outline-primary btn-edit'
         ]);
         // 削除
         echo $this->Form->customButton(__('BTN-DELETE'), [
-            'data-action' => '/role-details/delete',
+            'data-action' => ['controller' => 'RoleDetails', 'action' => 'delete'],
             'data-id' => $roleDetail->id,
             'data-lock' => $roleDetail->_lock,
             'class' => 'btn-outline-danger btn-delete'

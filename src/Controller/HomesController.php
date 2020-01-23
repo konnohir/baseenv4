@@ -126,7 +126,7 @@ class HomesController extends AppController
         // $id: ログイン中のユーザーのユーザーID
         $id = $this->getRequest()->getAttribute('identity')->id;
 
-        // $user: ユーザーマスタ
+        // $user: ユーザー
         $user = $this->Users->find('detail', compact('id'))->first();
         if ($user === null) {
             return $this->logout();
@@ -145,7 +145,7 @@ class HomesController extends AppController
         // $id: ログイン中のユーザーのユーザーID
         $id = $this->getRequest()->getAttribute('identity')->id;
 
-        // $user: ユーザーマスタ
+        // $user: ユーザー
         $user = $this->Users->find('detail', compact('id'))->first();
         if ($user === null) {
             return $this->logout();

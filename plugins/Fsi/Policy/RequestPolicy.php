@@ -1,4 +1,5 @@
 <?php
+
 namespace Fsi\Policy;
 
 use Authorization\Policy\RequestPolicyInterface;
@@ -14,6 +15,11 @@ use Cake\Utility\Inflector;
  */
 class RequestPolicy implements RequestPolicyInterface
 {
+    /**
+     * @var string
+     */
+    public static $publicController = 'Homes';
+
     /**
      * Method to check if the request can be accessed
      *
@@ -34,6 +40,7 @@ class RequestPolicy implements RequestPolicyInterface
                 return true;
             }
         }
+
         return $this->check($identity->role_id, [
             'controller' => $request->getParam('controller'),
             'action' => $request->getParam('action'),
@@ -47,24 +54,29 @@ class RequestPolicy implements RequestPolicyInterface
      * @param array $routes
      * @return bool
      */
-    public static function check($roleId, $routes)
+    public static function check(int $roleId, array $routes)
     {
         if (!isset($roleId)) {
             return false;
         }
 
         if (Configure::read('debug')) {
-            // Allow Special role access
+            // Allow special role access
             if ($roleId === 1) {
                 return true;
             }
         }
 
-        $controller = Inflector::camelize($routes['controller']) ?? '';
+        $controller = $routes['controller'] ?? '';
         $action = $routes['action'] ?? 'index';
-        
-        if (!is_callable('App\\Controller\\' . $controller . 'Controller::'. $action)) {
+
+        if (!is_callable('App\\Controller\\' . $controller . 'Controller::' . $action)) {
             // will be raised NotFoundException
+            return true;
+        }
+
+        if ($controller === static::$publicController) {
+            // Allow basic actions access
             return true;
         }
 

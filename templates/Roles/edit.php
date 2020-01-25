@@ -15,7 +15,9 @@
     ?>
     <div class="dl-wrap dl-wrap-form mb-4">
         <dl class="row">
-            <dt class="col-md required"><?= __('Roles.name') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('name', __('Roles.name')) ?>
+            </dt>
             <dd class="col-md">
                 <?php
                     // 名称
@@ -27,7 +29,9 @@
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md"><?= __('Roles.description') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('description', __('Roles.description')) ?>
+            </dt>
             <dd class="col-md">
                 <?php
                     // 説明文
@@ -39,10 +43,12 @@
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md"><?= __('Roles.role_details') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('role_details', __('Roles.role_details')) ?>
+            </dt>
             <dd class="col-md">
                 <?= $this->Form->hidden('role_details._ids') ?>
-                <ul style="list-style-type: none;padding-left: 0px;">
+                <ul class="pl-0">
                     <?php foreach ($roleDetails as $roleDetail) : ?>
                         <li>
                             <?=
@@ -56,7 +62,7 @@
                                 ])
                             ?>
                             <?php if (!empty($roleDetail->children)) : ?>
-                                <ul style="list-style-type: none">
+                                <ul>
                                     <?php foreach ($roleDetail->children as $child) : ?>
                                         <li>
                                             <?=

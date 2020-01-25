@@ -24,7 +24,7 @@ $roleIds = array_column((array) $role->role_details, 'id', 'id');
         <dl class="row">
             <dt class="col-md"><?= __('Roles.role_details') ?></dt>
             <dd class="col-md">
-                <ul style="list-style-type: none;padding-left:0">
+                <ul class="pl-0">
                     <?php foreach ($roleDetails as $roleDetail) : ?>
                         <li>
                             <?=
@@ -40,7 +40,7 @@ $roleIds = array_column((array) $role->role_details, 'id', 'id');
                                 ])
                             ?>
                             <?php if (!empty($roleDetail->children)) : ?>
-                                <ul style="list-style-type: none">
+                                <ul>
                                     <?php foreach ($roleDetail->children as $child) : ?>
                                         <li>
                                             <?=

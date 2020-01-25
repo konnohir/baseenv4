@@ -13,7 +13,9 @@
     ?>
     <div class="dl-wrap dl-wrap-form mb-4">
         <dl class="row">
-            <dt class="col-md"><?= __('RoleDetails.parent_id') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('parent_id', __('RoleDetails.parent_id')) ?>
+            </dt>
             <dd class="col-md">
                 <?php
                     // 親権限
@@ -27,7 +29,9 @@
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md required"><?= __('RoleDetails.name') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('name', __('RoleDetails.name')) ?>
+            </dt>
             <dd class="col-md">
                 <?php
                     // 名称
@@ -39,7 +43,9 @@
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md"><?= __('RoleDetails.description') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('description', __('RoleDetails.description')) ?>
+            </dt>
             <dd class="col-md">
                 <?php
                     // 説明文
@@ -51,10 +57,12 @@
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md"><?= __('RoleDetails.acos') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('acos', __('RoleDetails.acos')) ?>
+            </dt>
             <dd class="col-md">
                 <?= $this->Form->hidden('acos._ids') ?>
-                <ul style="list-style-type: none; padding-left: 0px">
+                <ul class="pl-0">
                     <?php foreach ($acos as $controller) : ?>
                         <li>
                             <?=
@@ -67,7 +75,7 @@
                                     'hiddenField' => false,
                                     'data-type' => 'controller',
                                 ]) ?>
-                                <ul style="list-style-type: none">
+                                <ul>
                                     <?php foreach ($controller->children as $action) : ?>
                                         <li>
                                             <?=

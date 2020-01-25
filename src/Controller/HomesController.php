@@ -123,14 +123,8 @@ class HomesController extends AppController
      */
     public function profile()
     {
-        // $id: ログイン中のユーザーのユーザーID
-        $id = $this->getRequest()->getAttribute('identity')->id;
-
         // $user: ユーザー
-        $user = $this->Users->find('detail', compact('id'))->first();
-        if ($user === null) {
-            return $this->logout();
-        }
+        $user = $this->getRequest()->getAttribute('identity');
 
         $this->set(compact('user'));
     }

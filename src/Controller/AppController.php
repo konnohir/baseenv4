@@ -68,6 +68,10 @@ class AppController extends Controller
      * @return bool false
      */
     protected function failed($entity, $isShowDetail = false) {
+        if ($entity === null) {
+            $this->Flash->error(__('E-NOT-FOUND', __($this->title)));
+            return false;
+        }
         // E-V-WRONG-INPUT: 入力内容に誤りがあります。
         $errorMessage = __('E-V-WRONG-INPUT');
         if ($isShowDetail) {

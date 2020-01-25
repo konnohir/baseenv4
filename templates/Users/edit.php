@@ -14,7 +14,9 @@
     ?>
     <div class="dl-wrap dl-wrap-form mb-4">
         <dl class="row">
-            <dt class="col-md required"><?= __('Users.email') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('email', __('Users.email')) ?>
+            </dt>
             <dd class="col-md">
                 <?php
                     // メールアドレス
@@ -26,7 +28,9 @@
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md required"><?= __('Users.role_id') ?></dt>
+            <dt class="col-md required">
+                <?= $this->Form->label('role_id', __('Users.role_id')) ?>
+            </dt>
             <dd class="col-md">
                 <?php
                     // 権限

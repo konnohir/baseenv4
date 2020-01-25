@@ -11,8 +11,12 @@ $acoIds = array_column((array) $roleDetail->acos, 'id', 'id');
     <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
     <div class="dl-wrap mb-4">
         <dl class="row">
-            <?php // 名称 
-            ?>
+            <?php // 親権限 ?>
+            <dt class="col-md"><?= __('RoleDetails.parent_id') ?></dt>
+            <dd class="col-md"><?= h($roleDetail->parent_role_detail->name ?? null) ?></dd>
+        </dl>
+        <dl class="row">
+            <?php // 名称 ?>
             <dt class="col-md"><?= __('RoleDetails.name') ?></dt>
             <dd class="col-md"><?= h($roleDetail->name) ?></dd>
         </dl>
@@ -24,7 +28,7 @@ $acoIds = array_column((array) $roleDetail->acos, 'id', 'id');
         <dl class="row">
             <dt class="col-md"><?= __('RoleDetails.acos') ?></dt>
             <dd class="col-md">
-                <ul style="list-style-type: none;padding-left:0">
+                <ul class="pl-0">
                     <?php foreach ($acos as $controller) : ?>
                         <?php
                         if (
@@ -48,7 +52,7 @@ $acoIds = array_column((array) $roleDetail->acos, 'id', 'id');
                                     'data-type' => 'controller',
                                 ]);
                             ?>
-                            <ul style="list-style-type: none">
+                            <ul>
                                 <?php foreach ($controller->children as $action) : ?>
                                     <li>
                                         <?=

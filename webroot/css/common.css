@@ -11,6 +11,15 @@ h1, h2, h3 {
     margin: 0;
 }
 
+ul {
+    list-style-type: none;
+}
+
+header {
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
 /** Custom table */
 
 .table-wrap {
@@ -103,8 +112,8 @@ h1, h2, h3 {
 }
 
 .dl-wrap-form dl {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
 }
 
 .dl-wrap-form dt {
@@ -156,7 +165,7 @@ form>.input {
     font-size: 85%;
 }
 
-.required label::after, dt.required::after {
+.required label::after {
     color: #cc0000;
     content: '*';
 }

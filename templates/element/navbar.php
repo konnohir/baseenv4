@@ -53,7 +53,7 @@ use Cake\Core\Configure;
             ?>
         </li>
         <?php endif ?>
-        <li class="nav-item">
+        <li class="nav-item c">
             <?php
                 // プロファイル
                 echo $this->Html->customLink($this->Identity->get('email'), ['controller' => 'Homes', 'action' => 'profile'], [

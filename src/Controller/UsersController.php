@@ -74,7 +74,7 @@ class UsersController extends AppController
         // $user: ユーザーエンティティ
         $user = $this->Users->find('detail', compact('id'))->first();
         if ($user === null) {
-            throw new NotFoundException();
+            //throw new NotFoundException();
         }
         $this->set(compact('user'));
     }
@@ -104,8 +104,14 @@ class UsersController extends AppController
             $user = $this->Users->find('detail', compact('id'))->first();
         }
 
+        // データ取得失敗時: 一覧画面に戻る(検索条件リセット)
         if ($user === null) {
-            throw new NotFoundException();
+            $this->Flash->error(__('E-NOT-FOUND', __($this->title)));
+            if (strpos($this->referer(), '/view') !== false) {
+                return $this->redirect(['action' => 'index']);
+            }else {
+                return $this->redirect($this->referer());
+            }
         }
 
         // POST送信された(保存ボタンが押された)場合
@@ -144,8 +150,10 @@ class UsersController extends AppController
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
                 $user = $this->Users->find('detail', compact('id'))->first();
+
+                // データ取得失敗時: ロールバック
                 if ($user === null) {
-                    throw new NotFoundException();
+                    return $this->failed($user);
                 }
 
                 // アカウントロック
@@ -183,8 +191,10 @@ class UsersController extends AppController
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
                 $user = $this->Users->find('detail', compact('id'))->first();
+
+                // データ取得失敗時: ロールバック
                 if ($user === null) {
-                    throw new NotFoundException();
+                    return $this->failed($user);
                 }
 
                 // アカウントロック
@@ -226,8 +236,10 @@ class UsersController extends AppController
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
                 $user = $this->Users->find('detail', compact('id'))->first();
+
+                // データ取得失敗時: ロールバック
                 if ($user === null) {
-                    throw new NotFoundException();
+                    return $this->failed($user);
                 }
 
                 // パスワード発行
@@ -275,8 +287,10 @@ class UsersController extends AppController
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
                 $user = $this->Users->find('detail', compact('id'))->first();
+
+                // データ取得失敗時: ロールバック
                 if ($user === null) {
-                    throw new NotFoundException();
+                    return $this->failed($user);
                 }
 
                 // 削除

@@ -279,8 +279,12 @@ class UsersTable extends AppTable
     public function findAuthentication(Query $query, array $options)
     {
         // ここで取得したエンティティは認証後、セッションに格納される
-        // パスワード未発行のユーザーはログイン不可
-        $query->where(['password is not null']);
+        $query
+            ->select($this)
+            ->select(['Roles.name'])
+            ->contain(['Roles'])
+            // パスワード未発行のユーザーはログイン不可
+            ->where(['password is not null']);
         return $query;
     }
 

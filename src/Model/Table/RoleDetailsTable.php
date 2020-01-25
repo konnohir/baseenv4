@@ -30,10 +30,14 @@ class RoleDetailsTable extends AppTable
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
+        $this->belongsToMany('Roles');
         $this->belongsToMany('Acl.Acos', [
             'joinTable' => 'role_details_acos'
         ]);
-        $this->belongsToMany('Roles');
+        $this->belongsTo('ParentRoleDetails', [
+            'className' => 'RoleDetails',
+            'foreignKey' => 'parent_id',
+        ]);
     }
 
     /**
@@ -103,7 +107,7 @@ class RoleDetailsTable extends AppTable
         if (isset($options['id'])) {
             $query->where([$this->getAlias() . '.id' => $options['id']]);
         }
-        return $query->contain(['Roles', 'Acos']);
+        return $query->contain(['Roles', 'Acos', 'ParentRoleDetails']);
     }
 
     /**

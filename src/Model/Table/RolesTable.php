@@ -38,42 +38,71 @@ class RolesTable extends AppTable
     }
 
     /**
-     * Default validation rules.
+     * バリデーションルール
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
     public function validationDefault(Validator $validator): Validator
     {
+        // 新規作成時の必須入力項目
+        $validator->requirePresence([
+            'name',
+        ], 'create');
+
         // ID
-        $validator
-            ->naturalNumber('id')
-            ->allowEmptyString('id', null, 'create');
+        $validator->naturalNumber('id');
 
         // 名称
-        $validator
-            ->scalar('name')
-            ->maxLength('name', 45)
-            ->requirePresence('name', 'create')
-            ->notEmptyString('name', __('E-V-REQUIRED', __('Roles.name')));
+        $column = 'name';
+        $label = __($this->getAlias() . '.' . $column);
+        $validator->add($column, [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED', $label),
+                'last' => true,
+            ],
+            // 文字列
+            'isScalar' => [
+                'message' => __('E-V-SCALAR', $label),
+                'last' => true,
+            ],
+            // 最大桁数以内
+            'maxLength' => [
+                'rule' =>  ['maxLength', 45],
+                'message' => __('E-V-MAXLENGTH', $label, 45),
+                'last' => true,
+            ],
+        ]);
 
         // 説明
-        $validator
-            ->scalar('description')
-            ->maxLength('description', 45)
-            ->allowEmptyString('description');
-
-        // 作成日付
+        $column = 'description';
+        $label = __($this->getAlias() . '.' . $column);
+        $validator->add($column, [
+            // 文字列
+            'isScalar' => [
+                'message' => __('E-V-SCALAR', $label),
+                'last' => true,
+            ],
+            // 最大桁数以内
+            'maxLength' => [
+                'rule' =>  ['maxLength', 45],
+                'message' => __('E-V-MAXLENGTH', $label, 45),
+                'last' => true,
+            ],
+        ]);
+        
+        // 作成日時
         $validator
             ->dateTime('created_at')
             ->notEmptyDateTime('created_at');
 
-        // 更新日付
+        // 更新日時
         $validator
             ->dateTime('updated_at')
             ->notEmptyDateTime('updated_at');
 
-        // 削除日付
+        // 削除日時
         $validator
             ->dateTime('deleted_at')
             ->allowEmptyDateTime('deleted_at');
@@ -82,12 +111,12 @@ class RolesTable extends AppTable
     }
 
     /**
-     * モデルの概要を取得する
+     * モデルの概要を取得するFinder
      */
     public function findOverview(Query $query, array $options)
     {
         // $map: 検索マッピング設定 (array)
-        $map = [];
+        $map = $this->getFilterSettings();
 
         // $conditions: 検索条件の配列 (array)
         $conditions = $this->buildConditions($map, $options['filter'] ?? []);
@@ -96,7 +125,7 @@ class RolesTable extends AppTable
     }
 
     /**
-     * モデルの詳細を取得する
+     * モデルの詳細を取得するFinder
      */
     public function findDetail(Query $query, array $options)
     {
@@ -104,6 +133,15 @@ class RolesTable extends AppTable
             $query->where([$this->getAlias() . '.id' => $options['id']]);
         }
         return $query->contain(['RoleDetails', 'RoleDetails.Acos']);
+    }
+
+    /**
+     * 検索マッピング設定
+     * 
+     * @return array
+     */
+    public function getFilterSettings() {
+        return [];
     }
 
     /**
@@ -141,7 +179,7 @@ class RolesTable extends AppTable
     public function doDeleteEntity(Entity $entity, array $input)
     {
         $input = array_merge_recursive($input, [
-            // 削除日付
+            // 削除日時
             'deleted_at' => new FrozenTime(),
         ]);
         $entity = $this->patchEntity($entity, $input, [

@@ -33,6 +33,7 @@ class RequestFilterComponent extends Component
      * beforeFilter
      * 各アクションの実行前にトリガーされる
      * 
+     * @param Event $event
      * @return void
      */
     public function beforeFilter(Event $event)
@@ -124,6 +125,13 @@ class RequestFilterComponent extends Component
         // 要素数が0ならBadRequestExceptionをスローする
         if (!is_array($targets) || count($targets) === 0) {
             throw new BadRequestException();
+        }
+
+        // 各要素が配列でなければBadRequestExceptionをスローする
+        foreach($targets as $target) {
+            if (!is_array($target)) {
+                throw new BadRequestException();
+            }
         }
     }
 

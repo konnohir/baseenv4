@@ -57,7 +57,7 @@
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md required">
+            <dt class="col-md">
                 <?= $this->Form->label('acos', __('RoleDetails.acos')) ?>
             </dt>
             <dd class="col-md">

@@ -43,7 +43,7 @@
             </dd>
         </dl>
         <dl class="row">
-            <dt class="col-md required">
+            <dt class="col-md">
                 <?= $this->Form->label('role_details', __('Roles.role_details')) ?>
             </dt>
             <dd class="col-md">

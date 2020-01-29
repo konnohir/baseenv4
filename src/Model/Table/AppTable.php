@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -13,13 +12,15 @@ use Cake\I18n\FrozenTime;
 use InvalidArgumentException;
 use ArrayObject;
 use Exception;
+use Fsi\Model\Behavior\FilterTrait;
 
 /**
  * App Table
  */
 class AppTable extends Table
 {
-    use \Cake\Log\LogTrait;
+    use FilterTrait;
+
     /**
      * 初期化
      *
@@ -29,51 +30,9 @@ class AppTable extends Table
     public function initialize(array $config): void
     {
         parent::initialize($config);
-    }
 
-    /**
-     * 保存前にトリガーされるイベント
-     * updated_at に値が設定されていない場合、現在の日時を設定する
-     * (MySQLの仕様上、保存するデータに変更がない場合にupdated_at が自動更新されないため)
-     */
-    public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
-    {
-        if (!$entity->isDirty('updated_at')) {
-            if (!isset($entity->_lock)) {
-                $entity->_lock = '';
-            }
-            $entity->updated_at = new FrozenTime();
-        }
-        return $entity;
-    }
-
-    /**
-     * 検索前にトリガーされるイベント
-     * 削除済みのエンティティを除外する設定を行う
-     */
-    public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
-    {
-        if (!isset($query->withInactive)) {
-            $query->find('active');
-        }
-        return $query;
-    }
-
-    /**
-     * 有効なエンティティのみ取得するscope
-     */
-    public function findActive(Query $query, array $options)
-    {
-        return $query->where([$this->getAlias() . '.deleted_at is null']);
-    }
-
-    /**
-     * 有効でないエンティティを含めて取得するscope
-     */
-    public function findWithInactive(Query $query, array $options)
-    {
-        $query->withInactive = true;
-        return $query;
+        $this->addBehavior('Fsi.Timestamp');
+        $this->addBehavior('Fsi.SoftDelete');
     }
 
     /**
@@ -130,70 +89,5 @@ class AppTable extends Table
         $statement->closeCursor();
 
         return $success;
-    }
-
-    /**
-     * util: 検索条件を組み立てる
-     *
-     * @var array $map
-     * @var array $options
-     */
-    public function buildConditions(array $map, array $options)
-    {
-        $conditions = [];
-        foreach ($options as $key => $value) {
-            if (!isset($map[$key]['type'])) {
-                continue;
-            }
-            $field = $map[$key]['field'] ?? $this->getAlias() . '.' . $key;
-            switch ($map[$key]['type']) {
-                // 完全一致
-                case 'value':
-                    if (is_array($value)) {
-                        $conditions[] = ['OR' => array_map(function ($value) use ($field) {
-                            return [$field => $value];
-                        }, $value)];
-                    } else {
-                        $conditions[$field] = $value;
-                    }
-                    break;
-                // 部分一致
-                case 'like':
-                    if (is_array($value)) {
-                        $conditions[] = ['OR' => array_map(function ($value) use ($field) {
-                            return [$field. ' LIKE' => '%' . $value . '%'];
-                        }, $value)];
-                    } else {
-                        $conditions[$field. ' LIKE'] = '%' . $value . '%';
-                    }
-                    break;
-                // 範囲
-                case 'range':
-                    if (is_scalar($value)) {
-                        list($min, $max) = explode('-', $value);
-
-                        if (is_numeric($min)) {
-                            $conditions[$field . ' >='] = $min;
-                        }
-                        if (is_numeric($max)) {
-                            $conditions[$field . ' <='] = $max;
-                        }
-                    }
-                    break;
-                // カスタムクエリ
-                case 'query':
-                    if (!isset($map[$key]['method'])) {
-                        throw new Exception('Not implemented');
-                    }
-                    $result = $this->{$map[$key]['method']}($field, $value, $map[$key] + ['filter' => $options]);
-                    if (is_array($result)) {
-                        $conditions = array_merge($conditions, $result);
-                    }
-                    break;
-                default:
-                    throw new Exception('Not implemented');
-            }
-        }
-        return $conditions;
     }
 }

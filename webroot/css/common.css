@@ -111,12 +111,12 @@ header {
     min-height: 1.5em;
 }
 
-.dl-wrap-form dl {
+.dl-wrap.dl-wrap-form dt,.dl-wrap.dl-wrap-form dd {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
 }
 
-.dl-wrap-form dt {
+.dl-wrap.dl-wrap-form dt {
     font-weight: normal;
 }
 

@@ -34,7 +34,7 @@ class MCompaniesTable extends AppTable
     }
 
     /**
-     * Default validation rules.
+     * バリデーションルール
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
@@ -70,7 +70,7 @@ class MCompaniesTable extends AppTable
 
         // 創業年月日
         $validator
-            ->date('established_date', ['ymd'], __('{0}は日付を入力してください。', '創業年月日'))
+            ->date('established_date', ['ymd'], __('{0}は日時を入力してください。', '創業年月日'))
             ->allowEmptyString('established_date');
 
         // 従業員数
@@ -85,17 +85,17 @@ class MCompaniesTable extends AppTable
             ->maxLength('note', 255)
             ->allowEmptyString('note');
 
-        // 作成日付
+        // 作成日時
         $validator
             ->dateTime('created_at')
             ->notEmptyDateTime('created_at');
 
-        // 更新日付
+        // 更新日時
         $validator
             ->dateTime('updated_at')
             ->notEmptyDateTime('updated_at');
             
-        // 削除日付
+        // 削除日時
         $validator
             ->dateTime('deleted_at')
             ->allowEmptyDateTime('deleted_at');
@@ -110,16 +110,12 @@ class MCompaniesTable extends AppTable
     }
 
     /**
-     * モデルの概要を取得する
+     * モデルの概要を取得するFinder
      */
     public function findOverview(Query $query, array $options)
     {
         // $map: 検索マッピング設定 (array)
-        $map = [
-            'code' => ['type' => 'like'],
-            'name' => ['type' => 'like'],
-            'staff' => ['type' => 'range']
-        ];
+        $map = $this->getFilterSettings();
 
         // $conditions: 検索条件の配列 (array)
         $conditions = $this->buildConditions($map, $options['filter'] ?? []);
@@ -128,7 +124,7 @@ class MCompaniesTable extends AppTable
     }
 
     /**
-     * モデルの詳細を取得する
+     * モデルの詳細を取得するFinder
      */
     public function findDetail(Query $query, array $options)
     {
@@ -139,5 +135,18 @@ class MCompaniesTable extends AppTable
             'Tags',
             'Notices',
         ]);
+    }
+    
+    /**
+     * 検索マッピング設定
+     * 
+     * @return array
+     */
+    public function getFilterSettings() {
+        return [
+            'code' => ['type' => 'like'],
+            'name' => ['type' => 'like'],
+            'staff' => ['type' => 'range']
+        ];
     }
 }

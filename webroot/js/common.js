@@ -200,6 +200,14 @@ $(function () {
         }
     });
 
+    // 一覧画面へ戻るボタン
+    $('.btn-back-to-index').click(function () {
+        var url = sessionStorage.indexUrl;
+        sessionStorage.removeItem('viewUrl');
+        sessionStorage.removeItem('indexUrl');
+        location.href = url || $(this).attr('data-action');
+    });
+
     // 検索条件クリアボタン
     $('.btn-clear').click(function () {
         location.href = $(this).attr('data-action');

@@ -25,6 +25,9 @@ msgstr "保存"
 msgid "BTN-BACK"
 msgstr "戻る"
 
+msgid "BTN-BACK-TO-INDX"
+msgstr "一覧画面へ戻る"
+
 msgid "BTN-CANCEL"
 msgstr "キャンセル"
 
@@ -171,7 +174,7 @@ msgid "Users.current_password"
 msgstr "現在のパスワード"
 
 msgid "Users.new_password"
-msgstr "新しいパスワード（再入力）"
+msgstr "新しいパスワード"
 
 msgid "Users.retype_password"
 msgstr "新しいパスワード（再入力）"

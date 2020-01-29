@@ -35,7 +35,7 @@ return [
             'host' => '127.0.0.1',
             'username' => 'my_app',
             'password' => 'secret',
-            'database' => 'cakephp4dev',
+            'database' => 'baseenv4',
             'log' => false,
         ],
 

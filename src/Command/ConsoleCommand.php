@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use Cake\Command\Command;
 use Cake\Console\Arguments;
-use Cake\Console\Command;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Log\Log;
@@ -53,34 +53,5 @@ class ConsoleCommand extends Command
 
         $io->out("You can exit with <info>`CTRL-C`</info> or <info>`exit`</info>");
         $io->out('');
-
-        Log::drop('debug');
-        Log::drop('error');
-        $io->setLoggers(false);
-        restore_error_handler();
-        restore_exception_handler();
-
-        $psy = new PsyShell();
-        $psy->run();
-    }
-
-    /**
-     * Display help for this console.
-     *
-     * @param \Cake\Console\ConsoleOptionParser $parser The parser to update
-     * @return \Cake\Console\ConsoleOptionParser
-     */
-    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
-    {
-        $parser->setDescription(
-            'This shell provides a REPL that you can use to interact with ' .
-            'your application in a command line designed to run PHP code. ' .
-            'You can use it to run adhoc queries with your models, or ' .
-            'explore the features of CakePHP and your application.' .
-            "\n\n" .
-            'You will need to have psysh installed for this Shell to work.'
-        );
-
-        return $parser;
     }
 }

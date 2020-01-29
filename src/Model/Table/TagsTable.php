@@ -29,7 +29,7 @@ class TagsTable extends AppTable
     }
 
     /**
-     * Default validation rules.
+     * バリデーションルール
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
@@ -50,17 +50,17 @@ class TagsTable extends AppTable
             ->notEmptyString('name')
             ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
-        // 作成日付
+        // 作成日時
         $validator
             ->dateTime('created_at')
             ->notEmptyDateTime('created_at');
 
-        // 更新日付
+        // 更新日時
         $validator
             ->dateTime('updated_at')
             ->notEmptyDateTime('updated_at');
 
-        // 削除日付
+        // 削除日時
         $validator
             ->dateTime('deleted_at')
             ->allowEmptyDateTime('deleted_at');

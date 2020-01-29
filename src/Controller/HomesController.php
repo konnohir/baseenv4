@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\Core\Configure;
-use Cake\I18n\FrozenDate;
-
 /**
  * Homes Controller
  * ホーム
@@ -15,6 +12,11 @@ use Cake\I18n\FrozenDate;
  */
 class HomesController extends AppController
 {
+    /**
+     * @var アカウントロックを実行する値
+     */
+    const ACCOUNT_LOCK_VALUE = 5;
+
     /**
      * 初期化
      *
@@ -57,7 +59,7 @@ class HomesController extends AppController
             $user = $result->getData();
 
             if (isset($user->login_failed_count)) {
-                if ($user->login_failed_count >= 5) {
+                if ($user->login_failed_count >= self::ACCOUNT_LOCK_VALUE) {
                     // ログイン失敗回数が規定値以上: ログアウトする
                     // E-LOCK-ACCOUNT: アカウントがロックされています。
                     $this->Flash->error(__('E-LOCK-ACCOUNT'));
@@ -90,7 +92,7 @@ class HomesController extends AppController
         }
         if ($this->getRequest()->is('post') && !$result->isValid()) {
             // ログイン失敗
-            // E-LOGIN-FAILED: 入力内容に誤りがあります。
+            // E-LOGIN-FAILED: ログインに失敗しました。
             $errorMessage = __('E-LOGIN-FAILED');
 
             // $user: ログインを試みたユーザー
@@ -101,12 +103,12 @@ class HomesController extends AppController
 
             // アカウントロックチェック
             if (isset($user->login_failed_count)) {
-                if ($user->login_failed_count < 5) {
+                if ($user->login_failed_count < self::ACCOUNT_LOCK_VALUE) {
                     // ログイン失敗回数が規定値未満: ログイン失敗回数をインクリメント
                     $user->login_failed_count++;
                     $this->Users->saveOrFail($user);
                 }
-                if ($user->login_failed_count >= 5) {
+                if ($user->login_failed_count >= self::ACCOUNT_LOCK_VALUE) {
                     // ログイン失敗回数が規定値以上: アカウントロックメッセージ表示
                     // E-LOCK-ACCOUNT: アカウントがロックされています。
                     $errorMessage = __('E-LOCK-ACCOUNT');
@@ -118,6 +120,7 @@ class HomesController extends AppController
 
     /**
      * プロファイル画面
+     * セッションからユーザー情報を取得する
      *
      * @return \Cake\Http\Response|null
      */
@@ -125,6 +128,7 @@ class HomesController extends AppController
     {
         // $user: ユーザー
         $user = $this->getRequest()->getAttribute('identity');
+        $user->role = $this->Users->Roles->find()->where(['id' => $user->role_id])->first();
 
         $this->set(compact('user'));
     }

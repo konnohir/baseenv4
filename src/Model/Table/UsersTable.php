@@ -38,7 +38,7 @@ class UsersTable extends AppTable
     }
 
     /**
-     * Default validation rules.
+     * バリデーションルール
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
@@ -58,14 +58,22 @@ class UsersTable extends AppTable
         $column = 'email';
         $label = __($this->getAlias() . '.' . $column);
         $validator->add($column, [
+            // 入力有
             'notBlank' => [
                 'message' => __('E-V-REQUIRED', $label),
                 'last' => true,
             ],
+            // 文字列
+            'isScalar' => [
+                'message' => __('E-V-SCALAR', $label),
+                'last' => true,
+            ],
+            // メールアドレス形式
             'email' => [
                 'message' => __('E-V-EMAIL', $label),
                 'last' => true,
             ],
+            // 最大桁数以内
             'maxLength' => [
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAXLENGTH', $label, 255),
@@ -77,14 +85,17 @@ class UsersTable extends AppTable
         $column = 'password';
         $label = __($this->getAlias() . '.' . $column);
         $validator->add($column, [
+            // 入力有
             'notBlank' => [
                 'message' => __('E-V-REQUIRED', $label),
                 'last' => true,
             ],
+            // 文字列
             'isScalar' => [
                 'message' => __('E-V-SCALAR', $label),
                 'last' => true,
             ],
+            // 最大桁数以内
             'maxLength' => [
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAX-LENGTH', $label),
@@ -96,27 +107,29 @@ class UsersTable extends AppTable
         $column = 'role_id';
         $label = __($this->getAlias() . '.' . $column);
         $validator->add($column, [
+            // 入力有
             'notBlank' => [
                 'message' => __('E-V-REQUIRED', $label),
                 'last' => true,
             ],
+            // 自然数
             'naturalNumber' => [
                 'message' => __('E-V-NATURAL-NUMBER', $label),
                 'last' => true,
             ],
         ]);
 
-        // 作成日付
+        // 作成日時
         $validator
             ->dateTime('created_at')
             ->notEmptyDateTime('created_at');
 
-        // 更新日付
+        // 更新日時
         $validator
             ->dateTime('updated_at')
             ->notEmptyDateTime('updated_at');
 
-        // 削除日付
+        // 削除日時
         $validator
             ->dateTime('deleted_at')
             ->allowEmptyDateTime('deleted_at');
@@ -125,7 +138,7 @@ class UsersTable extends AppTable
     }
 
     /**
-     * パスワード変更バリデーション.
+     * パスワード変更バリデーション
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
@@ -145,14 +158,17 @@ class UsersTable extends AppTable
         $column = 'current_password';
         $label = __($this->getAlias() . '.' . $column);
         $validator->add($column, [
+            // 入力有
             'notBlank' => [
                 'message' => __('E-V-REQUIRED', $label),
                 'last' => true,
             ],
+            // 文字列
             'isScalar' => [
                 'message' => __('E-V-SCALAR', $label),
                 'last' => true,
             ],
+            // 最大桁数以内
             'maxLength' => [
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAX-LENGTH', $label),
@@ -176,14 +192,17 @@ class UsersTable extends AppTable
         $column = 'retype_password';
         $label = __($this->getAlias() . '.' . $column);
         $validator->add($column, [
+            // 入力有
             'notBlank' => [
                 'message' => __('E-V-REQUIRED', $label),
                 'last' => true,
             ],
+            // 文字列
             'isScalar' => [
                 'message' => __('E-V-SCALAR', $label),
                 'last' => true,
             ],
+            // 最大桁数以内
             'maxLength' => [
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAX-LENGTH', $label),
@@ -201,7 +220,7 @@ class UsersTable extends AppTable
 
     /**
      * ルール構築
-     * ステートフルなバリデーションルールを定義する
+     * DBのデータを使ったルールを定義する
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
@@ -211,7 +230,9 @@ class UsersTable extends AppTable
                 return true;
             }
             $model = $options['repository'];
-            if ($model->find('withInactive')->where(['email' => $entity->email])->count()) {
+
+            // 削除済みのデータを含めて既に登録済みのメールアドレスでないこと
+            if ($model->find('withDeleted')->where(['email' => $entity->email])->count()) {
                 return __('E-V-UNIQUE', __('Users.email'));
             }
             return true;
@@ -222,48 +243,51 @@ class UsersTable extends AppTable
             if (!$entity->isDirty('current_password')) {
                 return true;
             }
+
+            // 現在のパスワードが一致すること
             if (!$entity->comparePassword($entity->current_password)) {
                 return __('E-V-WRONG-PASSWORD');
             }
             return true;
         }, ['errorField' => 'current_password']);
 
-        // パスワード
+        // 新しいパスワード
         $rules->add(function ($entity) {
             if (!$entity->isDirty('password')) {
                 return true;
             }
+
+            // 新しいパスワードがメールアドレスと異なること
             if ($entity->retype_password == $entity->email) {
                 return __('E-V-SAME-PASSWORD-MAIL');
             }
             return true;
         }, ['errorField' => 'password']);
+        
         return $rules;
     }
 
     /**
-     * モデルの概要を取得する
+     * モデルの概要を取得するFinder
      */
     public function findOverview(Query $query, array $options)
     {
         // $map: 検索マッピング設定 (array)
-        $map = [
-            'email' => ['type' => 'like'],
-        ];
+        $map = $this->getFilterSettings();
 
         // $conditions: 検索条件の配列 (array)
         $conditions = $this->buildConditions($map, $options['filter'] ?? []);
 
         return $query
             ->select($this)
-            ->select(['password_issue' => 'password is not null'])  // ソートするためselectで取得する
+            ->select(['password_issue' => 'password is not null'])  // 「パスワード発行」一覧画面でソートするためselectで取得する
             ->select(['Roles.name'])
             ->contain(['Roles'])
             ->where($conditions);
     }
 
     /**
-     * モデルの詳細を取得する
+     * モデルの詳細を取得するFinder
      */
     public function findDetail(Query $query, array $options)
     {
@@ -274,18 +298,27 @@ class UsersTable extends AppTable
     }
 
     /**
-     * ユーザー認証のためのモデルを取得する
+     * ユーザー認証のためのモデルを取得するFinder
      */
     public function findAuthentication(Query $query, array $options)
     {
         // ここで取得したエンティティは認証後、セッションに格納される
         $query
             ->select($this)
-            ->select(['Roles.name'])
-            ->contain(['Roles'])
             // パスワード未発行のユーザーはログイン不可
             ->where(['password is not null']);
         return $query;
+    }
+
+    /**
+     * 検索マッピング設定
+     * 
+     * @return array
+     */
+    public function getFilterSettings() {
+        return [
+            'email' => ['type' => 'like'],
+        ];
     }
 
     /**
@@ -396,7 +429,7 @@ class UsersTable extends AppTable
     {
         $input = array_merge_recursive($input, [
             // パスワード有効期限
-            'password_expired' => (new FrozenDate())->addMonth(3)
+            'password_expired' => (new FrozenDate())->addMonths(3)
         ]);
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
@@ -422,7 +455,7 @@ class UsersTable extends AppTable
     public function doDeleteEntity(Entity $entity, array $input)
     {
         $input = array_merge_recursive($input, [
-            // 削除日付
+            // 削除日時
             'deleted_at' => new FrozenTime(),
         ]);
         $entity = $this->patchEntity($entity, $input, [

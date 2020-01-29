@@ -216,7 +216,7 @@ class MCompaniesController extends AppController
                 // 排他制御
                 $mCompany->_lock = $_lock['_lock'];
 
-                // 削除日付
+                // 削除日時
                 $mCompany->deleted_at = date('Y-m-d h:i:s');
 
                 // DB保存失敗時: ロールバック

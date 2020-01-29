@@ -164,8 +164,10 @@ class RoleDetailsController extends AppController
             foreach ($targets as $id => $requestData) {
                 // $roleDetail: 権限詳細エンティティ
                 $roleDetail = $this->RoleDetails->find('detail', compact('id'))->first();
+
+                // データ取得失敗時: ロールバック
                 if ($roleDetail === null) {
-                    throw new NotFoundException();
+                    return $this->failed($roleDetail);
                 }
 
                 // 削除

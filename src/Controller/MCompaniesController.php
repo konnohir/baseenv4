@@ -47,11 +47,8 @@ class MCompaniesController extends AppController
     public function index()
     {
         // $mCompanies: 企業マスタの配列
-        try {
-            $mCompanies = $this->paginate($this->MCompanies);
-        } catch (NotFoundException $e) {
-            return $this->redirect($this->paginate['firstPage']);
-        }
+        $mCompanies = $this->paginate($this->MCompanies);
+        
         $this->set(compact('mCompanies'));
     }
 
@@ -231,7 +228,11 @@ class MCompaniesController extends AppController
             return true;
         });
 
-        // 画面を再表示
-        return $this->redirect($this->referer());
+        // 画面を再表示、または一覧画面へ遷移 (検索条件クリア)
+        $redirectUrl = $this->referer();
+        if (strpos($redirectUrl, 'view') !== false) {
+            $redirectUrl = ['action' => 'index'];
+        }
+        return $this->redirect($redirectUrl);
     }
 }

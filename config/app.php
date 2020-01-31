@@ -85,7 +85,7 @@ return [
          */
         '_cake_core_' => [
             'className' => FileEngine::class,
-            'prefix' => 'core_',
+            'prefix' => '',
             'path' => CACHE . 'persistent' . DS,
             'serialize' => true,
             'duration' => '+1 years',
@@ -99,7 +99,7 @@ return [
          */
         '_cake_model_' => [
             'className' => FileEngine::class,
-            'prefix' => 'model_',
+            'prefix' => '',
             'path' => CACHE . 'models' . DS,
             'serialize' => true,
             'duration' => '+1 years',
@@ -153,8 +153,6 @@ return [
         'exceptionRenderer' => ExceptionRenderer::class,
         'skipLog' => [
             \Authorization\Exception\ForbiddenException::class,
-            \Cake\Http\Exception\MissingControllerException::class,
-            \Cake\Controller\Exception\MissingActionException::class,
         ],
         'log' => true,
         'trace' => false,

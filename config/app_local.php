@@ -20,7 +20,7 @@ return [
     /**
      * DebugKit configuration.
      * 
-     * DebugKit is Enabled when 'debug' and 'DebugKit' is true.
+     * DebugKit is enabled when 'debug' and 'DebugKit' is true.
      */
     'DebugKit' => false,
 
@@ -47,6 +47,7 @@ return [
             'username' => 'my_app',
             'password' => 'secret',
             'database' => 'test_myapp',
+            'log' => false,
         ],
     ],
 

@@ -32,8 +32,8 @@ class UsersController extends AppController
             'view' => ['requestId'],
             'edit' => ['requestId'],
             'delete' => ['requestTarget'],
-            'accountLock' => ['requestTarget'],
-            'accountUnlock' => ['requestTarget'],
+            'lockAccount' => ['requestTarget'],
+            'unlockAccount' => ['requestTarget'],
             'passwordIssue' => ['requestTarget'],
         ]);
 
@@ -48,18 +48,15 @@ class UsersController extends AppController
     public function index()
     {
         // $users: ユーザー一覧
-        try {
-            $users = $this->paginate($this->Users, [
-                'sortWhitelist' => [
-                    'Users.email',
-                    'Users.password_issue',
-                    'Users.login_failed_count',
-                    'Roles.id',
-                ],
-            ]);
-        } catch (NotFoundException $e) {
-            return $this->redirect($this->paginate['firstPage']);
-        }
+        $users = $this->paginate($this->Users, [
+            'sortWhitelist' => [
+                'Users.email',
+                'Users.password_issue',
+                'Users.login_failed_count',
+                'Roles.id',
+            ],
+        ]);
+
         $this->set(compact('users'));
     }
 
@@ -74,9 +71,11 @@ class UsersController extends AppController
         // $user: ユーザーエンティティ
         $user = $this->Users->find('detail', compact('id'))->first();
 
-        // データ取得失敗時: 共通エラー画面を表示
+        // データ取得失敗時: 一覧画面へ遷移 (検索条件クリア)
         if ($user === null) {
-            return $this->render('/Error/not_found');
+            // E-V-NOT-FOUND:対象の{0}が存在しません
+            $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
+            return $this->redirect(['action' => 'index']);
         }
         
         $this->set(compact('user'));
@@ -107,9 +106,11 @@ class UsersController extends AppController
             $user = $this->Users->find('detail', compact('id'))->first();
         }
 
-        // データ取得失敗時: 共通エラー画面を表示
+        // データ取得失敗時: 一覧画面へ遷移 (検索条件クリア)
         if ($user === null) {
-            return $this->render('/Error/not_found');
+            // E-V-NOT-FOUND:対象の{0}が存在しません
+            $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
+            return $this->redirect(['action' => 'index']);
         }
 
         // POST送信された(保存ボタンが押された)場合
@@ -307,7 +308,11 @@ class UsersController extends AppController
             return true;
         });
 
-        // 画面を再表示
-        return $this->redirect($this->referer());
+        // 画面を再表示、または一覧画面へ遷移 (検索条件クリア)
+        $redirectUrl = $this->referer();
+        if (strpos($redirectUrl, 'view') !== false) {
+            $redirectUrl = ['action' => 'index'];
+        }
+        return $this->redirect($redirectUrl);
     }
 }

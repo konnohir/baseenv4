@@ -117,7 +117,7 @@ header {
 }
 
 .dl-wrap.dl-wrap-form dt {
-    font-weight: normal;
+    /* font-weight: normal; */
 }
 
 /** Button field wrap */

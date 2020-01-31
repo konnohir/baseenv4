@@ -77,13 +77,13 @@ class HomesController extends AppController
                     // 初期パスワード: パスワード変更画面へ遷移する
                     // I-INITIAL-PASSWORD: 初期パスワードでログインしました。パスワードを変更してください。
                     $this->Flash->success(__('I-INITIAL-PASSWORD'));
-                    return $this->redirect('/password');
+                    return $this->redirect(['action' => 'password']);
                 }
                 if ($user->password_expired->isPast()) {
                     // パスワード有効期限切れ: パスワード変更画面へ遷移する
                     // I-EXPIRED-PASSWORD: パスワードの有効期限が切れています。パスワードを変更してください。
                     $this->Flash->success(__('I-EXPIRED-PASSWORD'));
-                    return $this->redirect('/password');
+                    return $this->redirect(['action' => 'password']);
                 }
             }
 
@@ -120,7 +120,7 @@ class HomesController extends AppController
 
     /**
      * プロファイル画面
-     * セッションからユーザー情報を取得する
+     * ユーザー情報はセッションから取得する
      *
      * @return \Cake\Http\Response|null
      */
@@ -175,10 +175,10 @@ class HomesController extends AppController
      */
     public function refresh()
     {
-        foreach (glob(CACHE . 'models' . DS . '*_*') as $file) {
+        foreach (glob(CACHE . 'models' . DS . '*') as $file) {
             @unlink($file);
         }
-        foreach (glob(CACHE . 'persistent' . DS . '*_*') as $file) {
+        foreach (glob(CACHE . 'persistent' . DS . '*') as $file) {
             @unlink($file);
         }
         return $this->redirect($this->referer());
@@ -192,6 +192,6 @@ class HomesController extends AppController
     public function logout()
     {
         $this->Authentication->logout();
-        return $this->redirect('/login');
+        return $this->redirect(['action' => 'login']);
     }
 }

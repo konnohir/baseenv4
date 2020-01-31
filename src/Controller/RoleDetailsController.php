@@ -46,11 +46,8 @@ class RoleDetailsController extends AppController
     public function index()
     {
         // $roleDetails: 権限詳細一覧
-        try {
-            $roleDetails = $this->paginate($this->RoleDetails);
-        } catch (NotFoundException $e) {
-            return $this->redirect($this->paginate['firstPage']);
-        }
+        $roleDetails = $this->paginate($this->RoleDetails);
+
         $this->set(compact('roleDetails'));
     }
 
@@ -64,8 +61,12 @@ class RoleDetailsController extends AppController
     {
         // $roleDetail: 権限詳細エンティティ
         $roleDetail = $this->RoleDetails->find('detail', compact('id'))->first();
+
+        // データ取得失敗時: 一覧画面へ遷移 (検索条件クリア)
         if ($roleDetail === null) {
-            throw new NotFoundException();
+            // E-V-NOT-FOUND:対象の{0}が存在しません
+            $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
+            return $this->redirect(['action' => 'index']);
         }
 
         // $acos: コントローラー／アクション(Access Control Object)のリスト (スレッド形式)
@@ -102,8 +103,11 @@ class RoleDetailsController extends AppController
             $roleDetail = $this->RoleDetails->find('detail', compact('id'))->first();
         }
 
+        // データ取得失敗時: 一覧画面へ遷移 (検索条件クリア)
         if ($roleDetail === null) {
-            throw new NotFoundException();
+            // E-V-NOT-FOUND:対象の{0}が存在しません
+            $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
+            return $this->redirect(['action' => 'index']);
         }
 
         // POST送信された(保存ボタンが押された)場合
@@ -186,7 +190,11 @@ class RoleDetailsController extends AppController
             return true;
         });
 
-        // 画面を再表示
-        return $this->redirect($this->referer());
+        // 画面を再表示、または一覧画面へ遷移 (検索条件クリア)
+        $redirectUrl = $this->referer();
+        if (strpos($redirectUrl, 'view') !== false) {
+            $redirectUrl = ['action' => 'index'];
+        }
+        return $this->redirect($redirectUrl);
     }
 }

@@ -51,28 +51,6 @@ use Fsi\Database\Type\DateType;
 use Fsi\Database\Type\DateTimeType;
 
 /*
- * See https://github.com/josegonzalez/php-dotenv for API details.
- *
- * Uncomment block of code below if you want to use `.env` file during development.
- * You should copy `config/.env.example` to `config/.env` and set/modify the
- * variables as required.
- *
- * The purpose of the .env file is to emulate the presence of the environment
- * variables like they would be present in production.
- *
- * If you use .env files, be careful to not commit them to source control to avoid
- * security risks. See https://github.com/josegonzalez/php-dotenv#general-security-information
- * for more information for recommended practices.
-*/
-// if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
-//     $dotenv = new \josegonzalez\Dotenv\Loader([CONFIG . '.env']);
-//     $dotenv->parse()
-//         ->putenv()
-//         ->toEnv()
-//         ->toServer();
-// }
-
-/*
  * Read configuration file and inject configuration into various
  * CakePHP classes.
  *
@@ -84,7 +62,7 @@ use Fsi\Database\Type\DateTimeType;
 try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
-    Configure::load('app_local', 'default');
+    Configure::load('app_' . env('APP_ENV', 'local'), 'default');
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
@@ -147,5 +125,4 @@ Security::setSalt(Configure::consume('Security.salt'));
 
 TypeFactory::map('date', DateType::class);
 TypeFactory::map('datetime', DateTimeType::class);
-
 Validator::addDefaultProvider('default', new RulesProvider(CustomValidation::class));

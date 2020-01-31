@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\I18n;
 
 /**
@@ -45,8 +46,40 @@ class AppController extends Controller
 
         // 言語設定
         $user = $this->getRequest()->getAttribute('identity');
-        if (isset($user) && !empty($user->language)) {
+        if (!empty($user->language)) {
             I18n::setLocale($user->language);
+        }
+    }
+
+    /**
+     * Handles pagination of records in Table objects.
+     *
+     * Will load the referenced Table object, and have the PaginatorComponent
+     * paginate the query using the request date and settings defined in `$this->paginate`.
+     *
+     * This method will also make the PaginatorHelper available in the view.
+     *
+     * @param \Cake\ORM\Table|string|\Cake\ORM\Query|null $object Table to paginate
+     * (e.g: Table instance, 'TableName' or a Query object)
+     * @param array $settings The settings/configuration used for pagination.
+     * @return \Cake\ORM\ResultSet|\Cake\Datasource\ResultSetInterface Query results
+     * @link https://book.cakephp.org/4/en/controllers.html#paginating-a-model
+     * @throws \RuntimeException When no compatible table object can be found.
+     */
+    public function paginate($object = null, array $settings = [])
+    {
+        try {
+            return parent::paginate($object, $settings);
+        } catch (NotFoundException $e) {
+            $obj = $this->getRequest()->getAttribute('paging');
+            $page = $obj[key($obj)]['pageCount'];
+            if ($page <= 1) {
+                $page = null;
+            }
+            return $this->redirect([
+                'action' => $this->getRequest()->getParam('action'),
+                '?' => ['page' => $page] + $this->getRequest()->getQuery(),
+            ]);
         }
     }
 
@@ -67,8 +100,10 @@ class AppController extends Controller
      * @param bool $isShowDetail true: バリデーションエラーの詳細を1件出力する
      * @return bool false
      */
-    protected function failed($entity, $isShowDetail = false) {
+    protected function failed($entity, $isShowDetail = false)
+    {
         if ($entity === null) {
+            // E-V-NOT-FOUND:対象の{0}が存在しません
             $this->Flash->error(__('E-NOT-FOUND', __($this->title)));
             return false;
         }

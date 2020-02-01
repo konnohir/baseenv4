@@ -178,7 +178,7 @@ class MCompaniesController extends AppController
                 }
 
                 // DB保存失敗時: ロールバック
-                return $this->failed($mCompany);
+                return $this->failed($mCompany, true);
             }
 
             $this->Flash->success(__('該当する{0}を増員しました。', __($this->title)));

@@ -146,8 +146,12 @@ class MCompaniesTable extends AppTable
     public function getFilterSettings()
     {
         return [
+            'id' => ['type' => '=='],
             'code' => ['type' => 'like'],
             'name' => ['type' => 'like'],
+            'established_date' => ['=='],
+            'established_date_from' => ['type' => '>=', 'field' => 'established_date'],
+            'established_date_to' => ['type' => '<=', 'field' => 'established_date'],
             'staff' => ['type' => 'range']
         ];
     }

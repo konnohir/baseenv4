@@ -26,13 +26,25 @@ trait FilterTrait
             $field = $map[$key]['field'] ?? $this->getAlias() . '.' . $key;
             switch ($map[$key]['type']) {
                 // 完全一致
-                case 'value':
+                case '==':
                     if (is_array($value)) {
                         $conditions[] = ['OR' => array_map(function ($value) use ($field) {
                             return [$field => $value];
                         }, $value)];
                     } else {
                         $conditions[$field] = $value;
+                    }
+                    break;
+                // 以上
+                case '>=':
+                    if (is_scalar($value)) {
+                        $conditions[$field.' >='] = $value;
+                    }
+                    break;
+                // 以下
+                case '<=':
+                    if (is_scalar($value)) {
+                        $conditions[$field.' <='] = $value;
                     }
                     break;
                 // 部分一致

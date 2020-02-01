@@ -9,8 +9,12 @@
     <div class="card mb-2">
         <div class="card-body py-1">
             <?= $this->Form->create() ?>
+            <?= $this->Form->customControl('filter.id', ['label' => 'ID']) ?>
             <?= $this->Form->customControl('filter.code', ['label' => 'コード']) ?>
             <?= $this->Form->customControl('filter.name', ['label' => '名称']) ?>
+            <?= $this->Form->customControl('filter.established_date', ['label' => '創業年月日']) ?>
+            <?= $this->Form->customControl('filter.established_date_from', ['label' => '創業年月日(From)']) ?>
+            <?= $this->Form->customControl('filter.established_date_to', ['label' => '創業年月日(To)']) ?>
             <?= $this->Form->customControl('filter.staff', [
                 'label' => '従業員数',
                 'type' => 'radio',
@@ -77,6 +81,7 @@
                     <th><?= $this->Paginator->sort('name', ['label' => __('名称')]) ?></th>
                     <th><?= $this->Paginator->sort('tel_no', ['label' => __('電話番号')]) ?></th>
                     <th><?= $this->Paginator->sort('staff', ['label' => __('従業員数')]) ?></th>
+                    <th><?= $this->Paginator->sort('established_date', ['label' => __('創業年月日')]) ?></th>
                     <th class="w-100">
                         <?= $this->Paginator->sort('note', ['label' => __('備考')]) ?>
                     </th>
@@ -90,6 +95,7 @@
                     <td><?= h($mCompany->name) ?></td>
                     <td><?= h($mCompany->tel_no) ?></td>
                     <td><?= h($mCompany->staff) ?></td>
+                    <td><?= h($mCompany->established_date) ?></td>
                     <td><?= h($mCompany->note) ?></td>
                 </tr>
                 <?php endforeach ?>

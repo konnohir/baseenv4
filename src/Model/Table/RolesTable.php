@@ -91,7 +91,7 @@ class RolesTable extends AppTable
                 'last' => true,
             ],
         ]);
-        
+
         // 作成日時
         $validator
             ->dateTime('created_at')
@@ -140,7 +140,8 @@ class RolesTable extends AppTable
      * 
      * @return array
      */
-    public function getFilterSettings() {
+    public function getFilterSettings()
+    {
         return [];
     }
 

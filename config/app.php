@@ -95,7 +95,6 @@ return [
          * Configure the cache for model and datasource caches. This cache
          * configuration is used to store schema descriptions, and table listings
          * in connections.
-         * Duration will be set to '+2 minutes' in bootstrap.php when debug = true
          */
         '_cake_model_' => [
             'className' => FileEngine::class,
@@ -108,7 +107,6 @@ return [
         /*
          * Configure the cache for routes. The cached routes collection is built the
          * first time the routes are processed through `config/routes.php`.
-         * Duration will be set to '+2 seconds' in bootstrap.php when debug = true
          */
         '_cake_routes_' => [
             'className' => FileEngine::class,

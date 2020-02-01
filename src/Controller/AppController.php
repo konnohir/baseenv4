@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\I18n;
 
 /**
  * Application Controller
- * 基底コントローラ
+ * アプリケーションコントローラ
  */
 class AppController extends Controller
 {
@@ -96,11 +97,11 @@ class AppController extends Controller
     /**
      * Util: エラーメッセージをセットする
      * 
-     * @param Cake\ORM\Entity $entity エンティティ
+     * @param Cake\Datasource\EntityInterface $entity エンティティ
      * @param bool $isShowDetail true: バリデーションエラーの詳細を1件出力する
      * @return bool false
      */
-    protected function failed($entity, $isShowDetail = false)
+    protected function failed(?EntityInterface $entity, $isShowDetail = false)
     {
         if ($entity === null) {
             // E-V-NOT-FOUND:対象の{0}が存在しません

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -94,7 +95,7 @@ class MCompaniesTable extends AppTable
         $validator
             ->dateTime('updated_at')
             ->notEmptyDateTime('updated_at');
-            
+
         // 削除日時
         $validator
             ->dateTime('deleted_at')
@@ -136,13 +137,14 @@ class MCompaniesTable extends AppTable
             'Notices',
         ]);
     }
-    
+
     /**
      * 検索マッピング設定
      * 
      * @return array
      */
-    public function getFilterSettings() {
+    public function getFilterSettings()
+    {
         return [
             'code' => ['type' => 'like'],
             'name' => ['type' => 'like'],

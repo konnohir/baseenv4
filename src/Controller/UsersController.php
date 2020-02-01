@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\Core\Configure;
-use Cake\Http\Exception\NotFoundException;
-
 /**
  * Users Controller
  * ユーザーマスタ
@@ -63,7 +60,7 @@ class UsersController extends AppController
     /**
      * 詳細画面
      *
-     * @param string $id ユーザーエンティティ id.
+     * @param string $id ユーザー id.
      * @return \Cake\Http\Response|null
      */
     public function view($id)
@@ -77,7 +74,7 @@ class UsersController extends AppController
             $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
             return $this->redirect(['action' => 'index']);
         }
-        
+
         $this->set(compact('user'));
     }
 
@@ -94,7 +91,7 @@ class UsersController extends AppController
     /**
      * 編集画面
      *
-     * @param string|null $id ユーザーエンティティ id.
+     * @param string|null $id ユーザー id.
      * @return \Cake\Http\Response|null
      */
     public function edit($id = null)
@@ -114,7 +111,7 @@ class UsersController extends AppController
         }
 
         // POST送信された(保存ボタンが押された)場合
-        if ($this->request->is(['patch', 'post', 'put'])) {
+        if ($this->request->is(['post', 'put', 'patch'])) {
             // エンティティ編集
             $user = $this->Users->doEditEntity($user, $this->getRequest()->getData());
 
@@ -263,11 +260,11 @@ class UsersController extends AppController
             // CSVヘッダ
             array_unshift($csv, ['ID', 'Email', 'Password']);
             // CSV ダウンロード
-            $this->viewBuilder()->setClassName('Csv');
-            $this->set('csv', $csv);
+            $this->set('csv', $csv)->viewBuilder()->setClassName('Csv');
             return;
         }
 
+        // 画面を再表示
         return $this->redirect($this->referer());
     }
 

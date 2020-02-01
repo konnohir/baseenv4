@@ -150,7 +150,7 @@ class HomesController extends AppController
         }
 
         // POST送信された(保存ボタンが押された)場合
-        if ($this->request->is(['patch', 'post', 'put'])) {
+        if ($this->request->is(['post', 'put', 'patch'])) {
             // パスワード変更
             $user = $this->Users->doChangePassword($user, $this->getRequest()->getData());
 

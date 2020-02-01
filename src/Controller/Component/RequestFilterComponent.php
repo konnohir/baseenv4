@@ -14,38 +14,24 @@ use Cake\Http\Exception\BadRequestException;
 class RequestFilterComponent extends Component
 {
     /**
-     * 設定値
-     * @var array
-     */
-    protected $config;
-
-    /**
-     * 初期化
-     *
-     * @return void
-     */
-    public function initialize(array $config): void
-    {
-        $this->config = $config;
-    }
-
-    /**
      * beforeFilter
      * 各アクションの実行前にトリガーされる
      * 
      * @param Event $event
-     * @return void
+     * @return \Cake\Http\Response|void
      */
     public function beforeFilter(Event $event)
     {
         // $action: リクエストされたアクション
         $action = $this->getRequest()->getParam('action');
 
-        if (!isset($this->config[$action])) {
+        // $filters: 適用するフィルタの配列
+        $filters = $this->getConfig($action);
+        if (!isset($filters)) {
             return;
         }
 
-        foreach($this->config[$action] as $method) {
+        foreach($filters as $method) {
             $method .= 'Filter';
             if ($result = $this->$method()) {
                 $event->stopPropagation();
@@ -81,12 +67,8 @@ class RequestFilterComponent extends Component
         $newRequest = $this->getRequest()->withData('filter', $filterArgs);
         $this->getController()->setRequest($newRequest);
 
-        // paginateプロパティを更新
+        // paginateプロパティを自動設定
         $this->getController()->paginate['finder']['overview'] = ['filter' => $filterArgs];
-        $this->getController()->paginate['firstPage'] = [
-            'action' => $this->getRequest()->getParam('action'),
-            '?' => ['page' => null] + $filterArgs,
-        ];
     }
 
     /**
@@ -117,7 +99,7 @@ class RequestFilterComponent extends Component
     public function requestTargetFilter()
     {
         // HTTPメソッドを制限する
-        $this->getRequest()->allowMethod(['post']);
+        $this->getRequest()->allowMethod(['post', 'put', 'patch']);
 
         // $targets: POSTデータ
         $targets = $this->getRequest()->getData('targets');

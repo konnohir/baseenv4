@@ -3,6 +3,9 @@ namespace App\Model\Validation;
 
 use Cake\Validation\Validation;
 
+/**
+ * CustomValidation
+ */
 class CustomValidation extends Validation
 {
     /**

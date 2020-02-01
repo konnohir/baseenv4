@@ -263,7 +263,7 @@ class UsersTable extends AppTable
             }
             return true;
         }, ['errorField' => 'password']);
-        
+
         return $rules;
     }
 
@@ -315,7 +315,8 @@ class UsersTable extends AppTable
      * 
      * @return array
      */
-    public function getFilterSettings() {
+    public function getFilterSettings()
+    {
         return [
             'email' => ['type' => 'like'],
         ];

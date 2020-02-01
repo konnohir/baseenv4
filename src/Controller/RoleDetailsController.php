@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\Core\Configure;
-use Cake\Http\Exception\NotFoundException;
-
 /**
  * RoleDetails Controller
  * 権限詳細マスタ
@@ -25,7 +22,7 @@ class RoleDetailsController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        
+
         // リクエストフィルタ
         $this->loadComponent('RequestFilter', [
             'index' => ['paginate'],
@@ -33,7 +30,6 @@ class RoleDetailsController extends AppController
             'edit' => ['requestId'],
             'delete' => ['requestTarget'],
         ]);
-        $this->loadComponent('Permission');
 
         $this->loadModel('RoleDetails');
     }
@@ -111,10 +107,10 @@ class RoleDetailsController extends AppController
         }
 
         // POST送信された(保存ボタンが押された)場合
-        if ($this->request->is(['patch', 'post', 'put'])) {
+        if ($this->request->is(['post', 'put', 'patch'])) {
             // エンティティ編集
             $roleDetail = $this->RoleDetails->doEditEntity($roleDetail, $this->getRequest()->getData());
-            
+
             // $result: トランザクション実行結果 (boolean)
             $result = $this->RoleDetails->getConnection()->transactional(function () use ($roleDetail) {
                 if (!$this->RoleDetails->save($roleDetail)) {
@@ -122,7 +118,8 @@ class RoleDetailsController extends AppController
                 }
 
                 // @ACL
-                foreach($roleDetail->roles ?? [] as $role) {
+                $this->loadComponent('Permission');
+                foreach ($roleDetail->roles ?? [] as $role) {
                     if (!$this->Permission->updateACL($role)) {
                         return false;
                     }

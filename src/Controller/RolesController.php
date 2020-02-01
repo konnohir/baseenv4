@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
-
-use Cake\Core\Configure;
 
 /**
  * Roles Controller
@@ -23,7 +22,7 @@ class RolesController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        
+
         // リクエストフィルタ
         $this->loadComponent('RequestFilter', [
             'index' => ['paginate'],
@@ -32,10 +31,9 @@ class RolesController extends AppController
             'delete' => ['requestTarget'],
         ]);
 
-        $this->loadComponent('Permission');
         $this->loadModel('Roles');
     }
-    
+
     /**
      * 一覧画面
      *
@@ -106,22 +104,10 @@ class RolesController extends AppController
         }
 
         // POST送信された(保存ボタンが押された)場合
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $role = $this->Roles->patchEntity($role, $this->getRequest()->getData(), [
-                'fields' => [
-                    'name', 'description',
-                    // associated
-                    'role_details',
-                    // lock flag
-                    '_lock',
-                ],
-                'associated' => [
-                    'RoleDetails' => [
-                        'onlyIds' => true
-                    ],
-                ],
-            ]);
-            
+        if ($this->request->is(['post', 'put', 'patch'])) {
+            // エンティティ編集
+            $role = $this->Roles->doEditEntity($role, $this->getRequest()->getData());
+
             // $result: トランザクション実行結果 (boolean)
             $result = $this->Roles->getConnection()->transactional(function () use ($role) {
                 // if (!$this->Roles->save($role)) {
@@ -129,6 +115,7 @@ class RolesController extends AppController
                 // }
 
                 // @ACL
+                $this->loadComponent('Permission');
                 if (!$this->Permission->updateACL($role)) {
                     return false;
                 }

@@ -7,31 +7,33 @@
 ?>
 <section>
     <h2 class="mb-2"><?= __('MCompanies') ?></h2>
+    <div class="dl-wrap mb-4">
+        <dl class="row">
+            <dt class="col-md"><?= __('コード') ?></dt>
+            <dd class="col-md"><?= h($mCompany->code) ?></dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md"><?= __('名称') ?></dt>
+            <dd class="col-md"><?= h($mCompany->name) ?></dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md"><?= __('電話番号') ?></dt>
+            <dd class="col-md"><?= h($mCompany->tel_no) ?></dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md"><?= __('従業員数') ?></dt>
+            <dd class="col-md"><?= h($mCompany->staff) ?></dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md"><?= __('創業年月') ?></dt>
+            <dd class="col-md"><?= h($mCompany->established_date) ?></dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md"><?= __('備考') ?></dt>
+            <dd class="col-md"><?= h($mCompany->note) ?></dd>
+        </dl>
+    </div>
     <table class="table mb-2 table-border border">
-        <tr>
-            <th><?= __('コード') ?></th>
-            <td><?= h($mCompany->code) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('名称') ?></th>
-            <td><?= h($mCompany->name) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('電話番号') ?></th>
-            <td><?= h($mCompany->tel_no) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('従業員数') ?></th>
-            <td><?= $mCompany->staff ?></td>
-        </tr>
-        <tr>
-            <th><?= __('創業年月') ?></th>
-            <td><?= h($mCompany->established_date) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('備考') ?></th>
-            <td><?= h($mCompany->note) ?></td>
-        </tr>
         <tr>
             <th><?= __('Tag') ?></th>
             <td>
@@ -47,7 +49,7 @@
             </td>
         </tr>
     </table>
-    <div class="btn-group mb-2">
+    <div class="btn-group my-2">
         <?= $this->Form->customButton(__('BTN-BACK'), [
             // 戻る
             'data-action' => ['controller' => 'MCompanies', 'action' => 'index'],

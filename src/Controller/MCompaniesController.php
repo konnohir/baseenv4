@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\Core\Configure;
-use Cake\Http\Exception\NotFoundException;
-
 /**
  * MCompanies Controller
  * 企業マスタ
@@ -25,7 +22,7 @@ class MCompaniesController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        
+
         // リクエストフィルタ
         $this->loadComponent('RequestFilter', [
             'index' => ['paginate'],
@@ -36,7 +33,6 @@ class MCompaniesController extends AppController
         ]);
 
         $this->loadModel('MCompanies');
-        $this->loadModel('Tags');
     }
 
     /**
@@ -48,7 +44,7 @@ class MCompaniesController extends AppController
     {
         // $mCompanies: 企業マスタの配列
         $mCompanies = $this->paginate($this->MCompanies);
-        
+
         $this->set(compact('mCompanies'));
     }
 
@@ -61,12 +57,17 @@ class MCompaniesController extends AppController
     public function view($id = null)
     {
         // $mCompany: 企業マスタ
-        $mCompany = $this->MCompanies->get($id, [
-            'finder' => 'detail',
-        ]);
+        $mCompany = $this->MCompanies->find('detail', compact('id'))->first();
+
+        // データ取得失敗時: 一覧画面へ遷移 (検索条件クリア)
+        if ($mCompany === null) {
+            // E-V-NOT-FOUND:対象の{0}が存在しません
+            $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
+            return $this->redirect(['action' => 'index']);
+        }
 
         // $tagList: タグ一覧
-        $tagList = $this->Tags->find('list')->toArray();
+        $tagList = $this->MCompanies->Tags->find('list')->toArray();
 
         $this->set(compact('mCompany', 'tagList'));
     }
@@ -93,13 +94,11 @@ class MCompaniesController extends AppController
         if ($this->isAdd()) {
             $mCompany = $this->MCompanies->newEmptyEntity();
         } else {
-            $mCompany = $this->MCompanies->get($id, [
-                'finder' => 'detail'
-            ]);
+            $mCompany = $this->MCompanies->find('detail', compact('id'))->first();
         }
 
         // POST送信された(保存ボタンが押された)場合
-        if ($this->request->is(['patch', 'post', 'put'])) {
+        if ($this->request->is(['post', 'put', 'patch'])) {
             $mCompany = $this->MCompanies->patchEntity($mCompany, $this->getRequest()->getData(), [
                 'fields' => [
                     'code', 'name', 'tel_no', 'staff', 'established_date', 'note',
@@ -133,7 +132,7 @@ class MCompaniesController extends AppController
         }
 
         // $tagList: タグ一覧
-        $tagList = $this->Tags->find('list')->toArray();
+        $tagList = $this->MCompanies->Tags->find('list')->toArray();
 
         $this->set(compact('mCompany', 'tagList'));
     }
@@ -150,7 +149,7 @@ class MCompaniesController extends AppController
 
         // $result: トランザクション実行結果 (boolean)
         $result = $this->MCompanies->getConnection()->transactional(function () use ($targets) {
-            foreach ($targets as $id => $_lock) {
+            foreach ($targets as $id => $requestData) {
                 $mCompany = $this->MCompanies->get($id, [
                     'fields' => [
                         'id',
@@ -163,7 +162,7 @@ class MCompaniesController extends AppController
                     // 従業員数
                     'staff' => $mCompany->staff + 1,
                     // 排他制御
-                    '_lock' => $_lock['_lock'],
+                    '_lock' => $requestData['_lock'],
                 ];
 
                 $mCompany = $this->MCompanies->patchEntity($mCompany, $inputArray, [
@@ -173,12 +172,13 @@ class MCompaniesController extends AppController
                     ],
                 ]);
 
-                // DB保存失敗時: ロールバック
-                if (!$this->MCompanies->save($mCompany)) {
-                    return $this->failed($mCompany, true);
+                // DB保存成功時: 次の対象データの処理へ進む
+                if ($this->Users->save($mCompany)) {
+                    continue;
                 }
 
-                // DB保存成功時: 次のデータの処理へ進む
+                // DB保存失敗時: ロールバック
+                return $this->failed($mCompany);
             }
 
             $this->Flash->success(__('該当する{0}を増員しました。', __($this->title)));
@@ -201,7 +201,7 @@ class MCompaniesController extends AppController
 
         // $result: トランザクション実行結果 (boolean)
         $result = $this->MCompanies->getConnection()->transactional(function () use ($targets) {
-            foreach ($targets as $id => $_lock) {
+            foreach ($targets as $id => $requestData) {
                 $mCompany = $this->MCompanies->get($id, [
                     'fields' => [
                         'id',
@@ -211,17 +211,18 @@ class MCompaniesController extends AppController
                 ]);
 
                 // 排他制御
-                $mCompany->_lock = $_lock['_lock'];
+                $mCompany->_lock = $requestData['_lock'];
 
                 // 削除日時
                 $mCompany->deleted_at = date('Y-m-d h:i:s');
 
-                // DB保存失敗時: ロールバック
-                if (!$this->MCompanies->save($mCompany)) {
-                    return $this->failed($mCompany);
+                // DB保存成功時: 次の対象データの処理へ進む
+                if ($this->Users->save($mCompany)) {
+                    continue;
                 }
 
-                // DB保存成功時: 次のデータの処理へ進む
+                // DB保存失敗時: ロールバック
+                return $this->failed($mCompany);
             }
 
             $this->Flash->success(__('I-DELETE', __($this->title)));

@@ -173,7 +173,7 @@ class MCompaniesController extends AppController
                 ]);
 
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->Users->save($mCompany)) {
+                if ($this->MCompanies->save($mCompany)) {
                     continue;
                 }
 
@@ -217,7 +217,7 @@ class MCompaniesController extends AppController
                 $mCompany->deleted_at = date('Y-m-d h:i:s');
 
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->Users->save($mCompany)) {
+                if ($this->MCompanies->save($mCompany)) {
                     continue;
                 }
 

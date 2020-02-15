@@ -93,8 +93,7 @@
         ]) ?>
         <?= $this->Form->customButton(__('BTN-SAVE'), [
             // 保存
-            'type' => 'submit',
-            'class' => 'btn-primary'
+            'class' => 'btn-primary btn-submit'
         ]) ?>
     </div>
     <?= $this->Form->end() ?>

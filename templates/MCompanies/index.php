@@ -7,7 +7,7 @@
 <div class="w-100 mx-auto">
     <h2 class="mb-2"><?= __('MCompanies') ?></h2>
     <div class="card mb-2">
-        <div class="card-body py-1">
+        <div class="card-body py-1 w-50">
             <?= $this->Form->create() ?>
             <?= $this->Form->customControl('filter.id', ['label' => 'ID']) ?>
             <?= $this->Form->customControl('filter.code', ['label' => 'コード']) ?>
@@ -25,6 +25,18 @@
                     '21-50' => '21～50',
                     '51-100' => '51～100',
                     '101-' => '101～',
+                ]
+            ]) ?>
+            <?= $this->Form->customControl('filter.staff2', [
+                'label' => '従業員数',
+                'type' => 'select',
+                'multiple' => 'checkbox',
+                'default' => '',
+                'empty' => 'すべて',
+                'options' => [
+                    '1' => '1',
+                    '15' => '15',
+                    '25' => '25',
                 ]
             ]) ?>
             <?= $this->Form->customButton(__('BTN-CLEAR'), ['data-action' => ['controller' => 'MCompanies', 'action' => 'index'], 'class' => 'btn-outline-secondary btn-clear']) ?>

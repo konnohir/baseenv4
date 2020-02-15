@@ -9,9 +9,19 @@
     <div class="card mb-2">
         <div class="card-body py-1">
             <?= $this->Form->create() ?>
-            <?= $this->Form->customControl('filter.email', ['label' => __('Users.email')]) ?>
-            <?= $this->Form->customButton(__('BTN-CLEAR'), ['data-action' => ['controller' => 'Users', 'action' => 'index'], 'class' => 'btn-outline-secondary btn-clear']) ?>
-            <?= $this->Form->customButton(__('BTN-SEARCH'), ['type' => 'submit', 'class' => 'btn-outline-info btn-search']) ?>
+            <?php
+                echo $this->Form->customControl('filter.email', [
+                    'label' => __('Users.email')
+                ]);
+                echo $this->Form->customButton(__('BTN-CLEAR'), [
+                    'data-action' => ['controller' => 'Users', 'action' => 'index'],
+                    'class' => 'btn-outline-secondary btn-clear'
+                ]);
+                echo $this->Form->customButton(__('BTN-SEARCH'), [
+                    'type' => 'submit',
+                    'class' => 'btn-outline-info btn-search',
+                ]);
+            ?>
             <?= $this->Form->end() ?>
         </div>
     </div>

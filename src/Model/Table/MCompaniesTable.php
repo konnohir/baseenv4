@@ -152,7 +152,8 @@ class MCompaniesTable extends AppTable
             'established_date' => ['=='],
             'established_date_from' => ['type' => '>=', 'field' => 'established_date'],
             'established_date_to' => ['type' => '<=', 'field' => 'established_date'],
-            'staff' => ['type' => 'range']
+            'staff' => ['type' => 'range'],
+            'staff2' => ['type' => '==', 'field' => 'staff'],
         ];
     }
 }

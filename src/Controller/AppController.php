@@ -73,7 +73,7 @@ class AppController extends Controller
     protected function failed(?EntityInterface $entity, $isShowDetail = false)
     {
         if ($entity === null) {
-            // E-V-NOT-FOUND:対象の{0}が存在しません
+            // E-V-NOT-FOUND: 対象の{0}が存在しません
             $this->Flash->error(__('E-NOT-FOUND', __($this->title)));
             return false;
         }

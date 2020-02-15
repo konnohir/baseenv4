@@ -213,6 +213,11 @@ $(function () {
         location.href = $(this).attr('data-action');
     });
     
+    // フォーム送信ボタン
+    $('.btn-submit').click(function () {
+        $(this).parents('form').submit();
+    });
+    
 });
 
 

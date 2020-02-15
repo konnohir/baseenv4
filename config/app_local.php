@@ -20,7 +20,7 @@ return [
     /**
      * DebugKit configuration.
      * 
-     * DebugKit is enabled when 'debug' and 'DebugKit' is true.
+     * DebugKit is enabled when both 'debug' and 'DebugKit' are true.
      */
     'DebugKit' => false,
 

@@ -52,12 +52,16 @@ class RequestFilterComponent extends Component
         // POST送信された場合
         if ($this->getRequest()->is('post')) {
             // POSTされたデータをクエリ文字列 (URLの?から後ろの部分)にして、生成したURLへリダイレクトする
-            return $this->getController()->redirect([
-                'action' => $this->getRequest()->getParam('action'),
-                '?' => array_filter((array)$this->getRequest()->getData('filter'), function ($row) {
-                    return (is_array($row) || mb_strlen($row) !== 0);
-                })
-            ]);
+            $routes = [
+                'action' => $this->getRequest()->getParam('action')
+            ];
+            if ($this->getRequest()->getParam('pass.0')) {
+                $routes[] = $this->getRequest()->getParam('pass.0');
+            }
+            $routes['?'] = array_filter((array)$this->getRequest()->getData('filter'), function ($row) {
+                return (is_array($row) || mb_strlen($row) !== 0);
+            });
+            return $this->getController()->redirect($routes);
         }
             
         // $filterArgs: クエリ文字列(URLの?から後ろの部分)の配列

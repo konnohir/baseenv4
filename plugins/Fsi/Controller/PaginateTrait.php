@@ -25,9 +25,10 @@ trait PaginateTrait
      * @param \Cake\ORM\Table|string|\Cake\ORM\Query|null $object Table to paginate
      * (e.g: Table instance, 'TableName' or a Query object)
      * @param array $settings The settings/configuration used for pagination.
-     * @return \Cake\ORM\ResultSet|\Cake\Datasource\ResultSetInterface Query results
+     * @return \Cake\ORM\ResultSet|\Cake\Datasource\ResultSetInterface|array Query results
      * @link https://book.cakephp.org/4/en/controllers.html#paginating-a-model
      * @throws \RuntimeException When no compatible table object can be found.
+     * @var \Cake\Controller\Controller $this
      */
     public function paginate($object = null, array $settings = [])
     {
@@ -35,15 +36,19 @@ trait PaginateTrait
             return parent::paginate($object, $settings);
         } catch (NotFoundException $e) {
             // ページが見つからない場合、末尾のページに遷移
-            $obj = $this->getRequest()->getAttribute('paging');
-            $page = $obj[key($obj)]['pageCount'];
-            if ($page <= 1) {
-                $page = null;
+            $paging = $this->getRequest()->getAttribute('paging');
+            $pageCount = $paging[key($paging)]['pageCount'];
+            if ($pageCount <= 1) {
+                $pageCount = null;
             }
-            $newRequest = $this->redirect([
-                'action' => $this->getRequest()->getParam('action'),
-                '?' => ['page' => $page] + $this->getRequest()->getQuery(),
-            ]);
+            $routes = [
+                'action' => $this->getRequest()->getParam('action')
+            ];
+            if ($this->getRequest()->getParam('pass.0')) {
+                $routes[] = $this->getRequest()->getParam('pass.0');
+            }
+            $routes['?'] = ['page' => $pageCount] + $this->getRequest()->getQuery();
+            $this->redirect($routes);
         } catch (InvalidArgumentException $e) {
             // ユーザー入力文字列不正
             // ex)数値型のカラムを文字列で検索
@@ -57,6 +62,7 @@ trait PaginateTrait
                     'end' => 0,
                 ],
             ]);
+            $this->setRequest($newRequest);
         } catch (PDOException $e) {
             // ユーザー入力文字列不正
             // ex)日付型のカラムを日付フォーマット以外で検索
@@ -70,8 +76,8 @@ trait PaginateTrait
                     'end' => 0,
                 ],
             ]);
+            $this->setRequest($newRequest);
         }
-        $this->setRequest($newRequest);
         return [];
     }
 }

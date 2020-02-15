@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Core\Configure;
 use Cake\Controller\Controller;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\I18n;
-use Fsi\Controller\PaginateTrait;
 
 /**
  * Application Controller
@@ -15,7 +15,7 @@ use Fsi\Controller\PaginateTrait;
  */
 class AppController extends Controller
 {
-    use PaginateTrait;
+    use \Fsi\Controller\PaginateTrait;
 
     /**
      * PaginatorComponent デフォルト設定
@@ -48,7 +48,7 @@ class AppController extends Controller
 
         // 言語設定
         $user = $this->getRequest()->getAttribute('identity');
-        if (!empty($user->language)) {
+        if (isset($user->language)) {
             I18n::setLocale($user->language);
         }
     }
@@ -66,7 +66,7 @@ class AppController extends Controller
     /**
      * Util: エラーメッセージをセットする
      * 
-     * @param Cake\Datasource\EntityInterface $entity エンティティ
+     * @param \Cake\Datasource\EntityInterface $entity エンティティ
      * @param bool $isShowDetail true: バリデーションエラーの詳細を1件出力する
      * @return bool false
      */
@@ -77,15 +77,23 @@ class AppController extends Controller
             $this->Flash->error(__('E-NOT-FOUND', __($this->title)));
             return false;
         }
+        if ($entity->getError('_lock')) {
+            // E-V-LOCK: データが変更されているため、保存できません。
+            $this->Flash->error(__('E-V-LOCK'));
+            return false;
+        }
         // E-V-WRONG-INPUT: 入力内容に誤りがあります。
         $errorMessage = __('E-V-WRONG-INPUT');
         if ($isShowDetail) {
             $errorMessage .= "\n・" . current(current($entity->getErrors()));
         }
-        if ($entity->getError('_lock')) {
-            $errorMessage = current($entity->getError('_lock'));
-        }
         $this->Flash->error($errorMessage);
+
+        // デバッグログ
+        if (Configure::read('debug')) {
+            $this->log($this->getName() . '::' . $this->getRequest()->getParam('action') . PHP_EOL . var_export($entity->getErrors(), true), 'debug');
+        }
+        
         return false;
     }
 }

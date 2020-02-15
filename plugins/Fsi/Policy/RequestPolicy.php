@@ -56,10 +56,6 @@ class RequestPolicy implements RequestPolicyInterface
      */
     public static function check(int $roleId, array $routes)
     {
-        if (!isset($roleId)) {
-            return false;
-        }
-
         if (Configure::read('debug')) {
             // Allow special role access
             if ($roleId === 1) {

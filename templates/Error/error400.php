@@ -6,13 +6,6 @@
  * @var string $message
  * @var string $url
  */
-
-use Authorization\Exception\ForbiddenException;
-
-// fix
-if ($error instanceof ForbiddenException) {
-    $message = 'Forbidden';
-}
 ?>
 <section>
     <h2><?= __('Error') ?></h2>

@@ -46,8 +46,14 @@ class AppController extends Controller
         $this->loadComponent('Authorization.Authorization');
         $this->loadComponent('Acl.Acl');
 
-        // 言語設定
         $user = $this->getRequest()->getAttribute('identity');
+
+        // ajax通信時はログイン画面にリダイレクトせずに例外を発生させるfix
+        if (!isset($user) && $this->getRequest()->is('ajax') && !$this instanceof ErrorController) {
+            throw new \Cake\Http\Exception\UnauthorizedException();
+        }
+
+        // 言語設定
         if (isset($user->language)) {
             I18n::setLocale($user->language);
         }
@@ -87,13 +93,13 @@ class AppController extends Controller
         if ($isShowDetail) {
             $errorMessage .= "\n・" . current(current($entity->getErrors()));
         }
-        $this->Flash->error($errorMessage);
 
         // デバッグログ
         if (Configure::read('debug')) {
-            $this->log($this->getName() . '::' . $this->getRequest()->getParam('action') . PHP_EOL . var_export($entity->getErrors(), true), 'debug');
+            $this->log(var_export($entity->getErrors(), true), 'debug');
         }
         
+        $this->Flash->error($errorMessage);
         return false;
     }
 }

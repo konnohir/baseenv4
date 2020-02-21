@@ -14,7 +14,7 @@
 </head>
 <body>
     <header class="navbar navbar-expand-md navbar-dark bg-dark p-0">
-        <h1><a href="/" class="navbar-brand"><?= __('CakePHP4dev') ?></a></h1>
+        <h1><a href="/" class="navbar-brand"><?= __('BaseEnv4') ?></a></h1>
         <?= $this->element('navbar') ?>
     </header>
     <main class="container-fluid">
@@ -24,10 +24,10 @@
         </div>
     </main>
     <footer>
-        <p class="text-center border-top">© 2019 footer</p>
+        <p class="text-center border-top">© 2020 footer</p>
     </footer>
     <?=
-        $this->Html->script('/vendor/jquery-3.4.1.slim.min'),
+        $this->Html->script('/vendor/jquery-3.4.1.min'),
         $this->Html->script('/vendor/bootstrap.bundle.min'),
         $this->Html->script('common'),
         $this->fetch('script'),

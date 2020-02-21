@@ -260,7 +260,9 @@ class UsersController extends AppController
             // CSVヘッダ
             array_unshift($csv, ['ID', 'Email', 'Password']);
             // CSV ダウンロード
-            $this->set('csv', $csv)->viewBuilder()->setClassName('Csv');
+            $this->set('csv', $csv);
+            $this->viewBuilder()->setClassName('Csv');
+            $this->setResponse($this->getResponse()->withDownload('password.csv'));
             return;
         }
 

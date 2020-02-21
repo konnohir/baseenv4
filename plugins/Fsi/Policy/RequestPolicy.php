@@ -6,7 +6,6 @@ use Authorization\Policy\RequestPolicyInterface;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\Core\Configure;
-use Cake\Utility\Inflector;
 
 /**
  * RequestPolicy class
@@ -19,6 +18,11 @@ class RequestPolicy implements RequestPolicyInterface
      * @var string
      */
     public static $publicController = 'Homes';
+
+    /**
+     * @var \Cake\Datasource\EntityInterface
+     */
+    protected static $model = null;
 
     /**
      * Method to check if the request can be accessed
@@ -76,9 +80,11 @@ class RequestPolicy implements RequestPolicyInterface
             return true;
         }
 
-        $model = TableRegistry::getTableLocator()->get('Roles');
+        if (!isset(self::$model)) {
+            self::$model = TableRegistry::getTableLocator()->get('Roles');
+        }
 
-        $count = $model->find()
+        $count = self::$model->find()
             ->join([
                 'table' => 'role_details_roles',
                 'alias' => 'a',

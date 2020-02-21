@@ -36,6 +36,6 @@ class ExceptionHandler implements HandlerInterface
         array $options = []
     ): ResponseInterface {
         Router::setRequest($request);
-        throw $exception;
+        throw new \Cake\Http\Exception\ForbiddenException();
     }
 }

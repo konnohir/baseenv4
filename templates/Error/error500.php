@@ -9,17 +9,13 @@
 
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
-use Authorization\Exception\ForbiddenException;
 
-if (Configure::read('debug')) :
-    if ($error instanceof ForbiddenException) {
-        $this->extend('error400');
-        return;
-    }
-    $this->layout = 'dev_error';
-    $this->assign('title', $message);
-    $this->start('file');
-?>
+if (Configure::read('debug')) : ?>
+    <?php
+        $this->layout = 'dev_error';
+        $this->assign('title', $message);
+        $this->start('file');
+    ?>
     <?php if (!empty($error->queryString)) : ?>
         <p class="notice">
             <strong>SQL Query: </strong>
@@ -34,11 +30,8 @@ if (Configure::read('debug')) :
         <strong>Error in: </strong>
         <?= sprintf('%s, line %s', str_replace(ROOT, 'ROOT', $error->getFile()), $error->getLine()) ?>
     <?php endif; ?>
-<?php
-    echo $this->element('auto_table_warning');
-    $this->end();
-endif;
-?>
+    <?php $this->end() ?>
+<?php endif ?>
 <section>
     <h2><?= __('Error') ?></h2>
     <p class="error">

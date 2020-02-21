@@ -68,15 +68,15 @@ class UsersTable extends AppTable
                 'message' => __('E-V-SCALAR', $label),
                 'last' => true,
             ],
-            // メールアドレス形式
-            'email' => [
-                'message' => __('E-V-EMAIL', $label),
-                'last' => true,
-            ],
             // 最大桁数以内
             'maxLength' => [
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAXLENGTH', $label, 255),
+                'last' => true,
+            ],
+            // メールアドレス形式
+            'email' => [
+                'message' => __('E-V-EMAIL-FORMAT', $label),
                 'last' => true,
             ],
         ]);
@@ -152,7 +152,7 @@ class UsersTable extends AppTable
             'current_password',
             'password',
             'retype_password',
-        ]);
+        ], 'update');
 
         // 現在のパスワード
         $column = 'current_password';
@@ -232,7 +232,7 @@ class UsersTable extends AppTable
             $model = $options['repository'];
 
             // 削除済みのデータを含めて既に登録済みのメールアドレスでないこと
-            if ($model->find('withDeleted')->where(['email' => $entity->email])->count()) {
+            if ($model->find('withInactive')->where(['email' => $entity->email])->count()) {
                 return __('E-V-UNIQUE', __('Users.email'));
             }
             return true;
@@ -298,7 +298,7 @@ class UsersTable extends AppTable
     }
 
     /**
-     * ユーザー認証のためのモデルを取得するFinder
+     * 認証のためにユーザーを取得するFinder
      */
     public function findAuthentication(Query $query, array $options)
     {
@@ -399,7 +399,7 @@ class UsersTable extends AppTable
     public function doIssuePassword(Entity $entity, array $input)
     {
         // 新しいパスワード
-        $password = 'pass#12345';
+        $password = $this->makePassword();
 
         $input = array_merge_recursive($input, [
             // パスワード
@@ -469,5 +469,14 @@ class UsersTable extends AppTable
             'associated' => []
         ]);
         return $entity;
+    }
+
+    /**
+     * パスワード文字列生成
+     * 
+     * @return string ランダムパスワード
+     */
+    private function makePassword() {
+        return 'pass#12345';
     }
 }

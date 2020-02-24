@@ -18,7 +18,7 @@
             </dt>
             <dd class="col-md">
                 <?php
-                    // 親権限
+                    // 親権限詳細
                     echo $this->Form->customControl('parent_id', [
                         'type' => 'select',
                         'options' => $parentRoleDetailList,
@@ -66,7 +66,7 @@
                     <?php foreach ($acos as $controller) : ?>
                         <li>
                             <?=
-                                // 権限詳細 (親)
+                                // Acos (controller)
                                 $this->Form->customControl('acos._ids', [
                                     'type' => 'select',
                                     'multiple' => 'checkbox',
@@ -79,7 +79,7 @@
                                     <?php foreach ($controller->children as $action) : ?>
                                         <li>
                                             <?=
-                                                // 権限詳細 (子)
+                                                // Acos (action)
                                                 $this->Form->customControl('acos._ids', [
                                                     'type' => 'select',
                                                     'multiple' => 'checkbox',

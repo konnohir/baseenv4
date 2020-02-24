@@ -10,13 +10,16 @@
         <div class="card-body py-1">
             <?= $this->Form->create() ?>
             <?php
+                // メールアドレス
                 echo $this->Form->customControl('filter.email', [
                     'label' => __('Users.email')
                 ]);
+                // 条件クリア
                 echo $this->Form->customButton(__('BTN-CLEAR'), [
                     'data-action' => ['controller' => 'Users', 'action' => 'index'],
                     'class' => 'btn-outline-secondary btn-clear'
                 ]);
+                // 検索
                 echo $this->Form->customButton(__('BTN-SEARCH'), [
                     'type' => 'submit',
                     'class' => 'btn-outline-info btn-search',

@@ -3,5 +3,4 @@
  * @var \App\View\AppView $this
  */
 ?>
-<section>
-</section>
+<section></section>

@@ -24,7 +24,11 @@ class CsvView extends View
         foreach ($this->viewVars['csv'] as $row) {
             foreach($row as &$col) {
                 if (!is_numeric(($col))) {
-                    $col = '"' . str_replace('"', '""', $col) . '"';
+                    if ($col === false) {
+                        $col = '0';
+                    }else {
+                        $col = '"' . str_replace('"', '""', $col) . '"';
+                    }
                 }
             }
             unset($col);

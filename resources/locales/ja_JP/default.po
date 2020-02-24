@@ -202,7 +202,7 @@ msgstr "権限詳細"
 ####################################
 
 msgid "RoleDetails.parent_id"
-msgstr "親権限"
+msgstr "親権限詳細"
 
 msgid "RoleDetails.name"
 msgstr "名称"

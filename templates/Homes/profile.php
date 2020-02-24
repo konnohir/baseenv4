@@ -7,16 +7,19 @@
 <section>
     <h2 class="mb-2"><?= __('Profile') ?></h2>
     <div class="dl-wrap mb-2">
-        <dl class="row">
-            <?php // メールアドレス ?>
-            <dt class="col-md"><?= __('Users.email') ?></dt>
-            <dd class="col-md"><?= h($user->email) ?></dd>
-        </dl>
-        <dl class="row">
-            <?php // 権限 ?>
-            <dt class="col-md"><?= __('Users.role_id') ?></dt>
-            <dd class="col-md"><?= h($user->role->name ?? null) ?></dd>
-        </dl>
+        <?php
+            // メールアドレス
+            echo $this->element('dl', [
+                'label' => __('Users.email'),
+                'value' => $user->email,
+            ]);
+
+            // 権限
+            echo $this->element('dl', [
+                'label' => __('Users.role_id'),
+                'value' => $user->role->name ?? null,
+            ]);
+        ?>
     </div>
     <div class="btn-group my-2">
         <?php
@@ -28,3 +31,4 @@
         ?>
     </div>
 </section>
+

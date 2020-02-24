@@ -43,7 +43,7 @@ class PermissionComponent extends Component
      * 
      * @var \App\Model\Entity\Role $role
      * @return bool
-     */ 
+     */
     public function updateACL(Role $role)
     {
         $role->updated_at = new FrozenTime();
@@ -73,14 +73,5 @@ class PermissionComponent extends Component
         }
 
         return true;
-    }
-
-    /**
-     * ServerRequestオブジェクト取得
-     * @return \Cake\Http\ServerRequest
-     */
-    protected function getRequest()
-    {
-        return $this->_registry->getController()->getRequest();
     }
 }

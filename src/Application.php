@@ -21,6 +21,7 @@ namespace App;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -95,6 +96,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // and make an error page/response
             // ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
             ->add(new RoutingMiddleware($this))
+            ->add(new BodyParserMiddleware())
             ->add(new AuthenticationMiddleware($this))
             ->add(new AuthorizationMiddleware($this, [
                 'unauthorizedHandler' => [
@@ -117,8 +119,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     protected function bootstrapCli(): void
     {
         try {
-            $this->addPlugin('Bake');
-            $this->addPlugin('Migrations');
+            // $this->addPlugin('Bake');
+            // $this->addPlugin('Migrations');
         } catch (MissingPluginException $e) {
             // Do not halt if the plugin is missing
         }

@@ -1,9 +1,6 @@
 <?php
-use Cake\Mailer\Transport\MailTransport;
-use Cake\Mailer\Transport\DebugTransport;
-
 /*
- * 環境設定
+ * 環境毎に変化する設定値
  */
 return [
     /*
@@ -60,12 +57,10 @@ return [
      */
     'EmailTransport' => [
         'default' => [
-            'className' => DebugTransport::class,
             'host' => '127.0.0.1',
             'port' => 25,
             'username' => null,
             'password' => null,
-            'client' => null,
         ],
     ],
 

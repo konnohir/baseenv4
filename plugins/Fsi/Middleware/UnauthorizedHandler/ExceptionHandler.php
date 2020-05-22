@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -20,6 +21,7 @@ use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Routing\Router;
 
 /**
@@ -28,7 +30,8 @@ use Cake\Routing\Router;
 class ExceptionHandler implements HandlerInterface
 {
     /**
-     * @inheritDoc
+     * 認可失敗時のカスタム動作
+     * @throws \Cake\Http\Exception\ForbiddenException
      */
     public function handle(
         Exception $exception,
@@ -36,6 +39,6 @@ class ExceptionHandler implements HandlerInterface
         array $options = []
     ): ResponseInterface {
         Router::setRequest($request);
-        throw new \Cake\Http\Exception\ForbiddenException();
+        throw new ForbiddenException();
     }
 }

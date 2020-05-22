@@ -122,10 +122,7 @@ class HomesController extends AppController
      */
     public function refresh()
     {
-        foreach (glob(CACHE . 'models' . DS . '*') as $file) {
-            @unlink($file);
-        }
-        foreach (glob(CACHE . 'persistent' . DS . '*') as $file) {
+        foreach (glob(CACHE . '*') as $file) {
             @unlink($file);
         }
         return $this->redirect($this->referer());
@@ -148,7 +145,7 @@ class HomesController extends AppController
      * @var \App\Model\Entity\User $user ログインユーザー
      * @return \Cake\Http\Response
      */
-    private function loginSuccess($user)
+    protected function loginSuccess($user)
     {
         if (isset($user->login_failed_count)) {
             if ($user->login_failed_count >= self::ACCOUNT_LOCK_VALUE) {
@@ -188,7 +185,7 @@ class HomesController extends AppController
      * 
      * @return void
      */
-    private function loginFailed()
+    protected function loginFailed()
     {
         // E-LOGIN-FAILED: ログインに失敗しました。
         $errorMessage = __('E-LOGIN-FAILED');
@@ -212,6 +209,8 @@ class HomesController extends AppController
                 $errorMessage = __('E-LOCK-ACCOUNT');
             }
         }
+
+        // エラーメッセージ表示
         $this->Flash->error($errorMessage);
     }
 }

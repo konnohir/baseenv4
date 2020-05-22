@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -17,7 +18,6 @@ declare(strict_types=1);
 namespace Fsi\View\Helper;
 
 use Cake\View\Helper\HtmlHelper as Helper;
-use Fsi\Policy\RequestPolicy;
 
 /**
  * Html Helper class for easy use of HTML widgets.

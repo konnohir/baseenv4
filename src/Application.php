@@ -20,11 +20,9 @@ namespace App;
 
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
-use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
-use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\Http\ServerRequest;
@@ -60,14 +58,14 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         parent::bootstrap();
 
         if (PHP_SAPI === 'cli') {
-            $this->bootstrapCli();
+            // $this->bootstrapCli();
         }
 
         /*
          * Only try to load DebugKit in development mode
          * Debug Kit should not be installed on a production system
          */
-        if (Configure::read('debug') && Configure::read('DebugKit')) {
+        if (Configure::read('debug') && Configure::read('DebugKit.use')) {
             $this->addPlugin('DebugKit');
         }
         $this->addPlugin('Authentication');
@@ -84,19 +82,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
-            // Add routing middleware.
-            // If you have a large number of routes connected, turning on routes
-            // caching in production could improve performance. For that when
-            // creating the middleware instance specify the cache config name by
-            // using it's second constructor argument:
-            // `new RoutingMiddleware($this, '_cake_routes_')`
-            // Handle plugin/theme assets like CakePHP normally does.
-            // ->add(new AssetMiddleware())
-            // Catch any exceptions in the lower layers,
-            // and make an error page/response
-            // ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
             ->add(new RoutingMiddleware($this))
-            ->add(new BodyParserMiddleware())
             ->add(new AuthenticationMiddleware($this))
             ->add(new AuthorizationMiddleware($this, [
                 'unauthorizedHandler' => [
@@ -119,13 +105,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     protected function bootstrapCli(): void
     {
         try {
-            // $this->addPlugin('Bake');
-            // $this->addPlugin('Migrations');
+            $this->addPlugin('Bake');
+            $this->addPlugin('Migrations');
         } catch (MissingPluginException $e) {
             // Do not halt if the plugin is missing
         }
-
-        // Load more plugins here
     }
 
     /**

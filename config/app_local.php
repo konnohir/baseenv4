@@ -12,14 +12,16 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => !false,
+    'debug' => false,
 
     /**
      * DebugKit configuration.
      * 
-     * DebugKit is enabled when both 'debug' and 'DebugKit' are true.
+     * DebugKit is enabled when both 'debug' and 'DebugKit.use' are true.
      */
-    'DebugKit' => false,
+    'DebugKit' => [
+        'use' => false,
+    ],
 
     /*
      * Connection information used by the ORM to connect

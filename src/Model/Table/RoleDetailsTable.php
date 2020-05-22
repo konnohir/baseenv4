@@ -179,7 +179,7 @@ class RoleDetailsTable extends AppTable
                 'parent_id', 'name', 'description',
                 // associated
                 'acos',
-                // lock flag
+                // lock token
                 '_lock',
             ],
             'associated' => [
@@ -207,7 +207,7 @@ class RoleDetailsTable extends AppTable
             'fields' => [
                 // application input
                 'deleted_at',
-                // lock flag
+                // lock token
                 '_lock',
             ],
             'associated' => []

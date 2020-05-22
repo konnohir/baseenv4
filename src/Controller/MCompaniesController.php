@@ -105,7 +105,7 @@ class MCompaniesController extends AppController
                     // associated
                     'tags',
                     'notices',
-                    // lock flag
+                    // lock token
                     '_lock',
                 ],
                 'associated' => [

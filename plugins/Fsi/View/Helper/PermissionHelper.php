@@ -32,8 +32,8 @@ class PermissionHelper extends Helper
             'controller' => $this->getView()->getRequest()->getParam('controller'),
             'action' => 'index',
         ];
-        $identify = $this->_View->getRequest()->getAttribute('identity');
+        $identity = $this->_View->getRequest()->getAttribute('identity');
 
-        return RequestPolicy::check($identify->role_id, $routes);
+        return RequestPolicy::check($identity->role_id, $routes);
     }
 }

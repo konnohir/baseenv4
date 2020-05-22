@@ -84,11 +84,6 @@ define('LOGS', ROOT . DS . 'logs' . DS);
 define('CACHE', TMP . 'cache' . DS);
 
 /**
- * Path to the resources directory.
- */
-define('RESOURCES', ROOT . DS . 'resources' . DS);
-
-/**
  * The absolute path to the "cake" directory, WITHOUT a trailing DS.
  *
  * CakePHP should always be installed with composer, so look there.
@@ -197,7 +192,10 @@ TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Mailer::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
-
 TypeFactory::map('date', DateType::class);
 TypeFactory::map('datetime', DateTimeType::class);
 Validator::addDefaultProvider('default', new RulesProvider(CustomValidation::class));
+
+function dbg($a) {
+    Log::debug((string)$a);
+}

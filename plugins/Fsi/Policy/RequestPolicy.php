@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fsi\Policy;
 
 use Authorization\Policy\RequestPolicyInterface;
@@ -61,22 +63,22 @@ class RequestPolicy implements RequestPolicyInterface
     public static function check(int $roleId, array $routes)
     {
         if (Configure::read('debug')) {
-            // Allow special role access
+            // Allow access by special role
             if ($roleId === 1) {
-                return true;
+                // return true;
             }
         }
 
         $controller = $routes['controller'] ?? '';
         $action = $routes['action'] ?? 'index';
 
-        if (!is_callable('App\\Controller\\' . $controller . 'Controller::' . $action)) {
-            // will be raised NotFoundException
+        if ($controller === static::$publicController) {
+            // Allow access to basic actions
             return true;
         }
 
-        if ($controller === static::$publicController) {
-            // Allow basic actions access
+        if (!is_callable('App\\Controller\\' . $controller . 'Controller::' . $action)) {
+            // will be raised NotFoundException
             return true;
         }
 

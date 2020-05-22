@@ -111,13 +111,13 @@ msgid "E-V-WRONG-PASSWORD"
 msgstr "現在のパスワードが一致しません。"
 
 msgid "E-V-SAME-PASSWORD"
-msgstr "新しいパスワードは現在のパスワード以外の値を入力してください。"
+msgstr "現在のパスワードは使用できません。"
+
+msgid "E-V-SAME-PASSWORD-MAIL"
+msgstr "メールアドレスは使用できません。"
 
 msgid "E-V-RETYPE-WRONG-PASSWORD"
 msgstr "新しいパスワードと同じ値を入力してください。"
-
-msgid "E-V-SAME-PASSWORD-MAIL"
-msgstr "新しいパスワードはメールアドレス以外の値を入力してください。"
 
 ####################################
 # インフォメーションメッセージ (共通)
@@ -176,7 +176,7 @@ msgstr "現在のパスワード"
 msgid "Users.new_password"
 msgstr "新しいパスワード"
 
-msgid "Users.retype_password"
+msgid "Users.password.2"
 msgstr "新しいパスワード（再入力）"
 
 msgid "Users.role_id"

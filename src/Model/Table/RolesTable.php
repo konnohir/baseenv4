@@ -159,7 +159,7 @@ class RolesTable extends AppTable
                 'name', 'description',
                 // associated
                 'role_details',
-                // lock flag
+                // lock token
                 '_lock',
             ],
             'associated' => [
@@ -187,7 +187,7 @@ class RolesTable extends AppTable
             'fields' => [
                 // application input
                 'deleted_at',
-                // lock flag
+                // lock token
                 '_lock',
             ],
             'associated' => []

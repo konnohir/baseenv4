@@ -87,7 +87,7 @@ return [
         '_cake_core_' => [
             'className' => FileEngine::class,
             'prefix' => '',
-            'path' => CACHE . 'persistent' . DS,
+            'path' => CACHE,
             'serialize' => true,
             'duration' => '+1 years',
         ],
@@ -100,7 +100,7 @@ return [
         '_cake_model_' => [
             'className' => FileEngine::class,
             'prefix' => '',
-            'path' => CACHE . 'models' . DS,
+            'path' => CACHE,
             'serialize' => true,
             'duration' => '+1 years',
         ],
@@ -116,6 +116,13 @@ return [
             'serialize' => true,
             'duration' => '+1 years',
         ],
+    ],
+    
+    /*
+     * Configure the DebugKit
+     */
+    'DebugKit' => [
+        'ignoreAuthorization' => true,
     ],
 
     /*
@@ -151,7 +158,9 @@ return [
         'errorLevel' => E_ALL,
         'exceptionRenderer' => ExceptionRenderer::class,
         'skipLog' => [
-            \Authorization\Exception\ForbiddenException::class,
+            Cake\Http\Exception\ForbiddenException::class,
+            Cake\Http\Exception\MissingControllerException::class,
+            Cake\Controller\Exception\MissingActionException::class,
         ],
         'log' => true,
         'trace' => false,
@@ -289,7 +298,7 @@ return [
             'className' => Connection::class,
             'driver' => Mysql::class,
             'persistent' => false,
-            'timezone' => 'UTC',
+            'timezone' => 'Asia/Tokyo',
             //'encoding' => 'utf8mb4',
             'flags' => [],
             'cacheMetadata' => true,

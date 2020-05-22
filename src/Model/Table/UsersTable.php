@@ -17,6 +17,8 @@ use Cake\Validation\Validator;
  */
 class UsersTable extends AppTable
 {
+    protected $passwordLabelSuffix = '';
+
     /**
      * Initialize method
      *
@@ -83,7 +85,7 @@ class UsersTable extends AppTable
 
         // パスワード
         $column = 'password';
-        $label = __($this->getAlias() . '.' . $column);
+        $label = __($this->getAlias() . '.' . $column . $this->passwordLabelSuffix);
         $validator->add($column, [
             // 入力有
             'notBlank' => [
@@ -99,6 +101,12 @@ class UsersTable extends AppTable
             'maxLength' => [
                 'rule' =>  ['maxLength', 255],
                 'message' => __('E-V-MAX-LENGTH', $label),
+                'last' => true,
+            ],
+            // 新しいパスワードと一致 [パスワード変更画面]
+            'compareFields' => [
+                'rule' => ['compareFields', 'new_password', '==='],
+                'message' => __('E-V-RETYPE-WRONG-PASSWORD'),
                 'last' => true,
             ],
         ]);
@@ -145,13 +153,14 @@ class UsersTable extends AppTable
      */
     public function validationPassword(Validator $validator): Validator
     {
+        $this->passwordLabelSuffix = '.2';
         $this->validationDefault($validator);
 
         // パスワード変更時の必須入力項目
         $validator->requirePresence([
             'current_password',
+            'new_password',
             'password',
-            'retype_password',
         ], 'update');
 
         // 現在のパスワード
@@ -177,19 +186,7 @@ class UsersTable extends AppTable
         ]);
 
         // 新しいパスワード
-        $column = 'password';
-        $label = __($this->getAlias() . '.' . $column);
-        $validator->add($column, [
-            // 現在のパスワードと異なる
-            'compareFields' => [
-                'rule' => ['compareFields', 'current_password', '!=='],
-                'message' => __('E-V-SAME-PASSWORD'),
-                'last' => true,
-            ],
-        ]);
-
-        // 新しいパスワード (再入力)
-        $column = 'retype_password';
+        $column = 'new_password';
         $label = __($this->getAlias() . '.' . $column);
         $validator->add($column, [
             // 入力有
@@ -208,13 +205,14 @@ class UsersTable extends AppTable
                 'message' => __('E-V-MAX-LENGTH', $label),
                 'last' => true,
             ],
-            // 新しいパスワードと同一
+            // 現在のパスワードと異なる
             'compareFields' => [
-                'rule' => ['compareFields', 'password', '==='],
-                'message' => __('E-V-RETYPE-WRONG-PASSWORD'),
+                'rule' => ['compareFields', 'current_password', '!=='],
+                'message' => __('E-V-SAME-PASSWORD'),
                 'last' => true,
             ],
         ]);
+
         return $validator;
     }
 
@@ -334,7 +332,7 @@ class UsersTable extends AppTable
             'fields' => [
                 // user input
                 'email', 'role_id',
-                // lock flag
+                // lock token
                 '_lock',
             ],
             'associated' => []
@@ -358,7 +356,7 @@ class UsersTable extends AppTable
             'fields' => [
                 // application input
                 'login_failed_count',
-                // lock flag
+                // lock token
                 '_lock',
             ],
             'associated' => []
@@ -382,7 +380,7 @@ class UsersTable extends AppTable
             'fields' => [
                 // application input
                 'login_failed_count',
-                // lock flag
+                // lock token
                 '_lock',
             ],
             'associated' => []
@@ -412,7 +410,7 @@ class UsersTable extends AppTable
                 // application input
                 'password',
                 'plain_password',
-                // lock flag
+                // lock token
                 // '_lock',
             ],
             'associated' => []
@@ -437,8 +435,8 @@ class UsersTable extends AppTable
                 // application input
                 'password_expired',
                 // user input
-                'current_password', 'password', 'retype_password',
-                // lock flag
+                'current_password', 'new_password', 'password',
+                // lock token
                 '_lock',
             ],
             'associated' => [],
@@ -463,7 +461,7 @@ class UsersTable extends AppTable
             'fields' => [
                 // application input
                 'deleted_at',
-                // lock flag
+                // lock token
                 '_lock',
             ],
             'associated' => []

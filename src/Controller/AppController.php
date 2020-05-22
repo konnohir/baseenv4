@@ -7,7 +7,9 @@ namespace App\Controller;
 use Cake\Core\Configure;
 use Cake\Controller\Controller;
 use Cake\Datasource\EntityInterface;
+use Cake\Http\Exception\UnauthorizedException;
 use Cake\I18n\I18n;
+use Fsi\Controller\PaginateTrait;
 
 /**
  * Application Controller
@@ -15,7 +17,7 @@ use Cake\I18n\I18n;
  */
 class AppController extends Controller
 {
-    use \Fsi\Controller\PaginateTrait;
+    use PaginateTrait;
 
     /**
      * PaginatorComponent デフォルト設定
@@ -50,7 +52,7 @@ class AppController extends Controller
 
         // ajax通信時はログイン画面にリダイレクトせずに例外を発生させるfix
         if (!isset($user) && $this->getRequest()->is('ajax') && !$this instanceof ErrorController) {
-            throw new \Cake\Http\Exception\UnauthorizedException();
+            throw new UnauthorizedException();
         }
 
         // 言語設定

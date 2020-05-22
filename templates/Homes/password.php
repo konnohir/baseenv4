@@ -21,7 +21,6 @@
                     echo $this->Form->customControl('current_password', [
                         'type' => 'password',
                         'label' => false,
-                        'value' => false,   // バリデーションエラー時に入力欄をクリアする
                     ]);
                 ?>
             </dd>
@@ -35,10 +34,9 @@
             </dt>
             <dd class="col-md">
                 <?php
-                    echo $this->Form->customControl('password', [
+                    echo $this->Form->customControl('new_password', [
                         'type' => 'password',
                         'label' => false,
-                        'value' => false,
                     ]);
                 ?>
             </dd>
@@ -47,15 +45,17 @@
             <dt class="col-md required">
                 <?php
                     // 新しいパスワード（再入力）
-                    echo $this->Form->label('retype_password', __('Users.retype_password'));
+                    echo $this->Form->label('password', __('Users.password.2'));
                 ?>
             </dt>
             <dd class="col-md">
                 <?php
-                    echo $this->Form->customControl('retype_password', [
+                    echo $this->Form->customControl('password', [
                         'type' => 'password',
                         'label' => false,
                         'value' => false,
+                        'error' => [
+                            'Not long enough' => __('This is not long enough')]
                     ]);
                 ?>
             </dd>

@@ -55,19 +55,4 @@ class User extends AppEntity
         $hasher = new DefaultPasswordHasher();
         return $hasher->check($password, $this->getOriginal('password'));
     }
-
-    /**
-     * 親ノードを取得する (@ACLプラグイン)
-     * ユーザーは権限の子ノードのため、権限IDを返す
-     */
-    public function parentNode()
-    {
-        if (!isset($this->role_id)) {
-            throw new Exception('role_id is required');
-        }
-        return [
-            'model' => 'Roles',
-            'foreign_key' => $this->role_id,
-        ];
-    }
 }

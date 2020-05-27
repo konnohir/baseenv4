@@ -32,9 +32,6 @@ class RolesTable extends AppTable
 
         $this->belongsToMany('RoleDetails');
         $this->hasMany('Users');
-
-        // @ACL
-        $this->addBehavior('Acl.Acl', ['requester']);
     }
 
     /**

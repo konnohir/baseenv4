@@ -16,12 +16,4 @@ use Cake\ORM\Entity;
  */
 class Role extends AppEntity
 {
-    /**
-     * 親ノードを取得する (@ACLプラグイン)
-     * 権限は常にトップレベルのため、NULLを返す
-     */
-    public function parentNode()
-    {
-        return null;
-    }
 }

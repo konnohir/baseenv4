@@ -116,15 +116,6 @@ class RoleDetailsController extends AppController
                 if (!$this->RoleDetails->save($roleDetail)) {
                     return false;
                 }
-
-                // @ACL
-                $this->loadComponent('Permission');
-                foreach ($roleDetail->roles ?? [] as $role) {
-                    if (!$this->Permission->updateACL($role)) {
-                        return false;
-                    }
-                }
-
                 return true;
             });
 

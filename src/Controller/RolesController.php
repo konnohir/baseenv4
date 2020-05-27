@@ -110,16 +110,9 @@ class RolesController extends AppController
 
             // $result: トランザクション実行結果 (boolean)
             $result = $this->Roles->getConnection()->transactional(function () use ($role) {
-                // if (!$this->Roles->save($role)) {
-                //     return false;
-                // }
-
-                // @ACL
-                $this->loadComponent('Permission');
-                if (!$this->Permission->updateACL($role)) {
+                if (!$this->Roles->save($role)) {
                     return false;
                 }
-
                 return true;
             });
 

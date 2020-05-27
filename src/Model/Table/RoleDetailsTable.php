@@ -31,7 +31,7 @@ class RoleDetailsTable extends AppTable
         $this->setPrimaryKey('id');
 
         $this->belongsToMany('Roles');
-        $this->belongsToMany('Acl.Acos', [
+        $this->belongsToMany('Acos', [
             'joinTable' => 'role_details_acos'
         ]);
         $this->belongsTo('ParentRoleDetails', [

@@ -156,7 +156,7 @@ class HomesController extends AppController
             }
             if ($user->login_failed_count >= 1) {
                 // ログイン失敗回数が1回以上: ログイン失敗回数をリセットする
-                $user->login_failed_count = 0;
+                $user = $this->Users->doResetLoginFailedCount($user);
                 $this->Users->saveOrFail($user);
             }
         }
@@ -200,7 +200,7 @@ class HomesController extends AppController
         if (isset($user->login_failed_count)) {
             if ($user->login_failed_count < self::ACCOUNT_LOCK_VALUE) {
                 // ログイン失敗回数が規定値未満: ログイン失敗回数をインクリメント
-                $user->login_failed_count++;
+                $user = $this->Users->doIncrementLoginFailedCount($user);
                 $this->Users->saveOrFail($user);
             }
             if ($user->login_failed_count >= self::ACCOUNT_LOCK_VALUE) {

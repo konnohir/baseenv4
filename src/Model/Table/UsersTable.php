@@ -220,11 +220,11 @@ class UsersTable extends AppTable
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         // メールアドレス
-        $rules->add(function ($entity, $options) {
+        $rules->add(function ($entity, $option) {
             if (!$entity->isDirty('email')) {
                 return true;
             }
-            $model = $options['repository'];
+            $model = $option['repository'];
 
             // 削除済みのデータを含めて既に登録済みのメールアドレスでないこと
             if ($model->find('withInactive')->where(['email' => $entity->email])->count()) {
@@ -265,18 +265,20 @@ class UsersTable extends AppTable
     /**
      * モデルの概要を取得するFinder
      */
-    public function findOverview(Query $query, array $options)
+    protected function findOverview(Query $query, array $option)
     {
         // $map: 検索マッピング設定 (array)
-        $map = $this->getFilterSettings();
+        $map = [
+            'email' => ['type' => 'like'],
+        ];
 
         // $conditions: 検索条件の配列 (array)
-        $conditions = $this->buildConditions($map, $options['filter'] ?? []);
+        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
 
         return $query
             ->select($this)
+            ->select($this->Roles)
             ->select(['password_issue' => 'password is not null'])  // 「パスワード発行」一覧画面でソートするためselectで取得する
-            ->select(['Roles.name'])
             ->contain(['Roles'])
             ->where($conditions);
     }
@@ -284,37 +286,33 @@ class UsersTable extends AppTable
     /**
      * モデルの詳細を取得するFinder
      */
-    public function findDetail(Query $query, array $options)
+    protected function findDetail(Query $query, array $option)
     {
-        if (isset($options['id'])) {
-            $query->where([$this->getAlias() . '.id' => $options['id']]);
+        if (isset($option['id'])) {
+            $query->where([$this->getAlias() . '.id' => $option['id']]);
         }
         return $query->contain(['Roles']);
     }
 
     /**
-     * 認証のためにユーザーを取得するFinder
+     * ログイン実行時にユーザーを取得するFinder
      */
-    public function findAuthentication(Query $query, array $options)
+    protected function findAuthentication(Query $query, array $option)
     {
-        // ここで取得したエンティティは認証後、セッションに格納される
         $query
-            ->select($this)
+            // ここで取得したエンティティは認証後、セッションに格納される
+            ->select([
+                // プライマリーキー
+                'id',
+                // 認証のため、email、passwordは必須
+                'email',
+                'password',
+                // 認可のため、role_idは必須
+                'role_id',
+            ])
             // パスワード未発行のユーザーはログイン不可
             ->where(['password is not null']);
         return $query;
-    }
-
-    /**
-     * 検索マッピング設定
-     * 
-     * @return array
-     */
-    public function getFilterSettings()
-    {
-        return [
-            'email' => ['type' => 'like'],
-        ];
     }
 
     /**
@@ -323,7 +321,7 @@ class UsersTable extends AppTable
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
      */
-    public function doEditEntity(Entity $entity, array $input)
+    public function doEditEntity(Entity $entity, array $input = [])
     {
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
@@ -343,7 +341,7 @@ class UsersTable extends AppTable
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
      */
-    public function doLockAccount(Entity $entity, array $input)
+    public function doLockAccount(Entity $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // ログイン失敗回数
@@ -367,7 +365,7 @@ class UsersTable extends AppTable
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
      */
-    public function doUnlockAccount(Entity $entity, array $input)
+    public function doUnlockAccount(Entity $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // ログイン失敗回数
@@ -391,7 +389,7 @@ class UsersTable extends AppTable
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
      */
-    public function doIssuePassword(Entity $entity, array $input)
+    public function doIssuePassword(Entity $entity, array $input = [])
     {
         // 新しいパスワード
         $password = $this->makePassword();
@@ -421,7 +419,7 @@ class UsersTable extends AppTable
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
      */
-    public function doChangePassword(Entity $entity, array $input)
+    public function doChangePassword(Entity $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // パスワード有効期限
@@ -448,7 +446,7 @@ class UsersTable extends AppTable
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
      */
-    public function doDeleteEntity(Entity $entity, array $input)
+    public function doDeleteEntity(Entity $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // 削除日時
@@ -467,11 +465,56 @@ class UsersTable extends AppTable
     }
 
     /**
+     * ログイン失敗回数リセット
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doResetLoginFailedCount(Entity $entity, array $input = [])
+    {
+        $input = array_merge_recursive($input, [
+            // ログイン失敗回数
+            'login_failed_count' => 0,
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'login_failed_count',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
+    }
+
+    /**
+     * ログイン失敗回数インクリメント
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     */
+    public function doIncrementLoginFailedCount(Entity $entity, array $input = [])
+    {
+        $input = array_merge_recursive($input, [
+            // ログイン失敗回数
+            'login_failed_count' => $entity->login_failed_count + 1,
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'login_failed_count',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
+    }
+
+    /**
      * パスワード文字列生成
      * 
      * @return string ランダムパスワード
      */
-    private function makePassword() {
+    private function makePassword()
+    {
         return 'pass#12345';
     }
 }

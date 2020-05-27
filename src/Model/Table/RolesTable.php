@@ -110,13 +110,13 @@ class RolesTable extends AppTable
     /**
      * モデルの概要を取得するFinder
      */
-    public function findOverview(Query $query, array $options)
+    protected function findOverview(Query $query, array $option)
     {
         // $map: 検索マッピング設定 (array)
-        $map = $this->getFilterSettings();
+        $map = [];
 
         // $conditions: 検索条件の配列 (array)
-        $conditions = $this->buildConditions($map, $options['filter'] ?? []);
+        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
 
         return $query->where($conditions);
     }
@@ -124,22 +124,12 @@ class RolesTable extends AppTable
     /**
      * モデルの詳細を取得するFinder
      */
-    public function findDetail(Query $query, array $options)
+    protected function findDetail(Query $query, array $option)
     {
-        if (isset($options['id'])) {
-            $query->where([$this->getAlias() . '.id' => $options['id']]);
+        if (isset($option['id'])) {
+            $query->where([$this->getAlias() . '.id' => $option['id']]);
         }
         return $query->contain(['RoleDetails', 'RoleDetails.Acos']);
-    }
-
-    /**
-     * 検索マッピング設定
-     * 
-     * @return array
-     */
-    public function getFilterSettings()
-    {
-        return [];
     }
 
     /**
@@ -148,7 +138,7 @@ class RolesTable extends AppTable
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
      */
-    public function doEditEntity(Entity $entity, array $input)
+    public function doEditEntity(Entity $entity, array $input = [])
     {
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
@@ -174,7 +164,7 @@ class RolesTable extends AppTable
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
      */
-    public function doDeleteEntity(Entity $entity, array $input)
+    public function doDeleteEntity(Entity $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // 削除日時

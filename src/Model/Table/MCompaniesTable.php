@@ -113,39 +113,10 @@ class MCompaniesTable extends AppTable
     /**
      * モデルの概要を取得するFinder
      */
-    public function findOverview(Query $query, array $options)
+    protected function findOverview(Query $query, array $option)
     {
         // $map: 検索マッピング設定 (array)
-        $map = $this->getFilterSettings();
-
-        // $conditions: 検索条件の配列 (array)
-        $conditions = $this->buildConditions($map, $options['filter'] ?? []);
-
-        return $query->where($conditions);
-    }
-
-    /**
-     * モデルの詳細を取得するFinder
-     */
-    public function findDetail(Query $query, array $options)
-    {
-        if (isset($options['id'])) {
-            $query->where([$this->getAlias() . '.id' => $options['id']]);
-        }
-        return $query->contain([
-            'Tags',
-            'Notices',
-        ]);
-    }
-
-    /**
-     * 検索マッピング設定
-     * 
-     * @return array
-     */
-    public function getFilterSettings()
-    {
-        return [
+        $map = [
             'id' => ['type' => '=='],
             'code' => ['type' => 'like'],
             'name' => ['type' => 'like'],
@@ -155,5 +126,25 @@ class MCompaniesTable extends AppTable
             'staff' => ['type' => 'range'],
             'staff2' => ['type' => '==', 'field' => 'staff'],
         ];
+
+        // $conditions: 検索条件の配列 (array)
+        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
+
+        return $query->where($conditions);
     }
+
+    /**
+     * モデルの詳細を取得するFinder
+     */
+    protected function findDetail(Query $query, array $option)
+    {
+        if (isset($option['id'])) {
+            $query->where([$this->getAlias() . '.id' => $option['id']]);
+        }
+        return $query->contain([
+            'Tags',
+            'Notices',
+        ]);
+    }
+
 }

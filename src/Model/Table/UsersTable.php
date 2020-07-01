@@ -44,60 +44,33 @@ class UsersTable extends AppTable
      */
     public function validationDefault(Validator $validator): Validator
     {
+        parent::validationDefault($validator);
+
         // 新規作成時の必須入力項目
         $validator->requirePresence([
             'email',
             'role_id',
         ], 'create');
 
-        // ID
-        $validator->naturalNumber('id');
-
         // メールアドレス
-        $column = 'email';
-        $label = __($this->getAlias() . '.' . $column);
-        $validator->add($column, [
+        $validator->add('email', [
             // 入力有
             'notBlank' => [
-                'message' => __('E-V-REQUIRED', $label),
-                'last' => true,
-            ],
-            // 文字列
-            'isScalar' => [
-                'message' => __('E-V-SCALAR', $label),
-                'last' => true,
-            ],
-            // 最大桁数以内
-            'maxLength' => [
-                'rule' =>  ['maxLength', 255],
-                'message' => __('E-V-MAXLENGTH', $label, 255),
+                'message' => __('E-V-REQUIRED'),
                 'last' => true,
             ],
             // メールアドレス形式
             'email' => [
-                'message' => __('E-V-EMAIL-FORMAT', $label),
+                'message' => __('E-V-EMAIL-FORMAT'),
                 'last' => true,
             ],
         ]);
 
         // パスワード
-        $column = 'password';
-        $label = __($this->getAlias() . '.' . $column . $this->passwordLabelSuffix);
-        $validator->add($column, [
+        $validator->add('password', [
             // 入力有
             'notBlank' => [
-                'message' => __('E-V-REQUIRED', $label),
-                'last' => true,
-            ],
-            // 文字列
-            'isScalar' => [
-                'message' => __('E-V-SCALAR', $label),
-                'last' => true,
-            ],
-            // 最大桁数以内
-            'maxLength' => [
-                'rule' =>  ['maxLength', 255],
-                'message' => __('E-V-MAX-LENGTH', $label),
+                'message' => __('E-V-REQUIRED'),
                 'last' => true,
             ],
             // 新しいパスワードと一致 [パスワード変更画面]
@@ -109,35 +82,13 @@ class UsersTable extends AppTable
         ]);
 
         // 権限
-        $column = 'role_id';
-        $label = __($this->getAlias() . '.' . $column);
-        $validator->add($column, [
+        $validator->add('role_id', [
             // 入力有
             'notBlank' => [
-                'message' => __('E-V-REQUIRED', $label),
-                'last' => true,
-            ],
-            // 自然数
-            'naturalNumber' => [
-                'message' => __('E-V-NATURAL-NUMBER', $label),
+                'message' => __('E-V-REQUIRED'),
                 'last' => true,
             ],
         ]);
-
-        // 作成日時
-        $validator
-            ->dateTime('created_at')
-            ->notEmptyDateTime('created_at');
-
-        // 更新日時
-        $validator
-            ->dateTime('updated_at')
-            ->notEmptyDateTime('updated_at');
-
-        // 削除日時
-        $validator
-            ->dateTime('deleted_at')
-            ->allowEmptyDateTime('deleted_at');
 
         return $validator;
     }

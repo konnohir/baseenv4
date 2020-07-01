@@ -25,9 +25,6 @@ msgstr "保存"
 msgid "BTN-BACK"
 msgstr "戻る"
 
-msgid "BTN-BACK-TO-INDX"
-msgstr "一覧画面へ戻る"
-
 msgid "BTN-CANCEL"
 msgstr "キャンセル"
 
@@ -80,22 +77,22 @@ msgstr "システムエラー"
 # バリデーションンエラー (共通)
 ####################################
 msgid "E-V-REQUIRED"
-msgstr "{0}は必須です。"
+msgstr "必須項目です。"
 
 msgid "E-V-EMAIL-FORMAT"
-msgstr "{0}はメールアドレス形式で入力してください。"
+msgstr "メールアドレス形式で入力してください。"
 
 msgid "E-V-MAX-LENGTH"
-msgstr "{0}は{1}文字以内で入力してください。"
+msgstr "{1}文字以内で入力してください。"
 
 msgid "E-V-SCALAR"
-msgstr "{0}には文字列を入力してください。"
+msgstr "文字列を入力してください。"
 
 msgid "E-V-NATURAL-NUMBER"
-msgstr "{0}には自然数を入力してください。"
+msgstr "自然数を入力してください。"
 
 msgid "E-V-UNIQUE"
-msgstr "入力した{0}は既に登録されています。"
+msgstr "既に登録されています。"
 
 msgid "E-V-LOCK"
 msgstr "データが変更されているため、保存できません。"

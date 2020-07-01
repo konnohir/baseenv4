@@ -48,67 +48,22 @@ class RoleDetailsTable extends AppTable
      */
     public function validationDefault(Validator $validator): Validator
     {
+        parent::validationDefault($validator);
+
         // 新規作成時の必須入力項目
         $validator->requirePresence([
             'name',
+            'description',
         ], 'create');
 
-        // ID
-        $validator->naturalNumber('id');
-
         // 名称
-        $column = 'name';
-        $label = __($this->getAlias() . '.' . $column);
-        $validator->add($column, [
+        $validator->add('name', [
             // 入力有
             'notBlank' => [
-                'message' => __('E-V-REQUIRED', $label),
-                'last' => true,
-            ],
-            // 文字列
-            'isScalar' => [
-                'message' => __('E-V-SCALAR', $label),
-                'last' => true,
-            ],
-            // 最大桁数以内
-            'maxLength' => [
-                'rule' =>  ['maxLength', 45],
-                'message' => __('E-V-MAXLENGTH', $label, 45),
+                'message' => __('E-V-REQUIRED'),
                 'last' => true,
             ],
         ]);
-
-        // 説明
-        $column = 'description';
-        $label = __($this->getAlias() . '.' . $column);
-        $validator->add($column, [
-            // 文字列
-            'isScalar' => [
-                'message' => __('E-V-SCALAR', $label),
-                'last' => true,
-            ],
-            // 最大桁数以内
-            'maxLength' => [
-                'rule' =>  ['maxLength', 45],
-                'message' => __('E-V-MAXLENGTH', $label, 45),
-                'last' => true,
-            ],
-        ]);
-
-        // 作成日時
-        $validator
-            ->dateTime('created_at')
-            ->notEmptyDateTime('created_at');
-
-        // 更新日時
-        $validator
-            ->dateTime('updated_at')
-            ->notEmptyDateTime('updated_at');
-
-        // 削除日時
-        $validator
-            ->dateTime('deleted_at')
-            ->allowEmptyDateTime('deleted_at');
 
         return $validator;
     }

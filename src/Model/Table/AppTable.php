@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use Cake\ORM\Table;
+use Cake\Validation\Validator;
 use Fsi\Model\Behavior\FilterTrait;
 use Fsi\Model\Behavior\EditLockTrait;
 
@@ -28,5 +29,27 @@ class AppTable extends Table
 
         $this->addBehavior('Fsi.Timestamp');
         $this->addBehavior('Fsi.SoftDelete');
+    }
+
+    /**
+     * バリデーションルール
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationDefault(Validator $validator): Validator
+    {
+
+        foreach($this->getSchema()->columns() as $column) {
+            $columnInfo = $this->getSchema()->getColumn($column);
+            $isRequirePresence = ($columnInfo['null'] === false && $columnInfo['default'] === null && (!isset($columnInfo['autoIncrement']) || $columnInfo['autoIncrement'] === false));
+            if ($isRequirePresence) {
+                $validator->requirePresence($column, 'create', __('E-V-REQUIRED'));
+            }
+            if ($columnInfo['null'] === true) {
+                $validator->allowEmptyFor($column);
+            }
+        }
+        return $validator;
     }
 }

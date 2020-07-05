@@ -60,20 +60,14 @@ class UsersController extends AppController
     /**
      * 詳細画面
      *
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @param string $id ユーザー id.
      * @return \Cake\Http\Response|null
      */
     public function view($id)
     {
         // $user: ユーザーエンティティ
-        $user = $this->Users->find('detail', compact('id'))->first();
-
-        // データ取得失敗時: 一覧画面へ遷移 (検索条件クリア)
-        if ($user === null) {
-            // E-V-NOT-FOUND:対象の{0}が存在しません
-            $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
-            return $this->redirect(['action' => 'index']);
-        }
+        $user = $this->Users->find('detail', compact('id'))->firstOrFail();
 
         $this->set(compact('user'));
     }
@@ -100,16 +94,8 @@ class UsersController extends AppController
         if ($this->isAdd()) {
             $user = $this->Users->newEmptyEntity();
         } else {
-            $user = $this->Users->find('detail', compact('id'))->first();
+            $user = $this->Users->find('detail', compact('id'))->firstOrFail();
         }
-
-        // データ取得失敗時: 一覧画面へ遷移 (検索条件クリア)
-        if ($user === null) {
-            // E-V-NOT-FOUND:対象の{0}が存在しません
-            $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
-            return $this->redirect(['action' => 'index']);
-        }
-
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['post', 'put', 'patch'])) {
             // エンティティ編集

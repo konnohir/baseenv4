@@ -16,7 +16,7 @@ declare(strict_types=1);
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Fsi\Model\Behavior;
+namespace Konnohir\Model\Behavior;
 
 use Cake\Datasource\EntityInterface;
 use InvalidArgumentException;

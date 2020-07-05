@@ -20,7 +20,6 @@ namespace App;
 
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
-use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
@@ -37,7 +36,7 @@ use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
-use Fsi\Policy\RequestPolicy;
+use Konnohir\Policy\RequestPolicy;
 
 /**
  * Application setup class.
@@ -85,7 +84,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new AuthenticationMiddleware($this))
             ->add(new AuthorizationMiddleware($this, [
                 'unauthorizedHandler' => [
-                    'className' => 'Fsi.Exception',
+                    'className' => 'Konnohir.Exception',
                 ]
             ]))
             ->add(new RequestAuthorizationMiddleware())

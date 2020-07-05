@@ -20,10 +20,10 @@ class AppView extends View
     public function initialize(): void
     {
         $this->loadHelper('Authentication.Identity');
-        $this->loadHelper('Fsi.Paginator');
-        $this->loadHelper('Fsi.Html');
-        $this->loadHelper('Fsi.Form');
-        $this->loadHelper('Fsi.Permission');
+        $this->loadHelper('Konnohir.Paginator');
+        $this->loadHelper('Konnohir.Html');
+        $this->loadHelper('Konnohir.Form');
+        $this->loadHelper('Konnohir.Permission');
     }
 
     /**

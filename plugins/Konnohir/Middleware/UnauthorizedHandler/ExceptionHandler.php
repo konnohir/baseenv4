@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Fsi\Middleware\UnauthorizedHandler;
+namespace Konnohir\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;

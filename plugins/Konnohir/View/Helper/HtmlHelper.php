@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         0.9.1
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Fsi\View\Helper;
+namespace Konnohir\View\Helper;
 
 use Cake\View\Helper\HtmlHelper as Helper;
 
@@ -25,7 +25,7 @@ use Cake\View\Helper\HtmlHelper as Helper;
  * HtmlHelper encloses all methods needed while working with HTML pages.
  *
  * @property \Cake\View\Helper\UrlHelper $Url
- * @property \Fsi\View\Helper\PermissionHelper $Permission
+ * @property \Konnohir\View\Helper\PermissionHelper $Permission
  * @link https://book.cakephp.org/4/en/views/helpers/html.html
  */
 class HtmlHelper extends Helper

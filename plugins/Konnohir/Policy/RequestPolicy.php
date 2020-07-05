@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fsi\Policy;
+namespace Konnohir\Policy;
 
 use Authorization\Policy\RequestPolicyInterface;
 use Cake\Http\ServerRequest;

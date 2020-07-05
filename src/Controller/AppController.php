@@ -9,7 +9,7 @@ use Cake\Controller\Controller;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\I18n\I18n;
-use Fsi\Controller\PaginateTrait;
+use Konnohir\Controller\PaginateTrait;
 
 /**
  * Application Controller

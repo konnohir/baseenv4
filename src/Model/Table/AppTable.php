@@ -6,8 +6,8 @@ namespace App\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Fsi\Model\Behavior\FilterTrait;
-use Fsi\Model\Behavior\EditLockTrait;
+use Konnohir\Model\Behavior\FilterTrait;
+use Konnohir\Model\Behavior\EditLockTrait;
 
 /**
  * App Table
@@ -27,8 +27,8 @@ class AppTable extends Table
     {
         parent::initialize($config);
 
-        $this->addBehavior('Fsi.Timestamp');
-        $this->addBehavior('Fsi.SoftDelete');
+        $this->addBehavior('Konnohir.Timestamp');
+        $this->addBehavior('Konnohir.SoftDelete');
     }
 
     /**

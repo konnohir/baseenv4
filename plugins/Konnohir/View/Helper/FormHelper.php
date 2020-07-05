@@ -16,7 +16,7 @@ declare(strict_types=1);
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Fsi\View\Helper;
+namespace Konnohir\View\Helper;
 
 use Cake\View\Helper\FormHelper as Helper;
 use Cake\View\View;

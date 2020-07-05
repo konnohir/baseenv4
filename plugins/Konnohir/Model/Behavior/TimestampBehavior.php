@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fsi\Model\Behavior;
+namespace Konnohir\Model\Behavior;
 
 use Cake\ORM\Behavior;
 use Cake\Event\Event;

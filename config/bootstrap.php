@@ -16,9 +16,10 @@ declare(strict_types=1);
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-/*
+/************************************************************************
+ * path.php
  * Configure paths required to find CakePHP + general filepath constants
- */
+ ************************************************************************/
 
 /*
  * Use the DS to separate the directories in other defines
@@ -96,7 +97,7 @@ define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'c
 define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
 define('CAKE', CORE_PATH . 'src' . DS);
 
-/*
+/************************************************************************
  * Bootstrap CakePHP.
  *
  * Does the various bits of setup that CakePHP needs to do.
@@ -104,7 +105,7 @@ define('CAKE', CORE_PATH . 'src' . DS);
  *
  * - Registering the CakePHP autoloader.
  * - Setting the default application paths.
- */
+ ************************************************************************/
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
 use Cake\Cache\Cache;
@@ -122,8 +123,8 @@ use Cake\Utility\Security;
 use Cake\Validation\Validator;
 use Cake\Validation\RulesProvider;
 use App\Model\Validation\CustomValidation;
-use Fsi\Database\Type\DateType;
-use Fsi\Database\Type\DateTimeType;
+use Konnohir\Database\Type\DateType;
+use Konnohir\Database\Type\DateTimeType;
 
 /*
  * Read configuration file and inject configuration into various

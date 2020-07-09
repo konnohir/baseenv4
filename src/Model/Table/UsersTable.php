@@ -348,6 +348,7 @@ class UsersTable extends AppTable
         $input = array_merge_recursive($input, [
             // パスワード
             'password' => $password,
+            'new_password' => $password,
             // パスワード (平文: CSV出力用)
             'plain_password' => $password,
         ]);

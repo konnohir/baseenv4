@@ -66,7 +66,7 @@
             'data-action' => ['controller' => 'MCompanies', 'action' => 'add-staff'],
             'data-id' => $mCompany->id,
             'data-lock' => $mCompany->_lock,
-            'class' => 'btn-outline-success btn-add-staff'
+            'class' => 'btn-outline-success btn-jump-api'
         ]) ?>
         <?= $this->Form->customButton(__('BTN-DELETE'), [
             // 削除

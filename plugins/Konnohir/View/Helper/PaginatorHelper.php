@@ -53,9 +53,9 @@ class PaginatorHelper extends Helper
                 'last' => '<li class="page-item"><a class="page-link" href="{{url}}">' . ('>>') . '</a></li>',
                 'number' => '<li class="page-item"><a class="page-link" href="{{url}}">{{text}}</a></li>',
                 'current' => '<li class="page-item active"><a class="page-link" href="">{{text}}</a></li>',
-                'checkboxAll' => '<div class="custom-control custom-checkbox"><input type="checkbox" id="{{table}}checkAll" class="custom-control-input"><label class="custom-control-label" for="{{table}}checkAll"></label></div>',
-                'checkbox' => '<div class="custom-control custom-checkbox"><input type="checkbox" id="{{table}}checkRow{{id}}" name="{{table}}checkRow{{id}}" value="{{id}}" data-lock="{{lock}}" class="custom-control-input {{table}}checkRow"><label class="custom-control-label" for="{{table}}checkRow{{id}}"></label></div>',
-                'radio' => '<div class="custom-control custom-radio"><input type="radio" id="{{table}}checkRow{{id}}" name="{{table}}checkRow{{id}}" value="{{id}}" data-lock="{{lock}}" class="custom-control-input {{table}}checkRow"><label class="custom-control-label" for="{{table}}checkRow{{id}}"></label></div>',
+                'checkboxAll' => '<div class="custom-control custom-checkbox"><input type="checkbox" id="checkAll{{table}}" class="custom-control-input"><label class="custom-control-label" for="checkAll{{table}}"></label></div>',
+                'checkbox' => '<div class="custom-control custom-checkbox"><input type="checkbox" id="checkRow{{table}}{{id}}" name="checkRow{{table}}{{id}}" value="{{id}}" data-lock="{{lock}}" class="custom-control-input checkRow{{table}}"><label class="custom-control-label" for="checkRow{{table}}{{id}}"></label></div>',
+                'radio' => '<div class="custom-control custom-radio"><input type="radio" id="checkRow{{table}}{{id}}" name="checkRow{{table}}{{id}}" value="{{id}}" data-lock="{{lock}}" class="custom-control-input checkRow{{table}}"><label class="custom-control-label" for="checkRow{{table}}{{id}}"></label></div>',
             ],
         ]);
     }

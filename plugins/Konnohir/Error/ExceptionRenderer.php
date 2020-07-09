@@ -16,24 +16,7 @@ declare(strict_types=1);
  */
 namespace Konnohir\Error;
 
-use Cake\Controller\Controller;
-use Cake\Controller\ControllerFactory;
-use Cake\Core\App;
-use Cake\Core\Configure;
-use Cake\Core\Exception\Exception as CakeException;
-use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\ExceptionRenderer as BaseExceptionRenderer;
-use Cake\Event\Event;
-use Cake\Http\Exception\HttpException;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
-use Cake\Http\ServerRequestFactory;
-use Cake\Routing\Router;
-use Cake\Utility\Inflector;
-use Cake\View\Exception\MissingLayoutException;
-use Cake\View\Exception\MissingTemplateException;
-use PDOException;
-use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
 /**
@@ -100,7 +83,7 @@ class ExceptionRenderer extends BaseExceptionRenderer
                 return $this->template = 'error400';
             }
         }
-        
+
         return parent::_template($exception, $method, $code);
     }
 }

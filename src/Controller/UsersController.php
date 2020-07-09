@@ -79,7 +79,7 @@ class UsersController extends AppController
      */
     public function add()
     {
-        $this->edit();
+        return $this->edit();
     }
 
     /**
@@ -96,6 +96,7 @@ class UsersController extends AppController
         } else {
             $user = $this->Users->find('detail', compact('id'))->firstOrFail();
         }
+
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['post', 'put', 'patch'])) {
             // エンティティ編集
@@ -131,12 +132,7 @@ class UsersController extends AppController
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->Users->find('detail', compact('id'))->first();
-
-                // データ取得失敗時: ロールバック
-                if ($user === null) {
-                    return $this->failed($user);
-                }
+                $user = $this->Users->find('detail', compact('id'))->firstOrFail();
 
                 // アカウントロック
                 $user = $this->Users->doLockAccount($user, $requestData);
@@ -154,8 +150,7 @@ class UsersController extends AppController
             return true;
         });
 
-        // 画面を再表示
-        return $this->redirect($this->referer());
+        $this->set(compact('result'));
     }
 
     /**
@@ -171,13 +166,7 @@ class UsersController extends AppController
         // $result: トランザクションの結果 (boolean)
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $requestData) {
-                // $user: ユーザーエンティティ
-                $user = $this->Users->find('detail', compact('id'))->first();
-
-                // データ取得失敗時: ロールバック
-                if ($user === null) {
-                    return $this->failed($user);
-                }
+                $user = $this->Users->find('detail', compact('id'))->firstOrFail();
 
                 // アカウントロック
                 $user = $this->Users->doUnlockAccount($user, $requestData);
@@ -195,8 +184,7 @@ class UsersController extends AppController
             return true;
         });
 
-        // 画面を再表示
-        return $this->redirect($this->referer());
+        $this->set(compact('result'));
     }
 
     /**
@@ -217,12 +205,7 @@ class UsersController extends AppController
         $result = $this->Users->getConnection()->transactional(function () use ($targets, &$csv) {
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->Users->find('detail', compact('id'))->first();
-
-                // データ取得失敗時: ロールバック
-                if ($user === null) {
-                    return $this->failed($user);
-                }
+                $user = $this->Users->find('detail', compact('id'))->firstOrFail();
 
                 // パスワード発行
                 $user = $this->Users->doIssuePassword($user, $requestData);
@@ -248,12 +231,11 @@ class UsersController extends AppController
             // CSV ダウンロード
             $this->set('csv', $csv);
             $this->viewBuilder()->setClassName('Csv');
-            $this->setResponse($this->getResponse()->withDownload('password.csv'));
+            $this->setResponse($this->getResponse()->withDownload('password.csv')->withType('text/css'));
             return;
         }
 
-        // 画面を再表示
-        return $this->redirect($this->referer());
+        $this->set(compact('result'));
     }
 
     /**
@@ -270,12 +252,7 @@ class UsersController extends AppController
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->Users->find('detail', compact('id'))->first();
-
-                // データ取得失敗時: ロールバック
-                if ($user === null) {
-                    return $this->failed($user);
-                }
+                $user = $this->Users->find('detail', compact('id'))->firstOrFail();
 
                 // 削除
                 $user = $this->Users->doDeleteEntity($user, $requestData);
@@ -293,11 +270,6 @@ class UsersController extends AppController
             return true;
         });
 
-        // 画面を再表示、または一覧画面へ遷移 (検索条件クリア)
-        $redirectUrl = $this->referer();
-        if (strpos($redirectUrl, 'view') !== false) {
-            $redirectUrl = ['action' => 'index'];
-        }
-        return $this->redirect($redirectUrl);
+        $this->set(compact('result'));
     }
 }

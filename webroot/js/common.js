@@ -1,10 +1,10 @@
 var common = common || [];
 
 common.paginator = {
-    watch: function (table) {
-        table = table || '';
-        var checkAll = '#' + table + 'checkAll';
-        var checkRow = '.' + table + 'checkRow';
+    watch: function (suffix) {
+        suffix = suffix || '';
+        var checkAll = '#checkAll' + suffix;
+        var checkRow = '.checkRow' + suffix;
 
         $(checkAll).click(function () {
             var checked = $(checkAll).prop('checked');
@@ -23,63 +23,82 @@ common.paginator = {
             }
         });
     },
-    getId: function (table) {
-        table = table || '';
-        var checkRow = '.' + table + 'checkRow';
-        var $rows = $(checkRow + ':checked');
-        switch ($rows.length) {
-            case 1:
-                return $rows.first().prop('value');
-            default:
-                common.alert.error('1件選択してください。');
-                break;
+    getId: function (self, suffix) {
+
+        var id = $(self).attr('data-id');
+        if (id) {
+            return id;
         }
+
+        var checkRow = '.checkRow' + (suffix || '');
+        var $rows = $(checkRow + ':checked');
+        if ($rows.length !== 1) {
+            common.alert.error('1件選択してください。');
+            return;
+        }
+
+        return $rows.first().prop('value');
     },
-    getIds: function (table) {
-        table = table || '';
-        var checkRow = '.' + table + 'checkRow';
-        var $rows = $(checkRow + ':checked');
-        switch ($rows.length) {
-            case 0:
-                common.alert.error('1件以上選択してください。');
-                break;
-            default:
-                results = [];
-                $rows.each(function (idx, value) {
-                    results.push($(value).prop('value'));
-                })
-                return results;
+    getTargets: function (self, suffix) {
+        var results = {};
+
+        var id = $(self).attr('data-id');
+        var _lock = $(self).attr('data-lock');
+        if (id && _lock) {
+            results[id] = { _lock };
+            return results
         }
-    },
-    getTargets: function (table) {
-        table = table || '';
-        var checkRow = '.' + table + 'checkRow';
+
+        var checkRow = '.checkRow' + (suffix || '');
         var $rows = $(checkRow + ':checked');
-        switch ($rows.length) {
-            case 0:
-                common.alert.error('1件以上選択してください。');
-                break;
-            default:
-                var results = {};
-                $rows.each(function (idx, value) {
-                    var id = $(value).prop('value');
-                    var lock = $(value).attr('data-lock');
-                    results[id] = lock;
-                })
-                return results;
+        if ($rows.length === 0) {
+            common.alert.error('1件以上選択してください。');
+            return;
         }
+
+        $rows.each(function (idx, value) {
+            var id = $(value).prop('value');
+            var _lock = $(value).attr('data-lock');
+            results[id] = { _lock };
+        })
+        return results;
     }
 }
 
 common.alert = {
-    info: function (s) {alert(s)},
-    error: function (s) {alert(s)},
-    confirm: function (s) {confirm(s)},
+    info: function (s) { alert(s) },
+    error: function (s) { alert(s) },
+    confirm: function (s) { confirm(s) },
+}
+
+common.fallbackErrorHandler = function (response) {
+    var message = {
+        401: '認証が必要です。',
+        403: '許可されていない操作です。',
+        404: '既に削除されています。',
+        500: 'システムエラーが発生しました。',
+    }
+    common.alert.error(message[response.status] || '予期せぬエラーが発生しました。');
+}
+
+common.createFile = function (fileName, blobData) {
+    if (navigator.appVersion.toString().indexOf('.NET') > 0) {
+        //IE 10+
+        window.navigator.msSaveBlob(blobData, fileName + ".pdf");
+    } else {
+        var blobUrl = window.URL.createObjectURL(new Blob([blobData], {
+            type: blobData.type
+        }));
+        var a = $("<a/>").css('display', 'none').attr('href', blobUrl).attr('download', fileName)[0];
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
 }
 
 $(function () {
 
-    // イベントリスナ
+    // Watch table
     common.paginator.watch();
 
     // Record index url
@@ -103,14 +122,32 @@ $(function () {
         return false;
     })
 
-    // 新規作成ボタン
-    $('.btn-add').click(function () {
+    // 汎用ボタン
+    $('.btn-jump, .btn-add, .btn-clear').click(function () {
         location.href = $(this).attr('data-action');
+    });
+
+    // 汎用ボタン (API)
+    $('.btn-jump-api').click(function () {
+        var targets = common.paginator.getTargets(this);
+        if (targets) {
+            $.ajax({
+                url: $(this).attr('data-action'),
+                method: 'post',
+                dataType: 'json',
+                headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
+                data: { targets },
+            }).fail(function (response) {
+                common.fallbackErrorHandler(response);
+            }).always(function (response) {
+                location.reload();
+            });
+        }
     });
 
     // 編集ボタン
     $('.btn-edit').click(function () {
-        var id = $(this).attr('data-id') || common.paginator.getId();
+        var id = common.paginator.getId(this);
         if (id) {
             location.href = $(this).attr('data-action') + '/' + id;
         }
@@ -118,72 +155,44 @@ $(function () {
 
     // 削除ボタン
     $('.btn-delete').click(function () {
-        var $form = $('#postForm');
-        var targets = {}
-        var id = $(this).attr('data-id');
-        if (id) {
-            var lock = $(this).attr('data-lock');
-            targets[id] = lock;
-        } else {
-            targets = common.paginator.getTargets();
-        }
+        var targets = common.paginator.getTargets(this);
         if (targets) {
-            Object.keys(targets).forEach(function (id) {
-                var lock = targets[id];
-                $form.append('<input type="hidden" name="targets[' + id + '][_lock]" value="' + lock + '" />');
+            $.ajax({
+                url: $(this).attr('data-action'),
+                method: 'post',
+                dataType: 'json',
+                headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
+                data: { targets },
+            }).fail(function (response) {
+                common.fallbackErrorHandler(response);
+            }).always(function (response) {
+                if ($('.btn-cancel').length) {
+                    $('.btn-cancel').click();
+                } else {
+                    location.reload();
+                }
             });
-            $form.attr('action', $(this).attr('data-action')).submit();
         }
     });
 
-    // 増員ボタン
-    $('.btn-add-staff').click(function () {
-        var $form = $('#postForm');
-        var targets = {}
-        var id = $(this).attr('data-id');
-        if (id) {
-            var lock = $(this).attr('data-lock');
-            targets[id] = lock;
-        } else {
-            targets = common.paginator.getTargets();
-        }
+    // パスワード再発行ボタン
+    $('.btn-password-issue').click(function () {
+        var targets = common.paginator.getTargets(this);
         if (targets) {
-            Object.keys(targets).forEach(function (id) {
-                var lock = targets[id];
-                $form.append('<input type="hidden" name="targets[' + id + '][_lock]" value="' + lock + '" />');
+            $.ajax({
+                url: $(this).attr('data-action'),
+                method: 'post',
+                xhrFields: { responseType: 'blob' },
+                headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
+                data: { targets },
+            }).fail(function (response) {
+                common.fallbackErrorHandler(response);
+            }).done(function (response) {
+                common.createFile('password.csv', response);
+            }).always(function (response) {
+                location.reload();
+                console.log(response)
             });
-            $form.attr('action', $(this).attr('data-action')).submit();
-        }
-    });
-    
-    // ACO更新ボタン
-    $('.btn-refresh').click(function () {
-        var template = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-        $(this).append(template).prop('disabled', true);
-    });
-    
-    // 遷移ボタン
-    $('.btn-jump').click(function () {
-        location.href = $(this).attr('data-action');
-    });
-    
-    // 遷移ボタン (API)
-    $('.btn-jump-api').click(function () {
-        var $form = $('#postForm');
-        var targets = {}
-        var id = $(this).attr('data-id');
-        if (id) {
-            var lock = $(this).attr('data-lock');
-            targets[id] = lock;
-        } else {
-            targets = common.paginator.getTargets();
-        }
-        if (targets) {
-            Object.keys(targets).forEach(function (id) {
-                var lock = targets[id];
-                $form.append('<input type="hidden" name="targets[' + id + '][_lock]" value="' + lock + '" />');
-            });
-            $form.attr('action', $(this).attr('data-action')).submit();
         }
     });
 
@@ -192,10 +201,10 @@ $(function () {
         if (sessionStorage.viewUrl) {
             location.href = sessionStorage.viewUrl;
             sessionStorage.removeItem('viewUrl');
-        }else if (sessionStorage.indexUrl) {
+        } else if (sessionStorage.indexUrl) {
             location.href = sessionStorage.indexUrl;
             sessionStorage.removeItem('indexUrl');
-        }else {
+        } else {
             location.href = $(this).attr('data-action');
         }
     });
@@ -208,16 +217,11 @@ $(function () {
         location.href = url || $(this).attr('data-action');
     });
 
-    // 検索条件クリアボタン
-    $('.btn-clear').click(function () {
-        location.href = $(this).attr('data-action');
-    });
-    
     // フォーム送信ボタン
     $('.btn-submit').click(function () {
         $(this).parents('form').submit();
     });
-    
+
 });
 
 
@@ -231,7 +235,7 @@ $(function () {
             .prop('checked', checked)
             .prop('disabled', checked);
         return false;
-    }).each(function() {
+    }).each(function () {
         // 画面初期表示
         var checked = $(this).prop('checked');
         if (checked) {

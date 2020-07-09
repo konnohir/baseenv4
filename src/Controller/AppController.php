@@ -50,7 +50,7 @@ class AppController extends Controller
         $user = $this->getRequest()->getAttribute('identity');
 
         // ajax通信時はログイン画面にリダイレクトせずに例外を発生させるfix
-        if (!isset($user) && $this->getRequest()->is('ajax') && !$this instanceof ErrorController) {
+        if (!isset($user) && $this->getRequest()->is('ajax')) {
             throw new UnauthorizedException();
         }
 

@@ -18,7 +18,7 @@ class CsvView extends View
      *
      * @return string The rendered view.
      */
-    public function render(): string
+    public function render(?string $template = NULL, $layout = NULL): string
     {
         $text = '';
         foreach ($this->viewVars['csv'] as $row) {

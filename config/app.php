@@ -158,9 +158,10 @@ return [
         'errorLevel' => E_ALL,
         'exceptionRenderer' => ExceptionRenderer::class,
         'skipLog' => [
+            Cake\Controller\Exception\MissingActionException::class,
+            Cake\Datasource\Exception\RecordNotFoundException::class,
             Cake\Http\Exception\ForbiddenException::class,
             Cake\Http\Exception\MissingControllerException::class,
-            Cake\Controller\Exception\MissingActionException::class,
         ],
         'log' => true,
         'trace' => false,

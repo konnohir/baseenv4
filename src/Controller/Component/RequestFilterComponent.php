@@ -119,6 +119,11 @@ class RequestFilterComponent extends Component
                 throw new BadRequestException();
             }
         }
+        
+        // レスポンスをJSON形式にする
+        $this->getController()->viewBuilder()
+            ->setClassName('Json')
+            ->setOption('serialize', true);
     }
 
     /**

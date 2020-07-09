@@ -66,7 +66,7 @@
         <?= $this->Form->customButton(__('増員'), [
             // 増員
             'data-action' => ['controller' => 'MCompanies', 'action' => 'add-staff'],
-            'class' => 'btn-outline-success btn-add-staff'
+            'class' => 'btn-outline-success btn-jump-api'
         ])
         ?>
         <?= $this->Form->customButton(__('BTN-DELETE'), [

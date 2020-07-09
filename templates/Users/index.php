@@ -43,7 +43,7 @@
             // パスワード再発行
             echo $this->Form->customButton(__('BTN-PASSWORD-ISSUE'), [
                 'data-action' => ['controller' => 'Users', 'action' => 'passwordIssue'],
-                'class' => 'btn-outline-success btn-jump-api'
+                'class' => 'btn-outline-success btn-password-issue'
             ]);
             // アカウントロック
             echo $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [

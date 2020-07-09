@@ -47,7 +47,7 @@
                 'data-action' => ['controller' => 'Users', 'action' => 'passwordIssue'],
                 'data-id' => $user->id,
                 'data-lock' => $user->_lock,
-                'class' => 'btn-outline-success btn-jump-api'
+                'class' => 'btn-outline-success btn-password-issue'
             ]);
             // アカウントロック
             echo $this->Form->customButton(__('BTN-ACCOUNT-LOCK'), [

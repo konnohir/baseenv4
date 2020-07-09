@@ -198,5 +198,8 @@ TypeFactory::map('datetime', DateTimeType::class);
 Validator::addDefaultProvider('default', new RulesProvider(CustomValidation::class));
 
 function dbg($a) {
+    if (is_array($a)) {
+        $a = print_r($a, true);
+    }
     Log::debug((string)$a);
 }

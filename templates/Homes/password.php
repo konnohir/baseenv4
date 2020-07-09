@@ -53,9 +53,6 @@
                     echo $this->Form->customControl('password', [
                         'type' => 'password',
                         'label' => false,
-                        'value' => false,
-                        'error' => [
-                            'Not long enough' => __('This is not long enough')]
                     ]);
                 ?>
             </dd>

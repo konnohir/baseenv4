@@ -57,15 +57,7 @@ class MCompaniesController extends AppController
     public function view($id = null)
     {
         // $mCompany: 企業マスタ
-        $mCompany = $this->MCompanies->find('detail', compact('id'))->first();
-
-        // データ取得失敗時: 一覧画面へ遷移 (検索条件クリア)
-        if ($mCompany === null) {
-            // E-V-NOT-FOUND:対象の{0}が存在しません
-            $this->Flash->error(__('E-NOT-FOUND', __($this->title)), ['clear' => true]);
-            return $this->redirect(['action' => 'index']);
-        }
-
+        $mCompany = $this->MCompanies->find('detail', compact('id'))->firstOrFail();
         // $tagList: タグ一覧
         $tagList = $this->MCompanies->Tags->find('list')->toArray();
 
@@ -94,7 +86,7 @@ class MCompaniesController extends AppController
         if ($this->isAdd()) {
             $mCompany = $this->MCompanies->newEmptyEntity();
         } else {
-            $mCompany = $this->MCompanies->find('detail', compact('id'))->first();
+            $mCompany = $this->MCompanies->find('detail', compact('id'))->firstOrFail();
         }
 
         // POST送信された(保存ボタンが押された)場合
@@ -186,7 +178,7 @@ class MCompaniesController extends AppController
         });
 
         // 画面を再表示
-        return $this->redirect($this->referer());
+        $this->set(compact('result'));
     }
 
     /**
@@ -229,11 +221,6 @@ class MCompaniesController extends AppController
             return true;
         });
 
-        // 画面を再表示、または一覧画面へ遷移 (検索条件クリア)
-        $redirectUrl = $this->referer();
-        if (strpos($redirectUrl, 'view') !== false) {
-            $redirectUrl = ['action' => 'index'];
-        }
-        return $this->redirect($redirectUrl);
+        $this->set(compact('result'));
     }
 }

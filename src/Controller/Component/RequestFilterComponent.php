@@ -71,8 +71,18 @@ class RequestFilterComponent extends Component
         $newRequest = $this->getRequest()->withData('filter', $filterArgs);
         $this->getController()->setRequest($newRequest);
 
-        // paginateプロパティを自動設定
-        $this->getController()->paginate['finder']['overview'] = ['filter' => $filterArgs];
+        // paginateプロパティをセット
+        $this->getController()->paginate = [
+            // 検索スコープ
+            'finder' => [
+                'overview' => ['filter' => $filterArgs]
+            ],
+            // 1ページ当たりの表示件数
+            'limit' => 20,
+            'maxLimit' => 20,
+            // 並び順
+            'order' => ['id' => 'asc']
+        ];
     }
 
     /**

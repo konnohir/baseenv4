@@ -6,7 +6,7 @@
 ?>
 <section>
     <h2 class="mb-2"><?= __('Password') ?></h2>
-    <?= $this->Form->create($user) ?>
+    <?= $this->Form->create($user, ['type' => 'post']) ?>
     <?= $this->Form->hidden('_lock') ?>
     <div class="dl-wrap dl-wrap-form mb-4">
         <dl class="row">
@@ -53,6 +53,7 @@
                     echo $this->Form->customControl('password', [
                         'type' => 'password',
                         'label' => false,
+                        'value' => '',
                     ]);
                 ?>
             </dd>

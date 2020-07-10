@@ -71,7 +71,7 @@ class MCompaniesController extends AppController
      */
     public function add()
     {
-        $this->edit();
+        return $this->edit();
     }
 
     /**
@@ -83,7 +83,7 @@ class MCompaniesController extends AppController
     public function edit($id = null)
     {
         // $mCompany: 企業マスタ
-        if ($this->isAdd()) {
+        if ($id === null) {
             $mCompany = $this->MCompanies->newEmptyEntity();
         } else {
             $mCompany = $this->MCompanies->find('detail', compact('id'))->firstOrFail();

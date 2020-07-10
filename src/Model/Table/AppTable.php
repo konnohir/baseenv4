@@ -20,7 +20,7 @@ class AppTable extends Table
     /**
      * 初期化
      *
-     * @param array $config The configuration for the Table.
+     * @param array $config 設定値
      * @return void
      */
     public function initialize(array $config): void
@@ -35,11 +35,10 @@ class AppTable extends Table
      * バリデーションルール
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @return Validator
      */
     public function validationDefault(Validator $validator): Validator
     {
-
         foreach($this->getSchema()->columns() as $column) {
             $columnInfo = $this->getSchema()->getColumn($column);
             $isRequirePresence = ($columnInfo['null'] === false && $columnInfo['default'] === null && (!isset($columnInfo['autoIncrement']) || $columnInfo['autoIncrement'] === false));

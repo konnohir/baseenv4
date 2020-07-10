@@ -7,7 +7,7 @@
 ?>
 <section>
     <h2 class="mb-2"><?= __('Users') ?></h2>
-    <?= $this->Form->create($user) ?>
+    <?= $this->Form->create($user, ['type' => 'post']) ?>
     <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');

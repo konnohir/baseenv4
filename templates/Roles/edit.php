@@ -8,7 +8,7 @@
 ?>
 <section>
     <h2 class="mb-2"><?= __('Roles') ?></h2>
-    <?= $this->Form->create($role) ?>
+    <?= $this->Form->create($role, ['type' => 'post']) ?>
     <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');

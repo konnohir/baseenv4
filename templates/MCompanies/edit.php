@@ -17,9 +17,9 @@
                 'label' => '自動採番',
                 'class' => 'btn btn-sm btn-success',
                 'onclick' => '$("#code").val(Math.round(Math.random()*900000+100000))',
-                'disabled' => !$this->isAdd(),
+                'disabled' => !$mCompany->isNew(),
             ],
-            'disabled' => !$this->isAdd(),
+            'disabled' => !$mCompany->isNew(),
         ]) ?>
         <?= $this->Form->customControl('name', [
             'type' => 'text',

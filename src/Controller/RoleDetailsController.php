@@ -52,6 +52,7 @@ class RoleDetailsController extends AppController
      *
      * @param string $id 権限詳細 id.
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function view($id)
     {
@@ -71,6 +72,7 @@ class RoleDetailsController extends AppController
      * 新規登録画面
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function add()
     {
@@ -82,11 +84,12 @@ class RoleDetailsController extends AppController
      *
      * @param string|null $id 権限詳細 id.
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function edit($id = null)
     {
         // $roleDetail: 権限詳細エンティティ
-        if ($this->isAdd()) {
+        if ($id === null) {
             $roleDetail = $this->RoleDetails->newEmptyEntity();
         } else {
             $roleDetail = $this->RoleDetails->find('detail', compact('id'))->firstOrFail();
@@ -97,16 +100,8 @@ class RoleDetailsController extends AppController
             // エンティティ編集
             $roleDetail = $this->RoleDetails->doEditEntity($roleDetail, $this->getRequest()->getData());
 
-            // $result: トランザクション実行結果 (boolean)
-            $result = $this->RoleDetails->getConnection()->transactional(function () use ($roleDetail) {
-                if (!$this->RoleDetails->save($roleDetail)) {
-                    return false;
-                }
-                return true;
-            });
-
             // DB保存成功時: 詳細画面へ遷移
-            if ($result) {
+            if ($this->RoleDetails->save($roleDetail)) {
                 $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $roleDetail->id]);
             }
@@ -131,6 +126,7 @@ class RoleDetailsController extends AppController
      * 削除API
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function delete()
     {

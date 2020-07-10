@@ -1,12 +1,13 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\RoleDetail $parentRoleDetailList
+ * @var \App\Model\Entity\RoleDetail $roleDetail
+ * @var \App\Model\Entity\RoleDetail[] $parentRoleDetailList
  */
 ?>
 <section>
     <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
-    <?= $this->Form->create($roleDetail) ?>
+    <?= $this->Form->create($roleDetail, ['type' => 'post']) ?>
     <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');

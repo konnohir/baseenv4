@@ -25,15 +25,4 @@ class AppView extends View
         $this->loadHelper('Konnohir.Form');
         $this->loadHelper('Konnohir.Permission');
     }
-
-    /**
-     * 新規登録画面判定
-     */
-    public function isAdd()
-    {
-        if (!isset($this->isAdd)) {
-            $this->isAdd = strpos($this->getRequest()->getRequestTarget(), 'add');
-        }
-        return $this->isAdd;
-    }
 }

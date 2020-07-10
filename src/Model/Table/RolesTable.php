@@ -17,9 +17,9 @@ use Cake\Validation\Validator;
 class RolesTable extends AppTable
 {
     /**
-     * Initialize method
+     * 初期化
      *
-     * @param array $config The configuration for the Table.
+     * @param array $config 設定値
      * @return void
      */
     public function initialize(array $config): void
@@ -38,7 +38,7 @@ class RolesTable extends AppTable
      * バリデーションルール
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @return Validator
      */
     public function validationDefault(Validator $validator): Validator
     {
@@ -63,7 +63,11 @@ class RolesTable extends AppTable
     }
 
     /**
-     * モデルの概要を取得するFinder
+     * モデルの概要を取得する
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return Query
      */
     protected function findOverview(Query $query, array $option)
     {
@@ -77,7 +81,11 @@ class RolesTable extends AppTable
     }
 
     /**
-     * モデルの詳細を取得するFinder
+     * モデルの詳細を取得する
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return Query
      */
     protected function findDetail(Query $query, array $option)
     {
@@ -92,6 +100,7 @@ class RolesTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doEditEntity(Entity $entity, array $input = [])
     {
@@ -118,6 +127,7 @@ class RolesTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doDeleteEntity(Entity $entity, array $input = [])
     {

@@ -17,12 +17,10 @@ use Cake\Validation\Validator;
  */
 class UsersTable extends AppTable
 {
-    protected $passwordLabelSuffix = '';
-
     /**
-     * Initialize method
+     * 初期化
      *
-     * @param array $config The configuration for the Table.
+     * @param array $config 設定値
      * @return void
      */
     public function initialize(array $config): void
@@ -40,17 +38,11 @@ class UsersTable extends AppTable
      * バリデーションルール
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @return Validator
      */
     public function validationDefault(Validator $validator): Validator
     {
         parent::validationDefault($validator);
-
-        // 新規作成時の必須入力項目
-        $validator->requirePresence([
-            'email',
-            'role_id',
-        ], 'create');
 
         // メールアドレス
         $validator->add('email', [
@@ -73,12 +65,6 @@ class UsersTable extends AppTable
                 'message' => __('E-V-REQUIRED'),
                 'last' => true,
             ],
-            // 新しいパスワードと一致 [パスワード変更画面]
-            'compareFields' => [
-                'rule' => ['compareFields', 'new_password', '==='],
-                'message' => __('E-V-RETYPE-WRONG-PASSWORD'),
-                'last' => true,
-            ],
         ]);
 
         // 権限
@@ -97,11 +83,10 @@ class UsersTable extends AppTable
      * パスワード変更バリデーション
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @return Validator
      */
     public function validationPassword(Validator $validator): Validator
     {
-        $this->passwordLabelSuffix = '.2';
         $this->validationDefault($validator);
 
         // パスワード変更時の必須入力項目
@@ -111,46 +96,35 @@ class UsersTable extends AppTable
             'password',
         ], 'update');
 
-        // 現在のパスワード
-        $column = 'current_password';
-        $label = __($this->getAlias() . '.' . $column);
-        $validator->add($column, [
+        // パスワード
+        $validator->add('password', [
             // 入力有
             'notBlank' => [
-                'message' => __('E-V-REQUIRED', $label),
+                'message' => __('E-V-REQUIRED'),
                 'last' => true,
             ],
-            // 文字列
-            'isScalar' => [
-                'message' => __('E-V-SCALAR', $label),
+            // 新しいパスワードと一致 [パスワード変更画面]
+            'compareFields' => [
+                'rule' => ['compareFields', 'new_password', '==='],
+                'message' => __('E-V-RETYPE-WRONG-PASSWORD'),
                 'last' => true,
             ],
-            // 最大桁数以内
-            'maxLength' => [
-                'rule' =>  ['maxLength', 255],
-                'message' => __('E-V-MAX-LENGTH', $label),
+        ]);
+
+        // 現在のパスワード
+        $validator->add('current_password', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
                 'last' => true,
             ],
         ]);
 
         // 新しいパスワード
-        $column = 'new_password';
-        $label = __($this->getAlias() . '.' . $column);
-        $validator->add($column, [
+        $validator->add('new_password', [
             // 入力有
             'notBlank' => [
-                'message' => __('E-V-REQUIRED', $label),
-                'last' => true,
-            ],
-            // 文字列
-            'isScalar' => [
-                'message' => __('E-V-SCALAR', $label),
-                'last' => true,
-            ],
-            // 最大桁数以内
-            'maxLength' => [
-                'rule' =>  ['maxLength', 255],
-                'message' => __('E-V-MAX-LENGTH', $label),
+                'message' => __('E-V-REQUIRED'),
                 'last' => true,
             ],
             // 現在のパスワードと異なる
@@ -214,7 +188,11 @@ class UsersTable extends AppTable
     }
 
     /**
-     * モデルの概要を取得するFinder
+     * モデルの概要を取得する
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return Query
      */
     protected function findOverview(Query $query, array $option)
     {
@@ -227,31 +205,50 @@ class UsersTable extends AppTable
         $conditions = $this->buildConditions($map, $option['filter'] ?? []);
 
         return $query
-            ->select($this)
-            ->select($this->Roles)
-            ->select(['password_issue' => 'password is not null'])  // 「パスワード発行」一覧画面でソートするためselectで取得する
+            ->select([
+                'Users.id',
+                'Users.email',
+                'Users.login_failed_count',
+                'Roles.name',
+                'Users__password_issue' => 'password is not null',
+                'Users.updated_at',
+            ])
             ->contain(['Roles'])
             ->where($conditions);
     }
 
     /**
-     * モデルの詳細を取得するFinder
+     * モデルの詳細を取得する
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return Query
      */
     protected function findDetail(Query $query, array $option)
     {
         if (isset($option['id'])) {
             $query->where([$this->getAlias() . '.id' => $option['id']]);
         }
-        return $query->contain(['Roles']);
+        return $query
+            ->select($this)
+            ->select($this->Roles)
+            ->select([
+                'password_issue' => 'password is not null',
+            ])
+            ->contain(['Roles']);
     }
 
     /**
-     * ログイン実行時にユーザーを取得するFinder
+     * ログイン実行時に必要な要素を取得する
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return Query
      */
     protected function findAuthentication(Query $query, array $option)
     {
-        $query
-            // ここで取得したエンティティは認証後、セッションに格納される
+        return $query
+            // Note: ここで取得したカラムは認証後、セッションに格納される
             ->select([
                 // プライマリーキー
                 'id',
@@ -263,7 +260,6 @@ class UsersTable extends AppTable
             ])
             // パスワード未発行のユーザーはログイン不可
             ->where(['password is not null']);
-        return $query;
     }
 
     /**
@@ -271,6 +267,7 @@ class UsersTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doEditEntity(Entity $entity, array $input = [])
     {
@@ -291,6 +288,7 @@ class UsersTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doLockAccount(Entity $entity, array $input = [])
     {
@@ -315,6 +313,7 @@ class UsersTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doUnlockAccount(Entity $entity, array $input = [])
     {
@@ -339,6 +338,7 @@ class UsersTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doIssuePassword(Entity $entity, array $input = [])
     {
@@ -348,7 +348,6 @@ class UsersTable extends AppTable
         $input = array_merge_recursive($input, [
             // パスワード
             'password' => $password,
-            'new_password' => $password,
             // パスワード (平文: CSV出力用)
             'plain_password' => $password,
         ]);
@@ -358,7 +357,7 @@ class UsersTable extends AppTable
                 'password',
                 'plain_password',
                 // lock token
-                // '_lock',
+                '_lock',
             ],
             'associated' => []
         ]);
@@ -370,6 +369,7 @@ class UsersTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doChangePassword(Entity $entity, array $input = [])
     {
@@ -397,6 +397,7 @@ class UsersTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doDeleteEntity(Entity $entity, array $input = [])
     {
@@ -421,6 +422,7 @@ class UsersTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doResetLoginFailedCount(Entity $entity, array $input = [])
     {
@@ -443,6 +445,7 @@ class UsersTable extends AppTable
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
+     * @return Entity
      */
     public function doIncrementLoginFailedCount(Entity $entity, array $input = [])
     {

@@ -15,9 +15,9 @@ use Cake\Validation\Validator;
 class NoticesTable extends AppTable
 {
     /**
-     * Initialize method
+     * 初期化
      *
-     * @param array $config The configuration for the Table.
+     * @param array $config 設定値
      * @return void
      */
     public function initialize(array $config): void
@@ -33,7 +33,7 @@ class NoticesTable extends AppTable
      * バリデーションルール
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @return Validator
      */
     public function validationDefault(Validator $validator): Validator
     {

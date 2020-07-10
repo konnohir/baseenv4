@@ -20,20 +20,6 @@ class AppController extends Controller
     use PaginateTrait;
 
     /**
-     * PaginatorComponent デフォルト設定
-     * @var array
-     */
-    public $paginate = [
-        // 検索スコープ (FilterComponentが自動設定)
-        'finder' => [],
-        // 1ページ当たりの表示件数
-        'limit' => 20,
-        'maxLimit' => 20,
-        // 並び順
-        'order' => ['id' => 'asc']
-    ];
-
-    /**
      * 初期化処理
      *
      * @return void
@@ -58,16 +44,6 @@ class AppController extends Controller
         if (isset($user->language)) {
             I18n::setLocale($user->language);
         }
-    }
-
-    /**
-     * Util: リクエストされた画面が新規登録画面であるかをURLから判定する
-     * 
-     * @return bool
-     */
-    protected function isAdd()
-    {
-        return strpos($this->getRequest()->getRequestTarget(), 'add');
     }
 
     /**

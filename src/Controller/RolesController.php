@@ -52,6 +52,7 @@ class RolesController extends AppController
      *
      * @param string $id 権限 id.
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function view($id)
     {
@@ -68,6 +69,7 @@ class RolesController extends AppController
      * 新規登録画面
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function add()
     {
@@ -79,31 +81,24 @@ class RolesController extends AppController
      *
      * @param string|null $id 権限 id.
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function edit($id = null)
     {
         // $role: 権限エンティティ
-        if ($this->isAdd()) {
+        if ($id === null) {
             $role = $this->Roles->newEmptyEntity();
         } else {
             $role = $this->Roles->find('detail', compact('id'))->firstOrFail();
         }
 
         // POST送信された(保存ボタンが押された)場合
-        if ($this->request->is(['post', 'put', 'patch'])) {
+        if ($this->request->is('post')) {
             // エンティティ編集
             $role = $this->Roles->doEditEntity($role, $this->getRequest()->getData());
 
-            // $result: トランザクション実行結果 (boolean)
-            $result = $this->Roles->getConnection()->transactional(function () use ($role) {
-                if (!$this->Roles->save($role)) {
-                    return false;
-                }
-                return true;
-            });
-
             // DB保存成功時: 詳細画面へ遷移
-            if ($result) {
+            if ($this->Roles->save($role)) {
                 $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $role->id]);
             }
@@ -122,6 +117,7 @@ class RolesController extends AppController
      * 削除API
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function delete()
     {

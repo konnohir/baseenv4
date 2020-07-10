@@ -60,9 +60,9 @@ class UsersController extends AppController
     /**
      * 詳細画面
      *
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @param string $id ユーザー id.
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function view($id)
     {
@@ -76,6 +76,7 @@ class UsersController extends AppController
      * 新規登録画面
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function add()
     {
@@ -87,18 +88,19 @@ class UsersController extends AppController
      *
      * @param string|null $id ユーザー id.
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function edit($id = null)
     {
         // $user: ユーザーエンティティ
-        if ($this->isAdd()) {
+        if ($id === null) {
             $user = $this->Users->newEmptyEntity();
         } else {
             $user = $this->Users->find('detail', compact('id'))->firstOrFail();
         }
 
         // POST送信された(保存ボタンが押された)場合
-        if ($this->request->is(['post', 'put', 'patch'])) {
+        if ($this->request->is('post')) {
             // エンティティ編集
             $user = $this->Users->doEditEntity($user, $this->getRequest()->getData());
 
@@ -122,6 +124,7 @@ class UsersController extends AppController
      * アカウントロックAPI
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function lockAccount()
     {
@@ -157,6 +160,7 @@ class UsersController extends AppController
      * アカウントロック解除API
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function unlockAccount()
     {
@@ -192,6 +196,7 @@ class UsersController extends AppController
      * 既にパスワード発行済みの場合、パスワードを上書き（再発行）する
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function passwordIssue()
     {
@@ -242,6 +247,7 @@ class UsersController extends AppController
      * 削除API
      *
      * @return \Cake\Http\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function delete()
     {

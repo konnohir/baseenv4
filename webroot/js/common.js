@@ -24,7 +24,6 @@ common.paginator = {
         });
     },
     getId: function (self, suffix) {
-
         var id = $(self).attr('data-id');
         if (id) {
             return id;
@@ -45,7 +44,7 @@ common.paginator = {
         var id = $(self).attr('data-id');
         var _lock = $(self).attr('data-lock');
         if (id && _lock) {
-            results[id] = { _lock };
+            results[id] = { _lock: _lock };
             return results
         }
 
@@ -59,16 +58,70 @@ common.paginator = {
         $rows.each(function (idx, value) {
             var id = $(value).prop('value');
             var _lock = $(value).attr('data-lock');
-            results[id] = { _lock };
+            results[id] = { _lock: _lock };
         })
         return results;
     }
 }
 
 common.alert = {
-    info: function (s) { alert(s) },
-    error: function (s) { alert(s) },
-    confirm: function (s) { confirm(s) },
+    info: function (content, callback) {
+        this.modal(content, '情報', 'bg-info', callback, false)
+    },
+    error: function (content, callback) {
+        this.modal(content, 'エラー', 'bg-danger', callback, false)
+    },
+    confirm: function (content, okCallback, cancelCallback) {
+        this.modal(content, '確認', 'bg-info', okCallback, cancelCallback)
+    },
+    progress: function (content) {
+        this.modal(content, 'お待ちください', 'bg-info', false, false)
+    },
+    modal: function (content, title, headerClass, okCallback, cancelCallback) {
+        if (!this._modal) {
+            this._modal = (
+                $('<div/>').addClass('modal fade').append(
+                    $('<div/>').addClass('modal-dialog').append(
+                        $('<div/>').addClass('modal-content')
+                            .append($('<div/>').addClass('modal-header p-2 text-white'))
+                            .append($('<div/>').addClass('modal-body'))
+                            .append($('<div/>').addClass('modal-footer justify-content-center')
+                                .append($('<button/>').addClass('btn btn-sm btn-block btn-outline-secondary modal-cancel mt-0').attr('data-dismiss', 'modal').text('キャンセル'))
+                                .append($('<button/>').addClass('btn btn-sm btn-block btn-outline-primary modal-ok mt-0').attr('data-dismiss', 'modal').text('OK'))
+                            )
+                    )
+                )
+            );
+            $(this._modal).on('shown.bs.modal', function (e) {
+                $('.modal-footer button:not(.d-none):first', this).focus();
+            });
+            $(this._modal).on('hidden.bs.modal', function (e) {
+                $('.modal-header', this).text(title).removeClass('bg-info bg-warning bg-danger bg-info')
+                $('.modal-cancel', this).off('click').removeClass('d-none');
+                $('.modal-ok', this).off('click').removeClass('d-none');
+            });
+        }
+        if (this._modal.hasClass('show')) {
+            // $(this._modal).one('hidden.bs.modal', function (e) {
+            //     common.alert.modal(content, title, headerClass, okCallback, cancelCallback)
+            // });
+            // return;
+            $(this._modal).trigger('hidden.bs.modal');
+        }
+        $('.modal-header', this._modal).text(title).addClass(headerClass);
+        $('.modal-body', this._modal).text(content);
+        if (cancelCallback === false) {
+            $('.modal-cancel', this._modal).addClass('d-none');
+        } else if (cancelCallback) {
+            $('.modal-cancel', this._modal).one('click', cancelCallback);
+        }
+        if (okCallback === false) {
+            $('.modal-ok', this._modal).addClass('d-none');
+        } else if (okCallback) {
+            $('.modal-ok', this._modal).one('click', okCallback);
+        }
+        this._modal.modal({ show: true, backdrop: 'static', keyboard: false });
+    }
 }
 
 common.fallbackErrorHandler = function (response) {
@@ -82,11 +135,11 @@ common.fallbackErrorHandler = function (response) {
 }
 
 common.createFile = function (fileName, blobData) {
-    if (navigator.appVersion.toString().indexOf('.NET') > 0) {
-        //IE 10+
-        window.navigator.msSaveBlob(blobData, fileName + ".pdf");
+    if (navigator.msSaveBlob) {
+        // IE 10+
+        navigator.msSaveOrOpenBlob(blobData, fileName + ".pdf");
     } else {
-        var blobUrl = window.URL.createObjectURL(new Blob([blobData], {
+        var blobUrl = URL.createObjectURL(new Blob([blobData], {
             type: blobData.type
         }));
         var a = $("<a/>").css('display', 'none').attr('href', blobUrl).attr('download', fileName)[0];
@@ -116,6 +169,14 @@ $(function () {
             sessionStorage.viewUrl = location.href;
         });
     }
+    var $spiner = $('<div />').addClass('modal fade').append($('<div />').addClass('ml-auto text-primary spinner-border float-right'));
+
+    $(document).ajaxStart(function () {
+        $spiner.modal('show');
+    });
+    $(document).ajaxStop(function () {
+        $spiner.modal('hide')
+    });
 
     // Readonly checkbox
     $('input[type=checkbox][readonly]').click(function () {
@@ -136,7 +197,7 @@ $(function () {
                 method: 'post',
                 dataType: 'json',
                 headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
-                data: { targets },
+                data: { targets: targets },
             }).fail(function (response) {
                 common.fallbackErrorHandler(response);
             }).always(function (response) {
@@ -162,7 +223,7 @@ $(function () {
                 method: 'post',
                 dataType: 'json',
                 headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
-                data: { targets },
+                data: { targets: targets },
             }).fail(function (response) {
                 common.fallbackErrorHandler(response);
             }).always(function (response) {
@@ -179,19 +240,21 @@ $(function () {
     $('.btn-password-issue').click(function () {
         var targets = common.paginator.getTargets(this);
         if (targets) {
-            $.ajax({
-                url: $(this).attr('data-action'),
-                method: 'post',
-                xhrFields: { responseType: 'blob' },
-                headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
-                data: { targets },
-            }).fail(function (response) {
-                common.fallbackErrorHandler(response);
-            }).done(function (response) {
-                common.createFile('password.csv', response);
-            }).always(function (response) {
-                location.reload();
-                console.log(response)
+            var url = $(this).attr('data-action')
+            common.alert.confirm('発行します。よろしいですか？', function () {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    xhrFields: { responseType: 'blob' },
+                    headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
+                    data: { targets: targets },
+                }).fail(function (response) {
+                    common.fallbackErrorHandler(response);
+                }).done(function (response) {
+                    common.createFile('password.csv', response);
+                }).always(function (response) {
+                    location.reload();
+                });
             });
         }
     });

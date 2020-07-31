@@ -4,6 +4,7 @@
  * @var \App\Model\Entity\RoleDetail $roleDetail
  * @var \App\Model\Entity\RoleDetail[] $parentRoleDetailList
  */
+$this->Html->script('role-details/role-details', ['block' => true]);
 ?>
 <section>
     <h2 class="mb-2"><?= __('RoleDetails') ?></h2>

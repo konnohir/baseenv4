@@ -6,6 +6,7 @@
  */
 $acoParentIds = array_column((array) $roleDetail->acos, 'parent_id', 'parent_id');
 $acoIds = array_column((array) $roleDetail->acos, 'id', 'id');
+$this->Html->script('role-details/role-details', ['block' => true]);
 ?>
 <section>
     <h2 class="mb-2"><?= __('RoleDetails') ?></h2>

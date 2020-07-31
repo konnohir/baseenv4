@@ -81,8 +81,8 @@ app.modal = {
         this.modal(null, '通信中', 'p-2 text-white bg-info', false, false)
     },
     modal: function (content, title, headerClass, okCallback, cancelCallback) {
-        if (!this._modal) {
-            this._modal = (
+        if (!this.$modal) {
+            this.$modal = (
                 $('<div/>').addClass('modal fade').attr('tabindex', -1).append(
                     $('<div/>').addClass('modal-dialog').append(
                         $('<div/>').addClass('modal-content')
@@ -92,38 +92,38 @@ app.modal = {
                     )
                 )
             );
-            $(this._modal).on('shown.bs.modal', function () {
+            this.$modal.on('shown.bs.modal', function () {
                 $('.modal-footer button:first', this).focus();
             });
-            $(this._modal).on('hidden.bs.modal', function () {
+            this.$modal.on('hidden.bs.modal', function () {
                 $('.modal-header', this).empty();
                 $('.modal-body', this).empty();
                 $('.modal-footer', this).empty();
             });
         }
-        if ($(this._modal).hasClass('show')) {
-            $(this._modal).trigger('hidden.bs.modal');
+        if (this.$modal.hasClass('show')) {
+            this.$modal.trigger('hidden.bs.modal');
         }
-        $('.modal-header', this._modal).removeClass().addClass('modal-header ' + headerClass).text(title);
+        $('.modal-header', this.$modal).removeClass().addClass('modal-header ' + headerClass).text(title);
         if (content !== null) {
-            $('.modal-body', this._modal).text(content);
+            $('.modal-body', this.$modal).text(content);
         } else {
             var $spinner = $('<div />').addClass('d-block mx-auto text-primary spinner-border');
-            $('.modal-body', this._modal).append($spinner);
+            $('.modal-body', this.$modal).append($spinner);
         }
         if (cancelCallback !== false) {
-            $('.modal-footer', this._modal).append($('<button/>').addClass('btn btn-sm btn-block btn-outline-secondary modal-cancel mt-0').attr('data-dismiss', 'modal').text('キャンセル'))
+            $('.modal-footer', this.$modal).append($('<button/>').addClass('btn btn-sm btn-block btn-outline-secondary modal-cancel mt-0').attr('data-dismiss', 'modal').text('キャンセル'))
             if (cancelCallback) {
-                $('.modal-cancel', this._modal).one('click', cancelCallback);
+                $('.modal-cancel', this.$modal).one('click', cancelCallback);
             }
         }
         if (okCallback !== false) {
-            $('.modal-footer', this._modal).append($('<button/>').addClass('btn btn-sm btn-block btn-outline-primary modal-ok mt-0').attr('data-dismiss', 'modal').text('OK'))
+            $('.modal-footer', this.$modal).append($('<button/>').addClass('btn btn-sm btn-block btn-outline-primary modal-ok mt-0').attr('data-dismiss', 'modal').text('OK'))
             if (okCallback) {
-                $('.modal-ok', this._modal).one('click', okCallback);
+                $('.modal-ok', this.$modal).one('click', okCallback);
             }
         }
-        this._modal.modal({ show: true, backdrop: 'static', keyboard: false });
+        this.$modal.modal({ show: true, backdrop: 'static', keyboard: false });
         document.activeElement.blur();
     }
 }
@@ -289,27 +289,3 @@ $(function () {
     });
 
 });
-
-
-// 個別
-$(function () {
-    // 権限詳細
-    $('[data-type=controller]').change(function () {
-        var checked = $(this).prop('checked');
-        $(this).parents('li').first()
-            .find('ul input[type=checkbox]')
-            .prop('checked', checked)
-            .prop('disabled', checked);
-        return false;
-    }).each(function () {
-        // 画面初期表示
-        var checked = $(this).prop('checked');
-        if (checked) {
-            $(this).change();
-        }
-        if ($('.view').length) {
-            // IE fix
-            $(this).off('change');
-        }
-    });
-}); 

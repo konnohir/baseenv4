@@ -3,10 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="/favicon.ico" type="image/x-icon" rel="icon" />
+    <link href="/favicon.ico" type="image/x-icon" rel="icon">
     <?=
-        $this->Html->css('/vendor/bootstrap.min'),
-        $this->Html->css('common'),
+        // 全ページ共通のスタイルシート
+        $this->Html->css('vendor/bootstrap.min'),
+        $this->Html->css('common/common'),
+        // ページ毎のスタイルシート
         $this->fetch('css')
     ?>
 
@@ -24,17 +26,18 @@
         </div>
     </main>
     <footer>
-        <p class="text-center border-top">© 2020 footer</p>
+        <p class="text-center border-top">© 2020 konnohir</p>
     </footer>
     <?=
-        $this->Html->script('/vendor/jquery-3.4.1.min'),
-        $this->Html->script('/vendor/bootstrap.bundle.min'),
-        $this->Html->script('common'),
-        $this->fetch('script'),
-
         // for common.js
         $this->Form->create(null, ['id' => 'postForm', 'url' => false]),
-        $this->Form->end()
+        $this->Form->end(),
+        // 全ページ共通のJavaScript
+        $this->Html->script('vendor/jquery-3.4.1.min'),
+        $this->Html->script('vendor/bootstrap.bundle.min'),
+        $this->Html->script('common/common'),
+        // ページ毎のJavaScript
+        $this->fetch('script')
     ?>
 
 </body>

@@ -5,7 +5,7 @@
  * @var \App\Model\Entity\RoleDetail[]|\Cake\Collection\CollectionInterface $roleDetails
  */
 ?>
-<div class="w-100 mx-auto">
+<section>
     <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
     <div class="btn-group mb-2">
         <?php
@@ -68,4 +68,4 @@
             </tbody>
         </table>
     </div>
-</div>
+</section>

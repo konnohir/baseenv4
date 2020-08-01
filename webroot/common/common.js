@@ -284,6 +284,7 @@ $(function () {
     $('.btn-submit').click(function () {
         var $target = $(this).parents('form');
         app.modal.confirm('送信します。よろしいですか？', function () {
+            app.modal.progress();
             $target.submit();
         });
     });

@@ -4,7 +4,7 @@
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
  */
 ?>
-<div class="w-100 mx-auto">
+<section>
     <h2 class="mb-2"><?= __('Users') ?></h2>
     <div class="card mb-2">
         <div class="card-body py-1">
@@ -96,4 +96,4 @@
             </tbody>
         </table>
     </div>
-</div>
+</section>

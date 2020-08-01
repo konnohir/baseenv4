@@ -68,8 +68,7 @@
             ]);
             // 保存
             echo $this->Form->customButton(__('BTN-SAVE'), [
-                'type' => 'submit',
-                'class' => 'btn-primary'
+                'class' => 'btn-primary btn-submit'
             ]);
         ?>
     </div>

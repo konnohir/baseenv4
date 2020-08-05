@@ -7,6 +7,7 @@
     <?=
         // 全ページ共通のスタイルシート
         $this->Html->css('vendor/bootstrap.min'),
+        $this->Html->css('vendor/material-design-icons/material-design-icons'),
         $this->Html->css('common/common'),
         // ページ毎のスタイルシート
         $this->fetch('css')
@@ -15,7 +16,7 @@
     <title><?= $this->fetch('title') ?></title>
 </head>
 <body>
-    <header class="navbar navbar-expand-md navbar-dark bg-dark p-0">
+    <header class="navbar navbar-expand-md">
         <h1><a href="/" class="navbar-brand"><?= __('BaseEnv4') ?></a></h1>
         <?= $this->element('navbar') ?>
     </header>

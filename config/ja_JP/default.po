@@ -53,13 +53,13 @@ msgid "MCompanies"
 msgstr "企業マスタ"
 
 msgid "Users"
-msgstr "ユーザーマスタ"
+msgstr "ユーザー"
 
 msgid "Roles"
-msgstr "権限マスタ"
+msgstr "権限"
 
 msgid "RoleDetails"
-msgstr "権限詳細マスタ"
+msgstr "権限詳細"
 
 msgid "Login"
 msgstr "ログイン"

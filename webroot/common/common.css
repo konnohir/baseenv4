@@ -13,6 +13,10 @@ ul {
     list-style-type: none;
 }
 
+a {
+    color: black;
+}
+
 /** Custom table */
 
 .table-wrap {
@@ -31,7 +35,9 @@ ul {
 .table-wrap th, .table-wrap td {
     border-bottom: solid 1px gray;
     border-right: solid 1px gray;
-    vertical-align: top
+    vertical-align: top;
+    padding: 1px 4px;
+    font-size: 0.95rem;
 }
 
 .table-wrap thead th {
@@ -131,12 +137,22 @@ body>header {
 body>header h1 {
     font-size: 1rem;
     line-height: 30px;
-    height: 40px;
+    height: 41px;
     margin: 0;
 }
 
-body>header .nav-item:hover {
-    background: darkslategray;
+.navbar {
+    background: #eee;
+    padding: 0 16px;
+}
+
+.navbar-nav a {
+    border-bottom: solid 1px transparent;
+    color: #555;
+}
+.navbar-nav a:hover {
+    color: black;
+    border-bottom: solid 1px orangered;
 }
 
 /** Form */

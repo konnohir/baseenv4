@@ -16,32 +16,36 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // 企業マスタ
-                echo $this->Html->customLink(__('MCompanies'), ['controller' => 'MCompanies', 'action' => 'index'], [
-                    'class' => 'nav-link'
+                echo $this->Html->customLink('<i class="material-icons">location_city</i>' . __('MCompanies'), ['controller' => 'MCompanies', 'action' => 'index'], [
+                    'class' => 'nav-link',
+                    'escape' => false,
                 ]);
             ?>
         </li>
         <li class="nav-item">
             <?php
                 // ユーザーマスタ
-                echo $this->Html->customLink(__('Users'), ['controller' => 'Users', 'action' => 'index'], [
-                    'class' => 'nav-link'
+                echo $this->Html->customLink('<i class="material-icons">person</i>' . __('Users'), ['controller' => 'Users', 'action' => 'index'], [
+                    'class' => 'nav-link',
+                    'escape' => false,
                 ]);
             ?>
         </li>
         <li class="nav-item">
             <?php
                 // 権限マスタ
-                echo $this->Html->customLink(__('Roles'), ['controller' => 'Roles', 'action' => 'index'], [
-                    'class' => 'nav-link'
+                echo $this->Html->customLink('<i class="material-icons">group</i>' . __('Roles'), ['controller' => 'Roles', 'action' => 'index'], [
+                    'class' => 'nav-link',
+                    'escape' => false,
                 ]);
             ?>
         </li>
         <li class="nav-item">
             <?php
                 // 権限詳細マスタ
-                echo $this->Html->customLink(__('RoleDetails'), ['controller' => 'RoleDetails', 'action' => 'index'], [
-                    'class' => 'nav-link'
+                echo $this->Html->customLink('<i class="material-icons">settings</i>' . __('RoleDetails'), ['controller' => 'RoleDetails', 'action' => 'index'], [
+                    'class' => 'nav-link',
+                    'escape' => false,
                 ]);
             ?>
         </li>
@@ -68,8 +72,9 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // ログアウト
-                echo $this->Html->customLink(__('BTN-LOGOUT'), ['controller' => 'Homes', 'action' => 'logout'], [
-                    'class' => 'nav-link'
+                echo $this->Html->customLink('<i class="material-icons">power_settings_new</i>', ['controller' => 'Homes', 'action' => 'logout'], [
+                    'class' => 'nav-link',
+                    'escape' => false,
                 ]);
             ?>
         </li>

@@ -21,7 +21,7 @@
         <?= $this->element('navbar') ?>
     </header>
     <main class="container-fluid">
-        <div class="<?= $this->getName() ?> <?= $this->getRequest()->getParam('action') ?> py-3">
+        <div class="<?= $this->getName() ?> <?= $this->getRequest()->getParam('action') ?> mx-auto py-3">
             <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </div>

@@ -1,5 +1,4 @@
 @charset "utf-8";
-
 body {
     min-width: 320px;
     overflow-y: scroll;
@@ -11,10 +10,6 @@ h2, h3 {
 
 ul {
     list-style-type: none;
-}
-
-a {
-    color: black;
 }
 
 /** Custom table */
@@ -110,7 +105,7 @@ a {
     min-height: 1.5em;
 }
 
-.dl-wrap.dl-wrap-form dt,.dl-wrap.dl-wrap-form dd {
+.dl-wrap.dl-wrap-form dt, .dl-wrap.dl-wrap-form dd {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
 }
@@ -127,7 +122,7 @@ a {
     letter-spacing: normal;
 }
 
-/** Global lyout */
+/** Layout */
 
 body>header {
     white-space: nowrap;
@@ -150,9 +145,14 @@ body>header h1 {
     border-bottom: solid 1px transparent;
     color: #555;
 }
+
 .navbar-nav a:hover {
     color: black;
     border-bottom: solid 1px orangered;
+}
+
+.navbar-brand {
+    color: black;
 }
 
 /** Form */
@@ -175,12 +175,11 @@ form>.input {
     content: '*';
 }
 
-/** Page */
+/** Page width */
 
 .view, .add, .edit, .Homes.profile, .Homes.password {
     width: 50%;
     min-width: 722px;
-    margin: 0 auto;
 }
 
 @media (max-width: 767px) {
@@ -190,7 +189,10 @@ form>.input {
     }
 }
 
+.Homes.index {
+    max-width: 600px;
+}
+
 .Homes.login {
     max-width: 320px;
-    margin: 0 auto;
 }

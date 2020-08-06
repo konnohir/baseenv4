@@ -48,7 +48,7 @@
             </dt>
             <dd class="col-md">
                 <?= $this->Form->hidden('role_details._ids') ?>
-                <ul class="pl-0">
+                <ul class="list-unstyled">
                     <?php foreach ($roleDetails as $roleDetail) : ?>
                         <li>
                             <?=
@@ -62,7 +62,7 @@
                                 ])
                             ?>
                             <?php if (!empty($roleDetail->children)) : ?>
-                                <ul>
+                                <ul class="list-unstyled ml-4">
                                     <?php foreach ($roleDetail->children as $child) : ?>
                                         <li>
                                             <?=
@@ -88,7 +88,7 @@
     <div class="button-wrap py-4">
         <?= $this->Form->customButton(__('BTN-CANCEL'), [
             // キャンセル
-            'data-action' => ['controller' => 'Roles', 'action' => 'index'],
+            'data-action' => ['action' => 'index'],
             'class' => 'btn-secondary btn-cancel'
         ]) ?>
         <?= $this->Form->customButton(__('BTN-SAVE'), [

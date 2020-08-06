@@ -10,10 +10,10 @@ use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
- * DepartmentLevel2s Model
- * 部門（階層2）マスタ
+ * MDepartment3s Model
+ * 部門（階層3）マスタ
  */
-class DepartmentLevel2sTable extends AppTable
+class MDepartment3sTable extends AppTable
 {
     /**
      * 初期化
@@ -25,11 +25,11 @@ class DepartmentLevel2sTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->setTable('department_level2s');
+        $this->setTable('m_department3s');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('DepartmentLevel1s');
+        $this->belongsTo('MDepartment2s');
     }
 
     /**
@@ -47,7 +47,9 @@ class DepartmentLevel2sTable extends AppTable
         // $conditions: 検索条件の配列 (array)
         $conditions = $this->buildConditions($map, $option['filter'] ?? []);
 
-        return $query->where($conditions);
+        return $query
+        ->contain(['MDepartment2s', 'MDepartment2s.MDepartment1s'])
+        ->where($conditions);
     }
 
     /**

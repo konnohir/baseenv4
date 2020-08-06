@@ -52,25 +52,25 @@
     <div class="btn-group my-2">
         <?= $this->Form->customButton(__('BTN-BACK'), [
             // 戻る
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'index'],
+            'data-action' => ['action' => 'index'],
             'class' => 'btn-outline-secondary btn-cancel'
         ]) ?>
         <?= $this->Form->customButton(__('BTN-EDIT'), [
             // 編集
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'edit'],
+            'data-action' => ['action' => 'edit'],
             'data-id' => $mCompany->id,
             'class' => 'btn-outline-primary btn-edit'
         ]) ?>
         <?= $this->Form->customButton(__('増員'), [
             // 増員
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'add-staff'],
+            'data-action' => ['action' => 'add-staff'],
             'data-id' => $mCompany->id,
             'data-lock' => $mCompany->_lock,
             'class' => 'btn-outline-success btn-jump-api'
         ]) ?>
         <?= $this->Form->customButton(__('BTN-DELETE'), [
             // 削除
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'delete'],
+            'data-action' => ['action' => 'delete'],
             'data-id' => $mCompany->id,
             'data-lock' => $mCompany->_lock,
             'class' => 'btn-outline-danger btn-delete'

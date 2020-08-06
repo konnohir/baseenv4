@@ -55,6 +55,15 @@ msgstr "企業マスタ"
 msgid "Organizations"
 msgstr "組織マスタ"
 
+msgid "MDepartment1s"
+msgstr "本部マスタ"
+
+msgid "MDepartment2s"
+msgstr "部店マスタ"
+
+msgid "MDepartment3s"
+msgstr "課マスタ"
+
 msgid "Users"
 msgstr "ユーザー"
 
@@ -212,6 +221,33 @@ msgstr "説明文"
 
 msgid "RoleDetails.acos"
 msgstr "アクション"
+
+####################################
+
+msgid "MDepartment1s.code"
+msgstr "コード"
+
+msgid "MDepartment1s.name"
+msgstr "本部名"
+
+msgid "MDepartment1s.MDepartment2s"
+msgstr "部店"
+
+####################################
+
+msgid "MDepartment2s.code"
+msgstr "コード"
+
+msgid "MDepartment2s.name"
+msgstr "部店名"
+
+####################################
+
+msgid "MDepartment3s.code"
+msgstr "コード"
+
+msgid "MDepartment3s.name"
+msgstr "課名"
 
 ####################################
 

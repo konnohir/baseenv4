@@ -1,13 +1,13 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
- * @var array $roleList
+ * @var \App\Model\Entity\MDepartment1 $mDepartment1
+ * @var array $tagList
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('Users') ?></h2>
-    <?= $this->Form->create($user, ['type' => 'post']) ?>
+    <h2 class="mb-2"><?= __('MDepartment1s') ?></h2>
+    <?= $this->Form->create($mDepartment1, ['type' => 'post']) ?>
     <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');
@@ -15,12 +15,12 @@
     <div class="dl-wrap dl-wrap-form mb-4">
         <dl class="row">
             <dt class="col-md required">
-                <?= $this->Form->label('email', __('Users.email')) ?>
+                <?= $this->Form->label('email', __('MDepartment1s.code')) ?>
             </dt>
             <dd class="col-md">
                 <?php
-                    // メールアドレス
-                    echo $this->Form->customControl('email', [
+                    // 本部コード
+                    echo $this->Form->customControl('code', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -29,15 +29,13 @@
         </dl>
         <dl class="row">
             <dt class="col-md required">
-                <?= $this->Form->label('role_id', __('Users.role_id')) ?>
+                <?= $this->Form->label('role_id', __('MDepartment1s.name')) ?>
             </dt>
             <dd class="col-md">
                 <?php
-                    // 権限
-                    echo $this->Form->customControl('role_id', [
-                        'type' => 'select',
-                        'options' => $roleList,
-                        'empty' => true,
+                    // 本部名
+                    echo $this->Form->customControl('name', [
+                        'type' => 'text',
                         'label' => false,
                     ]);
                 ?>

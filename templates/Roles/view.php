@@ -24,7 +24,7 @@ $roleIds = array_column((array) $role->role_details, 'id', 'id');
         <dl class="row">
             <dt class="col-md"><?= __('Roles.role_details') ?></dt>
             <dd class="col-md">
-                <ul class="pl-0">
+                <ul class="list-unstyled">
                     <?php foreach ($roleDetails as $roleDetail) : ?>
                         <li>
                             <?=
@@ -40,7 +40,7 @@ $roleIds = array_column((array) $role->role_details, 'id', 'id');
                                 ])
                             ?>
                             <?php if (!empty($roleDetail->children)) : ?>
-                                <ul>
+                                <ul class="list-unstyled ml-4">
                                     <?php foreach ($roleDetail->children as $child) : ?>
                                         <li>
                                             <?=
@@ -68,19 +68,19 @@ $roleIds = array_column((array) $role->role_details, 'id', 'id');
         <?php
         // 戻る
         echo $this->Form->customButton(__('BTN-BACK'), [
-            'data-action' => ['controller' => 'Roles', 'action' => 'index'],
+            'data-action' => ['action' => 'index'],
             'class' => 'btn-outline-secondary btn-cancel'
         ]);
         // 編集
         echo $this->Form->customButton(__('BTN-EDIT'), [
-            'data-action' => ['controller' => 'Roles', 'action' => 'edit'],
+            'data-action' => ['action' => 'edit'],
             'data-id' => $role->id,
             'data-lock' => $role->_lock,
             'class' => 'btn-outline-primary btn-edit'
         ]);
         // 削除
         echo $this->Form->customButton(__('BTN-DELETE'), [
-            'data-action' => ['controller' => 'Roles', 'action' => 'delete'],
+            'data-action' => ['action' => 'delete'],
             'data-id' => $role->id,
             'data-lock' => $role->_lock,
             'class' => 'btn-outline-danger btn-delete'

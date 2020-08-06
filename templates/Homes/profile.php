@@ -25,7 +25,7 @@
         <?php
             // パスワード変更
             echo $this->Form->customButton(__('BTN-PASSWORD-CHANGE'), [
-                'data-action' => ['controller' => 'password', 'action' => 'index'],
+                'data-action' => ['controller' => 'Homes', 'action' => 'password'],
                 'class' => 'btn-outline-primary btn-jump'
             ])
         ?>

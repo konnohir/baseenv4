@@ -64,7 +64,7 @@ $this->Html->script('role-details/role-details', ['block' => true]);
             </dt>
             <dd class="col-md">
                 <?= $this->Form->hidden('acos._ids') ?>
-                <ul class="pl-0">
+                <ul class="list-unstyled">
                     <?php foreach ($acos as $controller) : ?>
                         <li>
                             <?=
@@ -77,7 +77,7 @@ $this->Html->script('role-details/role-details', ['block' => true]);
                                     'hiddenField' => false,
                                     'data-type' => 'controller',
                                 ]) ?>
-                                <ul>
+                                <ul class="list-unstyled ml-4">
                                     <?php foreach ($controller->children as $action) : ?>
                                         <li>
                                             <?=
@@ -101,7 +101,7 @@ $this->Html->script('role-details/role-details', ['block' => true]);
     <div class="form-group text-center py-4">
         <?= $this->Form->customButton(__('BTN-CANCEL'), [
             // キャンセル
-            'data-action' => ['controller' => 'RoleDetails', 'action' => 'index'],
+            'data-action' => ['action' => 'index'],
             'class' => 'btn-secondary btn-cancel'
         ]) ?>
         <?= $this->Form->customButton(__('BTN-SAVE'), [

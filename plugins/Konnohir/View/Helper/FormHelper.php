@@ -33,6 +33,7 @@ use Cake\View\View;
  * @method string search(string $fieldName, array $options = [])
  * @property \Cake\View\Helper\HtmlHelper $Html
  * @property \Cake\View\Helper\UrlHelper $Url
+ * @property \Konnohir\View\Helper\PermissionHelper $Permission
  * @link https://book.cakephp.org/3.0/en/views/helpers/form.html
  */
 class FormHelper extends Helper
@@ -92,7 +93,7 @@ class FormHelper extends Helper
         if ($multiple !== 'checkbox' && $type !== 'checkbox' && $type !== 'radio'/* && !isset($options['options'])*/) {
             $options = $this->addClass($options, 'form-control form-control-sm');
         } else {
-            $options = $this->addClass($options, 'ml-1');
+            $options = $this->addClass($options, 'mr-1');
             $options['templates'] += [
                 'checkboxWrapper' => '<div class="checkbox form-check">{{label}}</div>',
             ];

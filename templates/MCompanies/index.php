@@ -39,7 +39,7 @@
                     '25' => '25',
                 ]
             ]) ?>
-            <?= $this->Form->customButton(__('BTN-CLEAR'), ['data-action' => ['controller' => 'MCompanies', 'action' => 'index'], 'class' => 'btn-outline-secondary btn-clear']) ?>
+            <?= $this->Form->customButton(__('BTN-CLEAR'), ['data-action' => ['action' => 'index'], 'class' => 'btn-outline-secondary btn-clear']) ?>
             <?= $this->Form->customButton(__('BTN-SEARCH'), ['type' => 'submit', 'class' => 'btn-outline-info btn-search']) ?>
             <?= $this->Form->end() ?>
         </div>
@@ -47,31 +47,31 @@
     <div class="btn-group mb-2">
         <?= $this->Form->customButton(__('BTN-ADD'), [
             // 新規作成
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'add'],
+            'data-action' => ['action' => 'add'],
             'class' => 'btn-outline-primary btn-add'
         ])
         ?>
         <?= $this->Form->customButton(__('BTN-EDIT'), [
             // 編集
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'edit'],
+            'data-action' => ['action' => 'edit'],
             'class' => 'btn-outline-primary btn-edit'
         ])
         ?>
         <?= $this->Form->customButton(__('BTN-CSV'), [
             // CSV出力
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'csv'],
+            'data-action' => ['action' => 'csv'],
             'class' => 'btn-outline-success btn-csv'
         ])
         ?>
         <?= $this->Form->customButton(__('増員'), [
             // 増員
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'add-staff'],
+            'data-action' => ['action' => 'add-staff'],
             'class' => 'btn-outline-success btn-jump-api'
         ])
         ?>
         <?= $this->Form->customButton(__('BTN-DELETE'), [
             // 削除
-            'data-action' => ['controller' => 'MCompanies', 'action' => 'delete'],
+            'data-action' => ['action' => 'delete'],
             'class' => 'btn-outline-danger btn-delete'
         ])
         ?>

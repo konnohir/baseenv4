@@ -63,7 +63,7 @@
         <?php
             // キャンセル
             echo $this->Form->customButton(__('BTN-CANCEL'), [
-                'data-action' => ['controller' => 'profile', 'action' => 'index'],
+                'data-action' => ['controller' => 'Homes', 'action' => 'profile'],
                 'class' => 'btn-secondary btn-jump'
             ]);
             // 保存

@@ -11,17 +11,17 @@
         <?php
         // 新規作成
         echo $this->Form->customButton(__('BTN-ADD'), [
-            'data-action' => ['controller' => 'RoleDetails', 'action' => 'add'],
+            'data-action' => ['action' => 'add'],
             'class' => 'btn-outline-primary btn-add'
         ]);
         // 編集
         echo $this->Form->customButton(__('BTN-EDIT'), [
-            'data-action' => ['controller' => 'RoleDetails', 'action' => 'edit'],
+            'data-action' => ['action' => 'edit'],
             'class' => 'btn-outline-primary btn-edit'
         ]);
         // 削除
         echo $this->Form->customButton(__('BTN-DELETE'), [
-            'data-action' => ['controller' => 'RoleDetails', 'action' => 'delete'],
+            'data-action' => ['action' => 'delete'],
             'class' => 'btn-outline-danger btn-delete'
         ]);
         ?>

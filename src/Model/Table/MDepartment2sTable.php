@@ -10,10 +10,10 @@ use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
- * Organizations Model
- * 組織マスタ
+ * MDepartment2s Model
+ * 部門（階層2）マスタ
  */
-class OrganizationsTable extends AppTable
+class MDepartment2sTable extends AppTable
 {
     /**
      * 初期化
@@ -25,22 +25,11 @@ class OrganizationsTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->setTable('department_level3s');
+        $this->setTable('m_department2s');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('DepartmentLevel3s', [
-            'conditions' => 'DepartmentLevel3s.id = Organizations.id',
-            'foreignKey' => false,
-        ]);
-        $this->belongsTo('DepartmentLevel2s', [
-            'conditions' => 'DepartmentLevel2s.id = DepartmentLevel3s.department_level2_id',
-            'foreignKey' => false,
-        ]);
-        $this->belongsTo('DepartmentLevel1s', [
-            'conditions' => 'DepartmentLevel1s.id = DepartmentLevel2s.department_level1_id',
-            'foreignKey' => false,
-        ]);
+        $this->belongsTo('MDepartment1s');
     }
 
     /**
@@ -58,18 +47,7 @@ class OrganizationsTable extends AppTable
         // $conditions: 検索条件の配列 (array)
         $conditions = $this->buildConditions($map, $option['filter'] ?? []);
 
-        return $query
-            ->select(['id'])
-            ->select($this->DepartmentLevel1s)
-            ->select($this->DepartmentLevel2s)
-            ->select($this->DepartmentLevel3s)
-            ->contain(['DepartmentLevel3s'])
-            ->contain(['DepartmentLevel2s'])
-            ->contain(['DepartmentLevel1s'])
-            ->order('DepartmentLevel1s.code')
-            ->order('DepartmentLevel2s.code')
-            ->order('DepartmentLevel3s.code')
-            ->where($conditions);
+        return $query->where($conditions);
     }
 
     /**
@@ -86,4 +64,5 @@ class OrganizationsTable extends AppTable
         }
         return $query;
     }
+
 }

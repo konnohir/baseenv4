@@ -29,7 +29,7 @@ $this->Html->script('role-details/role-details', ['block' => true]);
         <dl class="row">
             <dt class="col-md"><?= __('RoleDetails.acos') ?></dt>
             <dd class="col-md">
-                <ul class="pl-0">
+                <ul class="list-unstyled">
                     <?php foreach ($acos as $controller) : ?>
                         <?php
                         if (
@@ -53,7 +53,7 @@ $this->Html->script('role-details/role-details', ['block' => true]);
                                     'data-type' => 'controller',
                                 ]);
                             ?>
-                            <ul>
+                            <ul class="list-unstyled ml-4">
                                 <?php foreach ($controller->children as $action) : ?>
                                     <li>
                                         <?=
@@ -81,19 +81,19 @@ $this->Html->script('role-details/role-details', ['block' => true]);
         <?php
         // 戻る
         echo $this->Form->customButton(__('BTN-BACK'), [
-            'data-action' => ['controller' => 'RoleDetails', 'action' => 'index'],
+            'data-action' => ['action' => 'index'],
             'class' => 'btn-outline-secondary btn-cancel'
         ]);
         // 編集
         echo $this->Form->customButton(__('BTN-EDIT'), [
-            'data-action' => ['controller' => 'RoleDetails', 'action' => 'edit'],
+            'data-action' => ['action' => 'edit'],
             'data-id' => $roleDetail->id,
             'data-lock' => $roleDetail->_lock,
             'class' => 'btn-outline-primary btn-edit'
         ]);
         // 削除
         echo $this->Form->customButton(__('BTN-DELETE'), [
-            'data-action' => ['controller' => 'RoleDetails', 'action' => 'delete'],
+            'data-action' => ['action' => 'delete'],
             'data-id' => $roleDetail->id,
             'data-lock' => $roleDetail->_lock,
             'class' => 'btn-outline-danger btn-delete'

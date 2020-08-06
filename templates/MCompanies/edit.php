@@ -67,7 +67,7 @@
         <div class="form-group text-center py-4">
             <?= $this->Form->customButton(__('BTN-CANCEL'), [
                 // キャンセル
-                'data-action' => ['controller' => 'MCompanies', 'action' => 'index'],
+                'data-action' => ['action' => 'index'],
                 'class' => 'btn-secondary btn-cancel'
             ]) ?>
             <?= $this->Form->customButton(__('BTN-SAVE'), [

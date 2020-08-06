@@ -27,6 +27,11 @@ class RequestPolicy implements RequestPolicyInterface
     protected static $model = null;
 
     /**
+     * @var array Cache storage
+     */
+    protected static $cache = [];
+
+    /**
      * Method to check if the request can be accessed
      *
      * @param \Authorization\IdentityInterface|null Identity
@@ -82,67 +87,31 @@ class RequestPolicy implements RequestPolicyInterface
             return true;
         }
 
+        if (isset(self::$cache[$controller][$action])) {
+            // Return cache data
+            return self::$cache[$controller][$action];
+        }
+
         if (!isset(self::$model)) {
-            self::$model = TableRegistry::getTableLocator()->get('Roles');
+            self::$model = TableRegistry::getTableLocator()->get('VPermissions');
         }
 
         $count = self::$model->find()
-            ->join([
-                'table' => 'role_details_roles',
-                'alias' => 'a',
-                'type' => 'INNER',
-                'conditions' => [
-                    'a.role_id = Roles.id',
-                ],
-            ])
-            ->join([
-                'table' => 'role_details',
-                'alias' => 'b',
-                'type' => 'INNER',
-                'conditions' => [
-                    'b.id = a.role_detail_id',
-                    'b.deleted_at is null',
-                ],
-            ])
-            ->join([
-                'table' => 'role_details_acos',
-                'alias' => 'c',
-                'type' => 'INNER',
-                'conditions' => [
-                    'c.role_detail_id = b.id',
-                ],
-            ])
-            ->join([
-                'table' => 'acos',
-                'alias' => 'd',
-                'type' => 'INNER',
-                'conditions' => [
-                    'd.id = c.aco_id'
-                ],
-            ])
-            ->join([
-                'table' => 'acos',
-                'alias' => 'e',
-                'type' => 'LEFT',
-                'conditions' => [
-                    'e.id = d.parent_id'
-                ],
-            ])
             ->where([
-                'Roles.id' => $roleId,
+                'role_id' => $roleId,
                 'OR' => [
                     [
-                        'e.alias' => $controller,
-                        'd.alias' => $action,
+                        'controller' => $controller,
+                        'action' => $action,
                     ],
                     [
-                        'e.alias' => 'controllers',
-                        'd.alias' => $controller,
+                        'controller' => 'controllers',
+                        'action' => $controller,
                     ]
                 ]
             ])
             ->count();
 
-        return ($count > 0);
+        return self::$cache[$controller][$action] = ($count > 0);
     }
 }

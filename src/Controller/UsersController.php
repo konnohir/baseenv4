@@ -46,7 +46,7 @@ class UsersController extends AppController
     {
         // $users: ユーザー一覧
         $users = $this->paginate($this->Users, [
-            'sortWhitelist' => [
+            'sortableFields' => [
                 'Users.email',
                 'Users.password_issue',
                 'Users.login_failed_count',

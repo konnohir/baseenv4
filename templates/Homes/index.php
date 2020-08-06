@@ -8,6 +8,16 @@
     <div class="row mb-4">
         <div class="col-sm-6 mb-2">
             <?php
+                // 組織マスタ
+                echo $this->Form->customButton('<i class="material-icons">location_city</i>' . __('Organizations'), [
+                    'data-action' => ['controller' => 'Organizations', 'action' => 'index'],
+                    'class' => 'btn-block btn-outline-primary btn-jump',
+                    'escapeTitle' => false,
+                ]);
+            ?>
+        </div>
+        <div class="col-sm-6 mb-2">
+            <?php
                 // 企業マスタ
                 echo $this->Form->customButton('<i class="material-icons">location_city</i>' . __('MCompanies'), [
                     'data-action' => ['controller' => 'MCompanies', 'action' => 'index'],

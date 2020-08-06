@@ -52,6 +52,9 @@ msgstr "ログアウト"
 msgid "MCompanies"
 msgstr "企業マスタ"
 
+msgid "Organizations"
+msgstr "組織マスタ"
+
 msgid "Users"
 msgstr "ユーザー"
 
@@ -209,6 +212,17 @@ msgstr "説明文"
 
 msgid "RoleDetails.acos"
 msgstr "アクション"
+
+####################################
+
+msgid "Organizations.level1_name"
+msgstr "本部名"
+
+msgid "Organizations.level2_name"
+msgstr "部店名"
+
+msgid "Organizations.level3_name"
+msgstr "課名"
 
 ####################################
 # ラベル

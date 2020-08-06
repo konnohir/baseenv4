@@ -22,7 +22,14 @@
     </header>
     <main class="container-fluid">
         <div class="<?= $this->getName() ?> <?= $this->getRequest()->getParam('action') ?> mx-auto py-3">
-            <?= $this->Flash->render() ?>
+            <?php 
+                // DB接続エラー時に発生する例外を抑制するfix
+                try {
+                    echo $this->Flash->render();
+                }catch(Exception $e) {
+                    // pass
+                }
+            ?>
             <?= $this->fetch('content') ?>
         </div>
     </main>

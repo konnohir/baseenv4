@@ -235,11 +235,17 @@ msgstr "部店"
 
 ####################################
 
+msgid "MDepartment2s.m_department1_id"
+msgstr "本部"
+
 msgid "MDepartment2s.code"
 msgstr "コード"
 
 msgid "MDepartment2s.name"
 msgstr "部店名"
+
+msgid "MDepartment2s.MDepartment3s"
+msgstr "課"
 
 ####################################
 

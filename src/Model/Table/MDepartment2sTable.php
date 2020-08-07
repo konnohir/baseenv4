@@ -30,6 +30,38 @@ class MDepartment2sTable extends AppTable
         $this->setPrimaryKey('id');
 
         $this->belongsTo('MDepartment1s');
+        $this->hasMany('MDepartment3s');
+    }
+
+    /**
+     * バリデーションルール
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return Validator
+     */
+    public function validationDefault(Validator $validator): Validator
+    {
+        parent::validationDefault($validator);
+
+        // 本部コード
+        $validator->add('code', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        // 本部名
+        $validator->add('name', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        return $validator;
     }
 
     /**
@@ -62,7 +94,28 @@ class MDepartment2sTable extends AppTable
         if (isset($option['id'])) {
             $query->where([$this->getAlias() . '.id' => $option['id']]);
         }
-        return $query;
+        return $query
+            ->contain(['MDepartment3s']);
     }
 
+    /**
+     * エンティティ編集
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     * @return Entity
+     */
+    public function doEditEntity(Entity $entity, array $input = [])
+    {
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // user input
+                'm_department1_id', 'code', 'name',
+                // lock token
+                '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
+    }
 }

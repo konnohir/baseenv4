@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 /**
- * MDepartment1s Controller
- * 本部マスタ
+ * MDepartment2s Controller
+ * 部店マスタ
  * 
- * @property \App\Model\Table\Department1sTable $Department1s
+ * @property \App\Model\Table\Department2sTable $Department2s
  */
-class MDepartment1sController extends AppController
+class MDepartment2sController extends AppController
 {
-    public $title = '本部';
+    public $title = '部店';
 
     /**
      * 初期化
@@ -32,6 +32,7 @@ class MDepartment1sController extends AppController
         ]);
 
         $this->loadModel('MDepartment1s');
+        $this->loadModel('MDepartment2s');
     }
 
     /**
@@ -41,27 +42,27 @@ class MDepartment1sController extends AppController
      */
     public function index()
     {
-        // $mDepartment1s: 本部一覧
-        $mDepartment1s = $this->paginate($this->MDepartment1s, [
+        // $mDepartment2s: 部店一覧
+        $mDepartment2s = $this->paginate($this->MDepartment2s, [
             'order' => ['code'],
         ]);
 
-        $this->set(compact('mDepartment1s'));
+        $this->set(compact('mDepartment2s'));
     }
 
     /**
      * 詳細画面
      *
-     * @param string $id 本部 id.
+     * @param string $id 部店 id.
      * @return \Cake\Http\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function view($id)
     {
-        // $mDepartment1: 本部エンティティ
-        $mDepartment1 = $this->MDepartment1s->find('detail', compact('id'))->firstOrFail();
+        // $mDepartment2: 部店エンティティ
+        $mDepartment2 = $this->MDepartment2s->find('detail', compact('id'))->firstOrFail();
 
-        $this->set(compact('mDepartment1'));
+        $this->set(compact('mDepartment2'));
     }
 
     /**
@@ -78,35 +79,38 @@ class MDepartment1sController extends AppController
     /**
      * 編集画面
      *
-     * @param string|null $id 本部 id.
+     * @param string|null $id 部店 id.
      * @return \Cake\Http\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function edit($id = null)
     {
-        // $mDepartment1: 本部エンティティ
+        // $mDepartment2: 部店エンティティ
         if ($id === null) {
-            $mDepartment1 = $this->MDepartment1s->newEmptyEntity();
+            $mDepartment2 = $this->MDepartment2s->newEmptyEntity();
         } else {
-            $mDepartment1 = $this->MDepartment1s->find('detail', compact('id'))->firstOrFail();
+            $mDepartment2 = $this->MDepartment2s->find('detail', compact('id'))->firstOrFail();
         }
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {
             // エンティティ編集
-            $mDepartment1 = $this->MDepartment1s->doEditEntity($mDepartment1, $this->getRequest()->getData());
+            $mDepartment2 = $this->MDepartment2s->doEditEntity($mDepartment2, $this->getRequest()->getData());
 
             // DB保存成功時: 詳細画面へ遷移
-            if ($this->MDepartment1s->save($mDepartment1)) {
+            if ($this->MDepartment2s->save($mDepartment2)) {
                 $this->Flash->success(__('I-SAVE', __($this->title)));
-                return $this->redirect(['action' => 'view', $mDepartment1->id]);
+                return $this->redirect(['action' => 'view', $mDepartment2->id]);
             }
 
             // DB保存失敗時: 画面を再表示
-            $this->failed($mDepartment1);
+            $this->failed($mDepartment2);
         }
 
-        $this->set(compact('mDepartment1'));
+        // $mDepartment1s: 本部リスト
+        $mDepartment1s = $this->MDepartment1s->find('list')->all();
+
+        $this->set(compact('mDepartment2', 'mDepartment1s'));
     }
 
     /**
@@ -121,21 +125,21 @@ class MDepartment1sController extends AppController
         $targets = $this->getRequest()->getData('targets');
 
         // $result: トランザクションの結果 (boolean)
-        $result = $this->MDepartment1s->getConnection()->transactional(function () use ($targets) {
+        $result = $this->MDepartment2s->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $requestData) {
-                // $mDepartment1: 本部エンティティ
-                $mDepartment1 = $this->MDepartment1s->find('detail', compact('id'))->firstOrFail();
+                // $mDepartment2: 部店エンティティ
+                $mDepartment2 = $this->MDepartment2s->find('detail', compact('id'))->firstOrFail();
 
                 // 削除
-                $mDepartment1 = $this->MDepartment1s->doDeleteEntity($mDepartment1, $requestData);
+                $mDepartment2 = $this->MDepartment2s->doDeleteEntity($mDepartment2, $requestData);
 
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->MDepartment1s->save($mDepartment1)) {
+                if ($this->MDepartment2s->save($mDepartment2)) {
                     continue;
                 }
 
                 // DB保存失敗時: ロールバック
-                return $this->failed($mDepartment1);
+                return $this->failed($mDepartment2);
             }
 
             $this->Flash->success(__('I-DELETE', __($this->title)));

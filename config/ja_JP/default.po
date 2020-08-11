@@ -52,9 +52,6 @@ msgstr "ログアウト"
 msgid "MCompanies"
 msgstr "企業マスタ"
 
-msgid "Organizations"
-msgstr "組織マスタ"
-
 msgid "MDepartment1s"
 msgstr "本部マスタ"
 
@@ -249,21 +246,16 @@ msgstr "課"
 
 ####################################
 
+msgid "MDepartment3s.m_department1_id"
+msgstr "本部"
+
+msgid "MDepartment3s.m_department2_id"
+msgstr "部店"
+
 msgid "MDepartment3s.code"
 msgstr "コード"
 
 msgid "MDepartment3s.name"
-msgstr "課名"
-
-####################################
-
-msgid "Organizations.level1_name"
-msgstr "本部名"
-
-msgid "Organizations.level2_name"
-msgstr "部店名"
-
-msgid "Organizations.level3_name"
 msgstr "課名"
 
 ####################################

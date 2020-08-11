@@ -1,7 +1,6 @@
 {
-    "name": "cakephp/app",
+    "name": "konnohir/baseenv4",
     "description": "CakePHP skeleton app",
-    "homepage": "https://cakephp.org",
     "type": "project",
     "license": "MIT",
     "require": {
@@ -39,19 +38,6 @@
     },
     "scripts": {
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
-        "check": [
-            "@test",
-            "@cs-check"
-        ],
-        "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
-        "cs-fix": "phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
-        "stan": "phpstan analyse src/",
-        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan-shim:^0.11 && mv composer.backup composer.json",
         "test": "phpunit --colors=always"
-    },
-    "prefer-stable": true,
-    "config": {
-        "sort-packages": true
-    },
-    "minimum-stability": "dev"
+    }
 }

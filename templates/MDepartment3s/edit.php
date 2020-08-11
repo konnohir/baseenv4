@@ -1,13 +1,14 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\MDepartment2 $mDepartment2
+ * @var \App\Model\Entity\MDepartment3 $mDepartment3
  * @var array $mDepartment1s
+ * @var array $mDepartment2s
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('MDepartment2s') ?></h2>
-    <?= $this->Form->create($mDepartment2, ['type' => 'post']) ?>
+    <h2 class="mb-2"><?= __('MDepartment3s') ?></h2>
+    <?= $this->Form->create($mDepartment3, ['type' => 'post']) ?>
     <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');
@@ -15,7 +16,7 @@
     <div class="dl-wrap dl-wrap-form mb-4">
         <dl class="row">
             <dt class="col-md required">
-                <?= $this->Form->label('m_department1_id', __('MDepartment2s.m_department1_id')) ?>
+                <?= $this->Form->label('m_department1_id', __('MDepartment3s.m_department1_id')) ?>
             </dt>
             <dd class="col-md">
                 <?php
@@ -31,11 +32,27 @@
         </dl>
         <dl class="row">
             <dt class="col-md required">
-                <?= $this->Form->label('code', __('MDepartment2s.code')) ?>
+                <?= $this->Form->label('m_department2_id', __('MDepartment3s.m_department2_id')) ?>
             </dt>
             <dd class="col-md">
                 <?php
-                    // 部店コード
+                    // 部店ID
+                    echo $this->Form->customControl('m_department2_id', [
+                        'type' => 'select',
+                        'options' => $mDepartment2s,
+                        'empty' => ' ',
+                        'label' => false,
+                    ]);
+                ?>
+            </dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md required">
+                <?= $this->Form->label('code', __('MDepartment3s.code')) ?>
+            </dt>
+            <dd class="col-md">
+                <?php
+                    // 課コード
                     echo $this->Form->customControl('code', [
                         'type' => 'text',
                         'label' => false,
@@ -45,11 +62,11 @@
         </dl>
         <dl class="row">
             <dt class="col-md required">
-                <?= $this->Form->label('name', __('MDepartment2s.name')) ?>
+                <?= $this->Form->label('name', __('MDepartment3s.name')) ?>
             </dt>
             <dd class="col-md">
                 <?php
-                    // 部店名
+                    // 課名
                     echo $this->Form->customControl('name', [
                         'type' => 'text',
                         'label' => false,

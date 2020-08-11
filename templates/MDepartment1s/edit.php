@@ -2,7 +2,6 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\MDepartment1 $mDepartment1
- * @var array $tagList
  */
 ?>
 <section>
@@ -15,7 +14,7 @@
     <div class="dl-wrap dl-wrap-form mb-4">
         <dl class="row">
             <dt class="col-md required">
-                <?= $this->Form->label('email', __('MDepartment1s.code')) ?>
+                <?= $this->Form->label('code', __('MDepartment1s.code')) ?>
             </dt>
             <dd class="col-md">
                 <?php
@@ -29,7 +28,7 @@
         </dl>
         <dl class="row">
             <dt class="col-md required">
-                <?= $this->Form->label('role_id', __('MDepartment1s.name')) ?>
+                <?= $this->Form->label('name', __('MDepartment1s.name')) ?>
             </dt>
             <dd class="col-md">
                 <?php

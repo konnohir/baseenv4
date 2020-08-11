@@ -3,7 +3,6 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\MDepartment1 $mDepartment1
- * @var array $tagList
  */
 ?>
 <section>

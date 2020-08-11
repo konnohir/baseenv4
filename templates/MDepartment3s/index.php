@@ -1,11 +1,11 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\MDepartment2[]|\Cake\Collection\CollectionInterface $mDepartment2s
+ * @var \App\Model\Entity\MDepartment3[]|\Cake\Collection\CollectionInterface $mDepartment3s
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('MDepartment2s') ?></h2>
+    <h2 class="mb-2"><?= __('MDepartment3s') ?></h2>
     <div class="btn-group mb-2">
         <?php
             // 新規作成
@@ -38,18 +38,18 @@
             <thead>
                 <tr>
                     <th><?= $this->Paginator->checkboxAll() ?></th>
-                    <th><?= $this->Paginator->sort('code', ['label' => __('MDepartment2s.code')]) ?></th>
+                    <th><?= $this->Paginator->sort('code', ['label' => __('MDepartment3s.code')]) ?></th>
                     <th class="w-100">
-                        <?= $this->Paginator->sort('name', ['label' => __('MDepartment2s.name')]) ?>
+                        <?= $this->Paginator->sort('name', ['label' => __('MDepartment3s.name')]) ?>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($mDepartment2s as $mDepartment2): ?>
+                <?php foreach ($mDepartment3s as $MDepartment3): ?>
                 <tr>
-                    <td><?= $this->Paginator->checkbox($mDepartment2->id, $mDepartment2->_lock) ?></td>
-                    <td><?= $this->Html->link($mDepartment2->code, ['action' => 'view', $mDepartment2->id]) ?></td>
-                    <td><?= $mDepartment2->name ?></td>
+                    <td><?= $this->Paginator->checkbox($MDepartment3->id, $MDepartment3->_lock) ?></td>
+                    <td><?= $this->Html->link($MDepartment3->code, ['action' => 'view', $MDepartment3->id]) ?></td>
+                    <td><?= $MDepartment3->name ?></td>
                 </tr>
                 <?php endforeach ?>
             </tbody>

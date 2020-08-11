@@ -43,7 +43,15 @@ class MDepartment2sTable extends AppTable
     {
         parent::validationDefault($validator);
 
-        // 本部コード
+        // 本部ID
+        $validator->add('m_department1_id', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+        // 部店コード
         $validator->add('code', [
             // 入力有
             'notBlank' => [
@@ -52,7 +60,7 @@ class MDepartment2sTable extends AppTable
             ],
         ]);
 
-        // 本部名
+        // 部店名
         $validator->add('name', [
             // 入力有
             'notBlank' => [

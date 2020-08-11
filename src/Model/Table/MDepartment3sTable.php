@@ -33,6 +33,46 @@ class MDepartment3sTable extends AppTable
     }
 
     /**
+     * バリデーションルール
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return Validator
+     */
+    public function validationDefault(Validator $validator): Validator
+    {
+        parent::validationDefault($validator);
+
+        // 部店ID
+        $validator->add('m_department2_id', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        // 課コード
+        $validator->add('code', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        // 課名
+        $validator->add('name', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        return $validator;
+    }
+
+    /**
      * モデルの概要を取得する
      * 
      * @param \Cake\ORM\Query $query クエリオブジェクト
@@ -65,6 +105,27 @@ class MDepartment3sTable extends AppTable
             $query->where([$this->getAlias() . '.id' => $option['id']]);
         }
         return $query;
+    }
+
+    /**
+     * エンティティ編集
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     * @return Entity
+     */
+    public function doEditEntity(Entity $entity, array $input = [])
+    {
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // user input
+                'm_department1_id', 'm_department2_id', 'code', 'name',
+                // lock token
+                '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
     }
 
 }

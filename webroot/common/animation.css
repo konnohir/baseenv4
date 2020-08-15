@@ -1,0 +1,24 @@
+@charset "utf-8";
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 999;
+    -webkit-transition: opacity .2s ease;
+    transition: opacity .2s ease;
+    pointer-events: initial;
+    opacity: 1;
+}
+
+body.fadein::after {
+    pointer-events: none;
+    opacity: 0;
+}
+
+body > header {
+    z-index: 1000;
+}

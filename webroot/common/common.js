@@ -282,7 +282,7 @@ $(function () {
 
     // フォーム送信ボタン
     $('.btn-submit').click(function () {
-        var $target = $(this).parents('form');
+        var $target = $(this).closest('form');
         app.modal.confirm('送信します。よろしいですか？', function () {
             app.modal.progress();
             $target.submit();

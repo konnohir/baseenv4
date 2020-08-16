@@ -137,7 +137,27 @@ class RequestFilterComponent extends Component
     }
 
     /**
-     * ServerRequestイブジェクト取得
+     * 組織IDフィルタ
+     * 第2引数, 第3引数が存在する場合、数値であるかチェックする
+     * 
+     * @throws Cake\Http\Exception\BadRequestException
+     * @return void
+     */
+    public function organizationIdFilter()
+    {
+        foreach([1, 2] as $key) {
+            // $id: URLの$key番目の引数
+            $id = $this->getRequest()->getParam('pass.' . $key);
+
+            // 数字以外(先頭0不可)ならBadRequestExceptionをスローする
+            if ($id !== null && !preg_match('/^[1-9]\d*$/', $id)) {
+                throw new BadRequestException();
+            }
+        }
+    }
+
+    /**
+     * ServerRequestオブジェクト取得
      * @return \Cake\Http\ServerRequest
      */
     protected function getRequest()

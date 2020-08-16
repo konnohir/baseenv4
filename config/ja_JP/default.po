@@ -52,14 +52,8 @@ msgstr "ログアウト"
 msgid "MCompanies"
 msgstr "企業マスタ"
 
-msgid "MDepartment1s"
-msgstr "本部マスタ"
-
-msgid "MDepartment2s"
-msgstr "部店マスタ"
-
-msgid "MDepartment3s"
-msgstr "課マスタ"
+msgid "Organizations"
+msgstr "組織マスタ"
 
 msgid "Users"
 msgstr "ユーザー"
@@ -257,6 +251,35 @@ msgstr "コード"
 
 msgid "MDepartment3s.name"
 msgstr "課名"
+
+####################################
+
+msgid "VOrganizations.m_department1_name"
+msgstr "本部名称"
+
+msgid "VOrganizations.m_department2_name"
+msgstr "部店名称"
+
+msgid "VOrganizations.m_department3_name"
+msgstr "課名称"
+
+msgid "VOrganizations.m_department1_code"
+msgstr "本部コード"
+
+msgid "VOrganizations.m_department2_code"
+msgstr "部店コード"
+
+msgid "VOrganizations.m_department3_code"
+msgstr "課コード"
+
+msgid "VOrganizations.m_department1_id"
+msgstr "本部"
+
+msgid "VOrganizations.m_department2_id"
+msgstr "部店"
+
+msgid "VOrganizations.m_department3_id"
+msgstr "課"
 
 ####################################
 # ラベル

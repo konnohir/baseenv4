@@ -24,6 +24,15 @@ use Cake\Core\Configure;
         </li>
         <li class="nav-item">
             <?php
+                // 組織マスタ
+                echo $this->Html->customLink('<i class="material-icons">format_list_bulleted</i>' . __('Organizations'), ['controller' => 'Organizations', 'action' => 'index'], [
+                    'class' => 'nav-link',
+                    'escape' => false,
+                ]);
+            ?>
+        </li>
+        <li class="nav-item">
+            <?php
                 // ユーザーマスタ
                 echo $this->Html->customLink('<i class="material-icons">person</i>' . __('Users'), ['controller' => 'Users', 'action' => 'index'], [
                     'class' => 'nav-link',

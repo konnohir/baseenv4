@@ -190,7 +190,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                         'type' => 'select',
                         'options' => $mDepartment1List,
                         'empty' => ' ',
-                        'default' => $mDepartment3->m_department2->m_department1_id,
+                        'default' => $mDepartment3->m_department2->m_department1_id ?? null,
                         'label' => false,
                     ]);
                     ?>

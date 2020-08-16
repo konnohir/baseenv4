@@ -255,6 +255,10 @@ class UsersTable extends AppTable
                 // 認証のため、email、passwordは必須
                 'email',
                 'password',
+                // アカウントロック判定用
+                'login_failed_count',
+                // パスワード有効期限判定用
+                'password_expired',
                 // 認可のため、role_idは必須
                 'role_id',
             ])

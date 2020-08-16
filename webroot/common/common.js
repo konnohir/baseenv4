@@ -77,9 +77,6 @@ app.modal = {
     confirmDanger: function (content, okCallback, cancelCallback) {
         this.modal(content, '確認', 'p-2 text-white bg-danger', okCallback, cancelCallback)
     },
-    progress: function () {
-        this.modal(null, '通信中', 'p-2 text-white bg-info', false, false)
-    },
     modal: function (content, title, headerClass, okCallback, cancelCallback) {
         if (!this.$modal) {
             this.$modal = (
@@ -101,16 +98,14 @@ app.modal = {
                 $('.modal-footer', this).empty();
             });
         }
-        if (this.$modal.hasClass('show')) {
-            this.$modal.trigger('hidden.bs.modal');
+        if ($('body').hasClass('modal-open')) {
+            this.$modal.one('hidden.bs.modal', function () {
+                app.modal.modal(content, title, headerClass, okCallback, cancelCallback);
+            });
+            return;
         }
         $('.modal-header', this.$modal).removeClass().addClass('modal-header ' + headerClass).text(title);
-        if (content !== null) {
-            $('.modal-body', this.$modal).text(content);
-        } else {
-            var $spinner = $('<div />').addClass('d-block mx-auto text-primary spinner-border');
-            $('.modal-body', this.$modal).append($spinner);
-        }
+        $('.modal-body', this.$modal).text(content);
         if (cancelCallback !== false) {
             $('.modal-footer', this.$modal).append($('<button/>').addClass('btn btn-sm btn-block btn-outline-secondary modal-cancel mt-0').attr('data-dismiss', 'modal').text('キャンセル'))
             if (cancelCallback) {
@@ -142,9 +137,7 @@ app.createFile = function (fileName, blobData) {
         // IE 10+
         navigator.msSaveOrOpenBlob(blobData, fileName);
     } else {
-        var blobUrl = URL.createObjectURL(new Blob([blobData], {
-            type: blobData.type
-        }));
+        var blobUrl = URL.createObjectURL(new Blob([blobData]));
         var a = $('<a/>').css('display', 'none').attr('href', blobUrl).attr('download', fileName)[0];
         document.body.appendChild(a);
         a.click();
@@ -175,6 +168,26 @@ app.parentPage = {
     }
 }
 
+app.loadingControl = {
+    init: function () {
+        $(document).ajaxStart(this.show);
+        $(document).ajaxError(this.hide);
+        $(document).submit(this.show);
+    },
+
+    show: function () {
+        $('body').removeClass('fadein');
+        var $spinner = $('<div/>').addClass('spinner-border loading');
+        $('body').append($spinner);
+        document.activeElement.blur();
+    },
+
+    hide: function () {
+        $('body').addClass('fadein');
+        $('.loading').remove();
+    }
+}
+
 $(function () {
 
     // Watch table
@@ -183,9 +196,13 @@ $(function () {
     // Watch index, view url
     app.parentPage.watch();
 
-    // ajaxStart callback
-    $(document).ajaxStart(function () {
-        app.modal.progress();
+    // Loading control
+    app.loadingControl.init();
+
+    // Ajax setup
+    $.ajaxSetup({
+        dataType: 'json',
+        headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
     });
 
     // Readonly checkbox
@@ -205,8 +222,6 @@ $(function () {
             $.ajax({
                 url: $(this).attr('data-action'),
                 method: 'post',
-                dataType: 'json',
-                headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
                 data: { targets: targets },
             }).fail(function (response) {
                 app.fallbackErrorHandler(response);
@@ -233,12 +248,10 @@ $(function () {
                 $.ajax({
                     url: url,
                     method: 'post',
-                    dataType: 'json',
-                    headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
                     data: { targets: targets },
                 }).fail(function (response) {
                     app.fallbackErrorHandler(response);
-                }).done(function () {
+                }).done(function (e) {
                     if ($('.btn-cancel').length > 0) {
                         $('.btn-cancel').click();
                     } else {
@@ -259,7 +272,7 @@ $(function () {
                     url: url,
                     method: 'post',
                     xhrFields: { responseType: 'blob' },
-                    headers: { 'X-CSRF-TOKEN': $('#postForm [name=_csrfToken]').val() },
+                    dataType: '',
                     data: { targets: targets },
                 }).fail(function (response) {
                     app.fallbackErrorHandler(response);
@@ -284,7 +297,6 @@ $(function () {
     $('.btn-submit').click(function () {
         var $target = $(this).closest('form');
         app.modal.confirm('送信します。よろしいですか？', function () {
-            app.modal.progress();
             $target.submit();
         });
     });

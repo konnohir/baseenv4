@@ -157,6 +157,14 @@ body>header h1 {
     color: black;
 }
 
+.loading {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    color: #28a745;
+    z-index: 1000;
+}
+
 /** Form */
 
 form>.input {

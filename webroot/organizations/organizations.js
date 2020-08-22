@@ -4,6 +4,7 @@ $(function () {
 
     if ($('.add, .edit').length > 0) {
 
+        // 編集種別
         $('[name=edit_type]').change(function () {
             var editType = $(this).val();
             $('[id^=EditForm]').addClass('d-none');
@@ -14,11 +15,6 @@ $(function () {
             if (checked) {
                 $(this).change();
             }
-        });
-
-        // Debug
-        $(document).on('change', function () {
-            $('footer').html("<pre>" + JSON.stringify($("form:first").serializeArray(), null, 2) + "</pre>");
         });
 
     }

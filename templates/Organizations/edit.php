@@ -20,9 +20,9 @@ $this->Html->script('organizations/organizations', ['block' => true]);
     echo $this->Form->customControl('edit_type', [
         'type' => 'radio',
         'options' => [
-            1 => '本部',
-            2 => '部店',
-            3 => '課',
+            '1' => '本部',
+            '2' => '部店',
+            '3' => '課',
         ],
         'default' => $editType,
         'disabled' => isset($editType),
@@ -112,12 +112,12 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         <div class="dl-wrap dl-wrap-form mb-4">
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('m_department1_id', __('VOrganizations.m_department1_id')) ?>
+                    <?= $this->Form->label('MDepartment2s.m_department1_id', __('VOrganizations.m_department1_id')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
                     // 本部ID
-                    echo $this->Form->customControl('m_department1_id', [
+                    echo $this->Form->customControl('MDepartment2s.m_department1_id', [
                         'type' => 'select',
                         'options' => $mDepartment1List,
                         'empty' => ' ',
@@ -133,7 +133,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 部店コード
-                    echo $this->Form->customControl('code', [
+                    echo $this->Form->customControl('MDepartment2s.code', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -147,7 +147,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 部店名
-                    echo $this->Form->customControl('name', [
+                    echo $this->Form->customControl('MDepartment2s.name', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -181,12 +181,12 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         <div class="dl-wrap dl-wrap-form mb-4">
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('m_department1_id', __('VOrganizations.m_department1_id')) ?>
+                    <?= $this->Form->label('MDepartment3s.m_department1_id', __('VOrganizations.m_department1_id')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
                     // 本部ID
-                    echo $this->Form->customControl('m_department1_id', [
+                    echo $this->Form->customControl('MDepartment3s.m_department1_id', [
                         'type' => 'select',
                         'options' => $mDepartment1List,
                         'empty' => ' ',
@@ -198,12 +198,12 @@ $this->Html->script('organizations/organizations', ['block' => true]);
             </dl>
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('m_department2_id', __('VOrganizations.m_department2_id')) ?>
+                    <?= $this->Form->label('MDepartment3s.m_department2_id', __('VOrganizations.m_department2_id')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
                     // 部店ID
-                    echo $this->Form->customControl('m_department2_id', [
+                    echo $this->Form->customControl('MDepartment3s.m_department2_id', [
                         'type' => 'select',
                         'options' => $mDepartment2List,
                         'empty' => ' ',
@@ -219,7 +219,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 部店コード
-                    echo $this->Form->customControl('code', [
+                    echo $this->Form->customControl('MDepartment3s.code', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -233,7 +233,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 部店名
-                    echo $this->Form->customControl('name', [
+                    echo $this->Form->customControl('MDepartment3s.name', [
                         'type' => 'text',
                         'label' => false,
                     ]);

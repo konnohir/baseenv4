@@ -96,25 +96,25 @@ class OrganizationsController extends AppController
      */
     public function edit($mDepartment1Id = null, $mDepartment2Id = null, $mDepartment3Id = null)
     {
-        // $editType: 編集種別 (1: 本部、2: 部店、3: 課、null: 新規)
+        // $editType: 編集種別 (1: 本部、2: 部店、3: 課、null: なし)
         $editType = $this->request->getData('edit_type');
         if ($mDepartment3Id !== null) {
-            $editType = 3;
+            $editType = '3';
         } elseif ($mDepartment2Id !== null) {
-            $editType = 2;
+            $editType = '2';
         } elseif ($mDepartment1Id !== null) {
-            $editType = 1;
+            $editType = '1';
         }
 
         // $mDepartment1: 本部エンティティ
-        if ($editType === 1) {
+        if ($editType === '1' && $mDepartment1Id !== null) {
             $mDepartment1 = $this->MDepartment1s->find('detail', ['id' => $mDepartment1Id])->firstOrFail();
         } else {
             $mDepartment1 = $this->MDepartment1s->newEmptyEntity();
         }
 
         // $mDepartment2: 部店エンティティ
-        if ($editType === 2) {
+        if ($editType === '2' && $mDepartment2Id !== null) {
             $mDepartment2 = $this->MDepartment2s->find('detail', ['id' => $mDepartment2Id])->firstOrFail();
             if ($mDepartment2->m_department1_id !== (int)$mDepartment1Id) {
                 throw new RecordNotFoundException();
@@ -124,7 +124,7 @@ class OrganizationsController extends AppController
         }
 
         // $mDepartment3: 課エンティティ
-        if ($editType === 3) {
+        if ($editType === '3' && $mDepartment3Id !== null) {
             $mDepartment3 = $this->MDepartment3s->find('detail', ['id' => $mDepartment3Id])->firstOrFail();
             if ($mDepartment3->m_department2_id !== (int)$mDepartment2Id) {
                 throw new RecordNotFoundException();
@@ -137,7 +137,7 @@ class OrganizationsController extends AppController
         if ($this->request->is('post')) {
             // エンティティ編集
             switch ($editType) {
-                case 1:
+                case '1':
                     $mDepartment1 = $this->MDepartment1s->doEditEntity($mDepartment1, $this->getRequest()->getData());
 
                     // DB保存成功時: 詳細画面へ遷移
@@ -145,8 +145,12 @@ class OrganizationsController extends AppController
                         $this->Flash->success(__('I-SAVE', __($this->title)));
                         return $this->redirect(['action' => 'view', $mDepartment1->id]);
                     }
+
+                    // DB保存失敗時: 画面を再表示
+                    $this->failed($mDepartment1);
+
                     break;
-                case 2:
+                case '2':
                     $mDepartment2 = $this->MDepartment2s->doEditEntity($mDepartment2, $this->getRequest()->getData());
 
                     // DB保存成功時: 詳細画面へ遷移
@@ -154,22 +158,27 @@ class OrganizationsController extends AppController
                         $this->Flash->success(__('I-SAVE', __($this->title)));
                         return $this->redirect(['action' => 'view', $mDepartment2->m_department1_id, $mDepartment2->id]);
                     }
+
+                    // DB保存失敗時: 画面を再表示
+                    $this->failed($mDepartment2);
+                    
                     break;
-                case 3:
+                case '3':
                     $mDepartment3 = $this->MDepartment3s->doEditEntity($mDepartment3, $this->getRequest()->getData());
 
                     // DB保存成功時: 詳細画面へ遷移
                     if ($this->MDepartment3s->save($mDepartment3)) {
                         $this->Flash->success(__('I-SAVE', __($this->title)));
-                        return $this->redirect(['action' => 'view', $this->request->getData('m_department1_id'), $mDepartment3->m_department2_id, $mDepartment3->id]);
+                        return $this->redirect(['action' => 'view', $this->request->getData('MDepartment3s.m_department1_id'), $mDepartment3->m_department2_id, $mDepartment3->id]);
                     }
+
+                    // DB保存失敗時: 画面を再表示
+                    $this->failed($mDepartment3);
+                    
                     break;
                 default:
                     throw new BadRequestException();
             }
-
-            // DB保存失敗時: 画面を再表示
-            $this->failed($mDepartment1);
         }
 
         // $mDepartment1List: 本部リスト

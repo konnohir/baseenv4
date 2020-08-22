@@ -354,12 +354,15 @@ class UsersTable extends AppTable
             'password' => $password,
             // パスワード (平文: CSV出力用)
             'plain_password' => $password,
+            // パスワード有効期限
+            'password_expired' => $entity->created_at
         ]);
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'password',
                 'plain_password',
+                'password_expired',
                 // lock token
                 '_lock',
             ],

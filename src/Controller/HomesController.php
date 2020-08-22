@@ -75,7 +75,7 @@ class HomesController extends AppController
     {
         // $user: ユーザー
         $user = $this->getRequest()->getAttribute('identity');
-        $user->role = $this->Users->Roles->get($user->role_id);
+        $user->role = $this->Users->Roles->find()->where(['id' => $user->role_id])->first();
 
         $this->set(compact('user'));
     }

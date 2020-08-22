@@ -161,20 +161,25 @@ class OrganizationsController extends AppController
 
                     // DB保存失敗時: 画面を再表示
                     $this->failed($mDepartment2);
-                    
+
                     break;
                 case '3':
                     $mDepartment3 = $this->MDepartment3s->doEditEntity($mDepartment3, $this->getRequest()->getData());
+                    dbg($mDepartment3);
 
                     // DB保存成功時: 詳細画面へ遷移
                     if ($this->MDepartment3s->save($mDepartment3)) {
                         $this->Flash->success(__('I-SAVE', __($this->title)));
-                        return $this->redirect(['action' => 'view', $this->request->getData('MDepartment3s.m_department1_id'), $mDepartment3->m_department2_id, $mDepartment3->id]);
+                        return $this->redirect([
+                            'action' => 'view',
+                            $mDepartment3->m_department2->m_department1_id ?? $this->request->getData('MDepartment3s.m_department1_id'),
+                            $mDepartment3->m_department2_id, $mDepartment3->id
+                        ]);
                     }
 
                     // DB保存失敗時: 画面を再表示
                     $this->failed($mDepartment3);
-                    
+
                     break;
                 default:
                     throw new BadRequestException();

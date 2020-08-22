@@ -104,7 +104,7 @@ class MDepartment3sTable extends AppTable
         if (isset($option['id'])) {
             $query->where([$this->getAlias() . '.id' => $option['id']]);
         }
-        return $query->contain(['MDepartment2s']);
+        return $query->contain(['MDepartment2s', 'MDepartment2s.MDepartment1s']);
     }
 
     /**

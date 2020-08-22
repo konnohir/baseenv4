@@ -121,6 +121,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                         'type' => 'select',
                         'options' => $mDepartment1List,
                         'empty' => ' ',
+                        'disabled' => !$mDepartment2->isNew(),
                         'label' => false,
                     ]);
                     ?>
@@ -191,6 +192,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                         'options' => $mDepartment1List,
                         'empty' => ' ',
                         'default' => $mDepartment3->m_department2->m_department1_id ?? null,
+                        'disabled' => !$mDepartment3->isNew(),
                         'label' => false,
                     ]);
                     ?>
@@ -207,6 +209,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                         'type' => 'select',
                         'options' => $mDepartment2List,
                         'empty' => ' ',
+                        'disabled' => !$mDepartment3->isNew(),
                         'label' => false,
                     ]);
                     ?>

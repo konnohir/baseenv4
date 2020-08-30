@@ -64,19 +64,4 @@ class VOrganizationsTable extends AppTable
         return $query
             ->select($this);
     }
-
-    /**
-     * 有効なエンティティのみ取得するFinder
-     * 
-     * select時に自動的にこのFinderを使用する.
-     * 有効でないエンティティを取得したい場合はfind('withInactive')を使用する
-     * 
-     * @param Query $query
-     * @param array $options
-     * @return Query
-     */
-    public function findActive(Query $query, array $options)
-    {
-        return $query;
-    }
 }

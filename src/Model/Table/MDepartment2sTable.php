@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -119,6 +120,31 @@ class MDepartment2sTable extends AppTable
             'fields' => [
                 // user input
                 'm_department1_id', 'code', 'name',
+                // lock token
+                '_lock',
+            ],
+            'associated' => []
+        ]);
+        return $entity;
+    }
+
+    /**
+     * 削除
+     * 
+     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param array $input ユーザー入力
+     * @return Entity
+     */
+    public function doDeleteEntity(Entity $entity, array $input = [])
+    {
+        $input = array_merge_recursive($input, [
+            // 削除日時
+            'deleted_at' => new FrozenTime(),
+        ]);
+        $entity = $this->patchEntity($entity, $input, [
+            'fields' => [
+                // application input
+                'deleted_at',
                 // lock token
                 '_lock',
             ],

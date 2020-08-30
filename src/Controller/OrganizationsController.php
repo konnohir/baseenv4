@@ -203,5 +203,80 @@ class OrganizationsController extends AppController
      */
     public function delete()
     {
+        // $targets: 対象データの配列 (array)
+        $targets = $this->getRequest()->getData('targets');
+
+        foreach ($targets as $id => $requestData) {
+        }
+
+        // $result: トランザクションの結果 (boolean)
+        $result = $this->MDepartment1s->getConnection()->transactional(function () use ($targets) {
+            foreach ($targets as $id => $requestData) {
+                // $deleteType: 削除種別(1: 本部, 2: 部店, 3: 課)
+                // $mDepartment1Id: 本部ID
+                // $mDepartment2Id: 部店ID
+                // $mDepartment3Id: 課ID
+                $explodeId = explode('/', (string)$id);
+                $deleteType = count($explodeId);
+
+                switch ($deleteType) {
+                    case '1':
+                        list($mDepartment1Id) = $explodeId;
+
+                        // $mDepartment1: 本部エンティティ
+                        $mDepartment1 = $this->MDepartment1s->find('detail', ['id' => $mDepartment1Id])->firstOrFail();
+
+                        // 削除
+                        $mDepartment1 = $this->MDepartment1s->doDeleteEntity($mDepartment1, $requestData);
+
+                        // DB保存成功時: 次の対象データの処理へ進む
+                        if ($this->MDepartment1s->save($mDepartment1)) {
+                            break;
+                        }
+
+                        // DB保存失敗時: ロールバック
+                        return $this->failed($mDepartment1);
+                    case '2':
+                        list(, $mDepartment2Id) = $explodeId;
+
+                        // $mDepartment2: 部店エンティティ
+                        $mDepartment2 = $this->MDepartment2s->find('detail', ['id' => $mDepartment2Id])->firstOrFail();
+
+                        // 削除
+                        $mDepartment2 = $this->MDepartment2s->doDeleteEntity($mDepartment2, $requestData);
+
+                        // DB保存成功時: 次の対象データの処理へ進む
+                        if ($this->MDepartment2s->save($mDepartment2)) {
+                            break;
+                        }
+
+                        // DB保存失敗時: ロールバック
+                        return $this->failed($mDepartment2);
+                    case '3':
+                        list(,, $mDepartment3Id) = $explodeId;
+
+                        // $mDepartment3: 課エンティティ
+                        $mDepartment3 = $this->MDepartment3s->find('detail', ['id' => $mDepartment3Id])->firstOrFail();
+
+                        // 削除
+                        $mDepartment3 = $this->MDepartment3s->doDeleteEntity($mDepartment3, $requestData);
+
+                        // DB保存成功時: 次の対象データの処理へ進む
+                        if ($this->MDepartment3s->save($mDepartment3)) {
+                            break;
+                        }
+
+                        // DB保存失敗時: ロールバック
+                        return $this->failed($mDepartment3);
+                    default:
+                        throw new BadRequestException();
+                }
+            }
+
+            $this->Flash->success(__('I-DELETE', __($this->title)));
+            return true;
+        });
+
+        $this->set(compact('result'));
     }
 }

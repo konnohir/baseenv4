@@ -43,7 +43,10 @@ class SoftDeleteBehavior extends Behavior
      */
     public function findActive(Query $query, array $options)
     {
-        return $query->where([$this->getTable()->getAlias() . '.deleted_at is null']);
+        if ($this->getTable()->getSchema()->hasColumn(('deleted_at'))) {
+            return $query->where([$this->getTable()->getAlias() . '.deleted_at is null']);
+        }
+        return $query;
     }
 
     /**

@@ -71,31 +71,30 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($tableRows as $vOrganization) : ?>
+                <?php foreach ($tableRows as $mOrganization) : ?>
                     <tr>
                         <td>
                             <?php
                             // 行選択チェックボックス
-                            echo $this->Paginator->checkbox($vOrganization->getId(), $vOrganization->_lock);
+                            echo $this->Paginator->checkbox($mOrganization->id, $mOrganization->_lock);
                             ?>
                         </td>
                         <td>
                             <?php
                             // 本部名
-                            echo $this->Html->link($vOrganization->m_department1_name, [
+                            echo $this->Html->link($mOrganization->m_department1->name, [
                                 'action' => 'view',
-                                $vOrganization->m_department1_id
+                                $mOrganization->id,
                             ]);
                             ?>
                         </td>
                         <td>
                             <?php
                             // 部店名
-                            if ($vOrganization->m_department2_id !== null) {
-                                echo $this->Html->link($vOrganization->m_department2_name, [
+                            if ($mOrganization->m_department2_id !== null) {
+                                echo $this->Html->link($mOrganization->m_department2->name, [
                                     'action' => 'view',
-                                    $vOrganization->m_department1_id,
-                                    $vOrganization->m_department2_id,
+                                    $mOrganization->id,
                                 ]);
                             }
                             ?>
@@ -103,12 +102,10 @@
                         <td>
                             <?php
                             // 課名
-                            if ($vOrganization->m_department3_id != null) {
-                                echo $this->Html->link($vOrganization->m_department3_name, [
+                            if ($mOrganization->m_department3_id != null) {
+                                echo $this->Html->link($mOrganization->m_department3->name, [
                                     'action' => 'view',
-                                    $vOrganization->m_department1_id,
-                                    $vOrganization->m_department2_id,
-                                    $vOrganization->m_department3_id,
+                                    $mOrganization->id,
                                 ]);
                             }
                             ?>

@@ -3,9 +3,7 @@
 /**
  * @var \App\View\AppView $this
  * @var int|null $editType 編集種別 (1: 本部、2: 部店、3: 課、null: 新規)
- * @var \App\Model\Entity\MDepartment1 $mDepartment1
- * @var \App\Model\Entity\MDepartment2 $mDepartment2
- * @var \App\Model\Entity\MDepartment3 $mDepartment3
+ * @var \App\Model\Entity\MOrganization $mOrganization
  * @var array $mDepartment1List 本部リスト
  * @var array $mDepartment2List 部店リスト
  */
@@ -48,8 +46,9 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         </div>
         <?= $this->Form->end() ?>
     </div>
+
     <div id="EditForm1" class="d-none">
-        <?= $this->Form->create($mDepartment1, ['type' => 'post']) ?>
+        <?= $this->Form->create($mOrganization, ['type' => 'post']) ?>
         <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');
@@ -64,7 +63,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 本部コード
-                    echo $this->Form->customControl('MDepartment1s.code', [
+                    echo $this->Form->customControl('m_department1.code', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -78,7 +77,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 本部名
-                    echo $this->Form->customControl('MDepartment1s.name', [
+                    echo $this->Form->customControl('m_department1.name', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -101,8 +100,9 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         </div>
         <?= $this->Form->end() ?>
     </div>
+
     <div id="EditForm2" class="d-none">
-        <?= $this->Form->create($mDepartment2, ['type' => 'post']) ?>
+        <?= $this->Form->create($mOrganization, ['type' => 'post']) ?>
         <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');
@@ -117,11 +117,11 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 本部ID
-                    echo $this->Form->customControl('MDepartment2s.m_department1_id', [
+                    echo $this->Form->customControl('MOrganizations.m_department1_id', [
                         'type' => 'select',
                         'options' => $mDepartment1List,
                         'empty' => ' ',
-                        'disabled' => !$mDepartment2->isNew(),
+                        'disabled' => !$mOrganization->isNew(),
                         'label' => false,
                     ]);
                     ?>
@@ -134,7 +134,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 部店コード
-                    echo $this->Form->customControl('MDepartment2s.code', [
+                    echo $this->Form->customControl('m_department2.code', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -148,7 +148,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 部店名
-                    echo $this->Form->customControl('MDepartment2s.name', [
+                    echo $this->Form->customControl('m_department2.name', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -171,8 +171,9 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         </div>
         <?= $this->Form->end() ?>
     </div>
+
     <div id="EditForm3" class="d-none">
-        <?= $this->Form->create($mDepartment3, ['type' => 'post']) ?>
+        <?= $this->Form->create($mOrganization, ['type' => 'post']) ?>
         <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');
@@ -187,12 +188,12 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 本部ID
-                    echo $this->Form->customControl('MDepartment3s.m_department1_id', [
+                    echo $this->Form->customControl('MOrganizations.m_department1_id', [
                         'type' => 'select',
                         'options' => $mDepartment1List,
                         'empty' => ' ',
-                        'default' => $mDepartment3->m_department2->m_department1_id ?? null,
-                        'disabled' => !$mDepartment3->isNew(),
+                        'default' => $mOrganization->m_department2->m_department1_id ?? null,
+                        'disabled' => !$mOrganization->isNew(),
                         'label' => false,
                     ]);
                     ?>
@@ -200,16 +201,16 @@ $this->Html->script('organizations/organizations', ['block' => true]);
             </dl>
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment3s.m_department2_id', __('VOrganizations.m_department2_id')) ?>
+                    <?= $this->Form->label('MOrganizations.m_department2_id', __('VOrganizations.m_department2_id')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
                     // 部店ID
-                    echo $this->Form->customControl('MDepartment3s.m_department2_id', [
+                    echo $this->Form->customControl('MOrganizations.m_department2_id', [
                         'type' => 'select',
                         'options' => $mDepartment2List,
                         'empty' => ' ',
-                        'disabled' => !$mDepartment3->isNew(),
+                        'disabled' => !$mOrganization->isNew(),
                         'label' => false,
                     ]);
                     ?>
@@ -222,7 +223,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 部店コード
-                    echo $this->Form->customControl('MDepartment3s.code', [
+                    echo $this->Form->customControl('m_department3.code', [
                         'type' => 'text',
                         'label' => false,
                     ]);
@@ -236,7 +237,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 <dd class="col-md">
                     <?php
                     // 部店名
-                    echo $this->Form->customControl('MDepartment3s.name', [
+                    echo $this->Form->customControl('m_department3.name', [
                         'type' => 'text',
                         'label' => false,
                     ]);

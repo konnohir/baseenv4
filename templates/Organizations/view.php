@@ -2,7 +2,7 @@
 
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\VOrganization $vOrganization
+ * @var \App\Model\Entity\VOrganization $mOrganization
  */
 ?>
 <section>
@@ -10,30 +10,30 @@
     <div class="dl-wrap mb-4">
         <dl class="row">
             <dt class="col-md"><?= __('VOrganizations.m_department1_code') ?></dt>
-            <dd class="col-md"><?= h($vOrganization->m_department1_code) ?></dd>
+            <dd class="col-md"><?= h($mOrganization->m_department1->code) ?></dd>
         </dl>
         <dl class="row">
             <dt class="col-md"><?= __('VOrganizations.m_department1_name') ?></dt>
-            <dd class="col-md"><?= h($vOrganization->m_department1_name) ?></dd>
+            <dd class="col-md"><?= h($mOrganization->m_department1->name) ?></dd>
         </dl>
-        <?php if ($vOrganization->m_department2_id !== null) : ?>
+        <?php if ($mOrganization->m_department2 !== null) : ?>
             <dl class="row">
                 <dt class="col-md"><?= __('VOrganizations.m_department2_code') ?></dt>
-                <dd class="col-md"><?= h($vOrganization->m_department2_code) ?></dd>
+                <dd class="col-md"><?= h($mOrganization->m_department2->code) ?></dd>
             </dl>
             <dl class="row">
                 <dt class="col-md"><?= __('VOrganizations.m_department2_name') ?></dt>
-                <dd class="col-md"><?= h($vOrganization->m_department2_name) ?></dd>
+                <dd class="col-md"><?= h($mOrganization->m_department2->name) ?></dd>
             </dl>
         <?php endif ?>
-        <?php if ($vOrganization->m_department3_id !== null) : ?>
+        <?php if ($mOrganization->m_department3 !== null) : ?>
             <dl class="row">
                 <dt class="col-md"><?= __('VOrganizations.m_department3_code') ?></dt>
-                <dd class="col-md"><?= h($vOrganization->m_department3_code) ?></dd>
+                <dd class="col-md"><?= h($mOrganization->m_department3->code) ?></dd>
             </dl>
             <dl class="row">
                 <dt class="col-md"><?= __('VOrganizations.m_department3_name') ?></dt>
-                <dd class="col-md"><?= h($vOrganization->m_department3_name) ?></dd>
+                <dd class="col-md"><?= h($mOrganization->m_department3->name) ?></dd>
             </dl>
         <?php endif ?>
     </div>
@@ -46,14 +46,14 @@
         <?= $this->Form->customButton(__('BTN-EDIT'), [
             // 編集
             'data-action' => ['action' => 'edit'],
-            'data-id' => $vOrganization->getId(),
+            'data-id' => $mOrganization->id,
             'class' => 'btn-outline-primary btn-edit'
         ]) ?>
         <?= $this->Form->customButton(__('BTN-DELETE'), [
             // 削除
             'data-action' => ['action' => 'delete'],
-            'data-id' => $vOrganization->getId(),
-            'data-lock' => $vOrganization->_lock,
+            'data-id' => $mOrganization->id,
+            'data-lock' => $mOrganization->_lock,
             'class' => 'btn-outline-danger btn-delete'
         ]) ?>
     </div>

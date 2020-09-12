@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 /**
- * MDepartment3 Entity
+ * MOrganization Entity
  *
  * @property int $id
+ * @property int $m_department1_id
  * @property int $m_department2_id
- * @property string $code
- * @property string $name
+ * @property int $m_department3_id
  * @property \Cake\I18n\FrozenTime $created_at
  * @property \Cake\I18n\FrozenTime $updated_at
- *
- * @property \App\Model\Entity\MDepartment2 $m_department2
+ * @property \Cake\I18n\FrozenTime|null $deleted_at
  */
-class MDepartment3 extends AppEntity
+class MOrganization extends AppEntity
 {
 }

@@ -26,7 +26,7 @@ class MDepartment3sTable extends AppTable
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('MDepartment2s');
+        $this->hasMany('MOrganizations');
     }
 
     /**
@@ -38,15 +38,6 @@ class MDepartment3sTable extends AppTable
     public function validationDefault(Validator $validator): Validator
     {
         parent::validationDefault($validator);
-
-        // 部店ID
-        $validator->add('m_department2_id', [
-            // 入力有
-            'notBlank' => [
-                'message' => __('E-V-REQUIRED'),
-                'last' => true,
-            ],
-        ]);
 
         // 課コード
         $validator->add('code', [

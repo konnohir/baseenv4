@@ -12,8 +12,6 @@ namespace App\Model\Entity;
  * @property string $name
  * @property \Cake\I18n\FrozenTime $created_at
  * @property \Cake\I18n\FrozenTime $updated_at
- *
- * @property \App\Model\Entity\MDepartment2[] $m_department2s
  */
 class MDepartment1 extends AppEntity
 {

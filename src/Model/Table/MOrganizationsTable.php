@@ -45,7 +45,6 @@ class MOrganizationsTable extends AppTable
         parent::validationDefault($validator);
 
         $validator->requirePresence('m_department1_id', false);
-        $validator->allowEmptyString('m_department1_id', 'create');
 
         return $validator;
     }
@@ -91,7 +90,7 @@ class MOrganizationsTable extends AppTable
     }
 
     /**
-     * エンティティ編集
+     * エンティティ編集 (部門階層1: 本部)
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
@@ -101,8 +100,6 @@ class MOrganizationsTable extends AppTable
     {
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
-                // user input
-                // 'code', 'name',
                 // lock token
                 '_lock',
                 // association
@@ -122,7 +119,7 @@ class MOrganizationsTable extends AppTable
     }
 
     /**
-     * エンティティ編集
+     * エンティティ編集 (部門階層2: 部店)
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
@@ -130,13 +127,6 @@ class MOrganizationsTable extends AppTable
      */
     public function doEditDepartment2Entity(Entity $entity, array $input = [])
     {
-        $input = array_merge_recursive($input, [
-            'm_department2' => [
-                'm_department1_id' => -1
-            ]
-        ]);
-        dbg($input);
-
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
                 // user input
@@ -160,7 +150,7 @@ class MOrganizationsTable extends AppTable
     }
 
     /**
-     * エンティティ編集
+     * エンティティ編集 (部門階層3: 課)
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力
@@ -168,13 +158,6 @@ class MOrganizationsTable extends AppTable
      */
     public function doEditDepartment3Entity(Entity $entity, array $input = [])
     {
-        $input = array_merge_recursive($input, [
-            'm_department3' => [
-                'm_department2_id' => -1
-            ]
-        ]);
-        dbg($input);
-
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
                 // user input
@@ -193,7 +176,6 @@ class MOrganizationsTable extends AppTable
                 ]
             ]
         ]);
-        dbg($entity);
         return $entity;
     }
 

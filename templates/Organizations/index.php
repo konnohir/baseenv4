@@ -47,24 +47,24 @@
                     <th>
                         <?php
                         // 本部名
-                        echo $this->Paginator->sort('m_department1_name', [
-                            'label' => __('VOrganizations.m_department1_name')
+                        echo $this->Paginator->sort('MDepartment1s.name', [
+                            'label' => __('MDepartment1s.name')
                         ]);
                         ?>
                     </th>
                     <th>
                         <?php
                         // 部店名
-                        echo $this->Paginator->sort('m_department2_name', [
-                            'label' => __('VOrganizations.m_department2_name')
+                        echo $this->Paginator->sort('MDepartment2s.name', [
+                            'label' => __('MDepartment2s.name')
                         ]);
                         ?>
                     </th>
                     <th class="w-100">
                         <?php
                         // 課名
-                        echo $this->Paginator->sort('m_department3_name', [
-                            'label' => __('VOrganizations.m_department3_name')
+                        echo $this->Paginator->sort('MDepartment3s.name', [
+                            'label' => __('MDepartment3s.name')
                         ]);
                         ?>
                     </th>

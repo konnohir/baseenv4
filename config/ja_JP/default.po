@@ -216,41 +216,37 @@ msgstr "アクション"
 ####################################
 
 msgid "MDepartment1s.code"
-msgstr "コード"
+msgstr "本部コード"
 
 msgid "MDepartment1s.name"
 msgstr "本部名"
 
-msgid "MDepartment1s.MDepartment2s"
-msgstr "部店"
-
 ####################################
 
-msgid "MDepartment2s.m_department1_id"
-msgstr "本部"
-
 msgid "MDepartment2s.code"
-msgstr "コード"
+msgstr "部店コード"
 
 msgid "MDepartment2s.name"
 msgstr "部店名"
 
-msgid "MDepartment2s.MDepartment3s"
-msgstr "課"
-
 ####################################
 
-msgid "MDepartment3s.m_department1_id"
-msgstr "本部"
-
-msgid "MDepartment3s.m_department2_id"
-msgstr "部店"
-
 msgid "MDepartment3s.code"
-msgstr "コード"
+msgstr "課コード"
 
 msgid "MDepartment3s.name"
 msgstr "課名"
+
+####################################
+
+msgid "MOrganizations.m_department1_id"
+msgstr "本部"
+
+msgid "MOrganizations.m_department2_id"
+msgstr "部店"
+
+msgid "MOrganizations.m_department3_id"
+msgstr "課"
 
 ####################################
 # ラベル

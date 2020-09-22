@@ -58,7 +58,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         <div class="dl-wrap dl-wrap-form mb-4">
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment1s.code', __('VOrganizations.m_department1_code')) ?>
+                    <?= $this->Form->label('MDepartment1s.code', __('MDepartment1s.code')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
@@ -72,7 +72,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
             </dl>
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment1s.name', __('VOrganizations.m_department1_name')) ?>
+                    <?= $this->Form->label('MDepartment1s.name', __('MDepartment1s.name')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
@@ -112,7 +112,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         <div class="dl-wrap dl-wrap-form mb-4">
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment2s.m_department1_id', __('VOrganizations.m_department1_id')) ?>
+                    <?= $this->Form->label('MDepartment2s.m_department1_id', __('MOrganizations.m_department1_id')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
@@ -129,7 +129,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
             </dl>
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment2s.code', __('VOrganizations.m_department2_code')) ?>
+                    <?= $this->Form->label('MDepartment2s.code', __('MDepartment2s.code')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
@@ -143,7 +143,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
             </dl>
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment2s.name', __('VOrganizations.m_department2_name')) ?>
+                    <?= $this->Form->label('MDepartment2s.name', __('MDepartment2s.name')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
@@ -183,7 +183,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         <div class="dl-wrap dl-wrap-form mb-4">
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment3s.m_department1_id', __('VOrganizations.m_department1_id')) ?>
+                    <?= $this->Form->label('MDepartment3s.m_department1_id', __('MOrganizations.m_department1_id')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
@@ -201,7 +201,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
             </dl>
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MOrganizations.m_department2_id', __('VOrganizations.m_department2_id')) ?>
+                    <?= $this->Form->label('MOrganizations.m_department2_id', __('MOrganizations.m_department2_id')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
@@ -218,7 +218,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
             </dl>
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment3s.code', __('VOrganizations.m_department3_code')) ?>
+                    <?= $this->Form->label('MDepartment3s.code', __('MDepartment3s.code')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php
@@ -232,7 +232,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
             </dl>
             <dl class="row">
                 <dt class="col-md required">
-                    <?= $this->Form->label('MDepartment3s.name', __('VOrganizations.m_department3_name')) ?>
+                    <?= $this->Form->label('MDepartment3s.name', __('MDepartment3s.name')) ?>
                 </dt>
                 <dd class="col-md">
                     <?php

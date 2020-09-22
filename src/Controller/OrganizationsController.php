@@ -10,6 +10,7 @@ use Cake\Http\Exception\BadRequestException;
  * OrganizationsController Controller
  * 組織マスタ
  * 
+ * @property \App\Model\Table\MOrganizationsTable $MOrganizations
  * @property \App\Model\Table\MDepartment1sTable $MDepartment1s
  * @property \App\Model\Table\MDepartment2sTable $MDepartment2s
  * @property \App\Model\Table\MDepartment3sTable $MDepartment3s
@@ -57,9 +58,9 @@ class OrganizationsController extends AppController
                 'MDepartment3s.name',
             ],
             'order' => [
-                'MDepartment1s.code',
-                'MDepartment2s.code',
-                'MDepartment3s.code',
+                'MDepartment1s.code' => 'asc',
+                'MDepartment2s.code' => 'asc',
+                'MDepartment3s.code' => 'asc',
             ],
         ]);
 

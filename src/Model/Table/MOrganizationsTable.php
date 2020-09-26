@@ -127,6 +127,10 @@ class MOrganizationsTable extends AppTable
      */
     public function doEditDepartment2Entity(Entity $entity, array $input = [])
     {
+        // バリデーション用add
+        $input['m_department2']['m_department1_id']
+            = $entity->m_department1_id ?? $input['MOrganizations']['m_department1_id'] ?? null;
+
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
                 // user input
@@ -135,17 +139,15 @@ class MOrganizationsTable extends AppTable
                 '_lock',
                 // association
                 'm_department2',
-                'MDepartment2',
             ],
             'associated' => [
                 'MDepartment2s' => [
                     'fields' => [
-                        'm_department1_id', 'code', 'name',
-                    ]
+                        'code', 'name',
+                    ],
                 ]
             ]
         ]);
-        dbg($entity);
         return $entity;
     }
 
@@ -158,6 +160,10 @@ class MOrganizationsTable extends AppTable
      */
     public function doEditDepartment3Entity(Entity $entity, array $input = [])
     {
+        // バリデーション用add
+        $input['m_department3']['m_department2_id']
+            = $entity->m_department2_id ?? $input['MOrganizations']['m_department2_id'] ?? null;
+
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
                 // user input
@@ -171,7 +177,7 @@ class MOrganizationsTable extends AppTable
             'associated' => [
                 'MDepartment3s' => [
                     'fields' => [
-                        'm_department2_id', 'code', 'name',
+                        'code', 'name',
                     ]
                 ]
             ]

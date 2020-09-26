@@ -54,8 +54,11 @@ class OrganizationsController extends AppController
         $tableRows = $this->paginate($this->MOrganizations, [
             'sortableFields' => [
                 'MDepartment1s.name',
+                'MDepartment1s.code',
                 'MDepartment2s.name',
+                'MDepartment2s.code',
                 'MDepartment3s.name',
+                'MDepartment3s.code',
             ],
             'order' => [
                 'MDepartment1s.code' => 'asc',

@@ -154,10 +154,16 @@ class OrganizationsController extends AppController
         }
 
         // $mDepartment1List: 本部リスト
-        $mDepartment1List = $this->MDepartment1s->find('list')->all();
+        $mDepartment1List = $this->MDepartment1s
+            ->find('activeRecord')
+            ->find('list')
+            ->all();
 
         // $mDepartment2List: 部店リスト
-        $mDepartment2List = $this->MDepartment2s->find('list')->all();
+        $mDepartment2List = $this->MDepartment2s
+            ->find('activeRecord')
+            ->find('list')
+            ->all();
 
         $this->set(compact('editType', 'mOrganization', 'mDepartment1List', 'mDepartment2List'));
     }
@@ -175,9 +181,43 @@ class OrganizationsController extends AppController
 
         // $result: トランザクションの結果 (boolean)
         $result = $this->MOrganizations->getConnection()->transactional(function () use ($targets) {
+            // 削除対象のIDの配列
+            $targetIds = [];
+            foreach(array_keys($targets) as $id) {
+                $targetIds[$id] = $id;
+            }
+
             foreach ($targets as $id => $requestData) {
                 // $mOrganization: 組織エンティティ
                 $mOrganization = $this->MOrganizations->get($id);
+
+                // 本部／部店を削除した場合、子組織も削除する
+                if ($mOrganization->m_department3_id === null) {
+                    $relatedOrganizations = $this->MOrganizations->find();
+                    if ($mOrganization->m_department1_id !== null) {
+                        $relatedOrganizations->where(['m_department1_id' => $mOrganization->m_department1_id]);
+                    }
+                    if ($mOrganization->m_department2_id !== null) {
+                        $relatedOrganizations->where(['m_department2_id' => $mOrganization->m_department2_id]);
+                    }
+                    foreach ($relatedOrganizations as $relatedOrganization) {
+                        // 削除対象のデータなら後続処理で削除するため、次の対象データの処理へ進む
+                        if (isset($targetIds[$relatedOrganization->id])) {
+                            continue;
+                        }
+
+                        // 削除
+                        $relatedOrganization = $this->MOrganizations->doDeleteEntity($relatedOrganization, ['_lock' => $relatedOrganization->_lock]);
+        
+                        // DB保存成功時: 次の対象データの処理へ進む
+                        if ($this->MOrganizations->save($relatedOrganization)) {
+                            continue;
+                        }
+        
+                        // DB保存失敗時: ロールバック
+                        return $this->failed($relatedOrganization);
+                    }
+                }
 
                 // 削除
                 $mOrganization = $this->MOrganizations->doDeleteEntity($mOrganization, $requestData);

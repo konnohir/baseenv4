@@ -42,11 +42,14 @@ return [
         'defaultLocale' => 'ja_JP',
         'defaultTimezone' => 'Asia/Tokyo',
         'base' => false,
-        'dir' => 'src',
+        'dir' => APP_DIR,
         'webroot' => 'webroot',
         'wwwRoot' => WWW_ROOT,
         //'baseUrl' => env('SCRIPT_NAME'),
         'fullBaseUrl' => false,
+        'fullBaseUrlWhiteList' => [
+            'localhost:8765',
+        ],
         // 'imageBaseUrl' => 'img/',
         // 'cssBaseUrl' => 'css/',
         // 'jsBaseUrl' => 'js/',
@@ -189,18 +192,7 @@ return [
     'EmailTransport' => [
         'default' => [
             'className' => MailTransport::class,
-            /*
-             * The keys host, port, timeout, username, password, client and tls
-             * are used in SMTP transports
-             */
-            // 'host' => 'localhost',
-            // 'port' => 25,
             'timeout' => 30,
-            /*
-             * It is recommended to set these options through your environment or app_local.php
-             */
-            //'username' => null,
-            //'password' => null,
             'client' => null,
             'tls' => false,
         ],
@@ -256,11 +248,11 @@ return [
             'className' => Connection::class,
             'driver' => Mysql::class,
             'persistent' => false,
-            'timezone' => 'Asia/Tokyo',
-
-            /**
-             * For MariaDB/MySQL the internal default changed from utf8 to utf8mb4, aka full utf-8 support, in CakePHP 3.6
+            
+            /*
+             *Use database default timezone and encoding.
              */
+            // 'timezone' => 'Asia/Tokyo',
             //'encoding' => 'utf8mb4',
 
             /**
@@ -270,7 +262,6 @@ return [
              */
             'flags' => [],
             'cacheMetadata' => true,
-            'log' => false,
 
             /*
              * Set identifier quoting to true if you are using reserved words or
@@ -299,12 +290,11 @@ return [
             'className' => Connection::class,
             'driver' => Mysql::class,
             'persistent' => false,
-            'timezone' => 'Asia/Tokyo',
+            // 'timezone' => 'Asia/Tokyo',
             //'encoding' => 'utf8mb4',
             'flags' => [],
             'cacheMetadata' => true,
             'quoteIdentifiers' => false,
-            'log' => false,
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
         ],
     ],

@@ -10,7 +10,6 @@ use Cake\ORM\Query;
 use Cake\Validation\Validator;
 
 /**
- * MOrganizations Model
  * 組織マスタ
  */
 class MOrganizationsTable extends AppTable

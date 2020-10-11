@@ -10,7 +10,6 @@ use Cake\Validation\Validator;
 
 /**
  * Notices Model
- *
  */
 class NoticesTable extends AppTable
 {

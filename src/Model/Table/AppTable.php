@@ -10,7 +10,7 @@ use Konnohir\Model\Behavior\FilterTrait;
 use Konnohir\Model\Behavior\EditLockTrait;
 
 /**
- * App Table
+ * テーブル共通
  */
 class AppTable extends Table
 {

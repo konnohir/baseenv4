@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 /**
- * Homes Controller
  * ホーム
  * 
  * @property \App\Model\Table\UsersTable $Users

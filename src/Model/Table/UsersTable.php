@@ -12,7 +12,6 @@ use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
- * Users Model
  * ユーザーマスタ
  */
 class UsersTable extends AppTable

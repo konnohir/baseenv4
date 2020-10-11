@@ -11,7 +11,6 @@ use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
- * Roles Model
  * 権限マスタ
  */
 class RolesTable extends AppTable

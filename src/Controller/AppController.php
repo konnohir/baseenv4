@@ -12,7 +12,6 @@ use Cake\I18n\I18n;
 use Konnohir\Controller\PaginateTrait;
 
 /**
- * Application Controller
  * アプリケーションコントローラ
  */
 class AppController extends Controller

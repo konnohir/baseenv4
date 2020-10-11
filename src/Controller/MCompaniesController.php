@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 /**
- * MCompanies Controller
  * 企業マスタ
  * 
  * @property \App\Model\Table\MCompaniesTable $MCompanies

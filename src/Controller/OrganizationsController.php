@@ -7,7 +7,6 @@ namespace App\Controller;
 use Cake\Http\Exception\BadRequestException;
 
 /**
- * OrganizationsController Controller
  * 組織マスタ
  * 
  * @property \App\Model\Table\MOrganizationsTable $MOrganizations
@@ -36,7 +35,6 @@ class OrganizationsController extends AppController
             'delete' => ['requestTarget'],
         ]);
 
-        $this->loadModel('VOrganizations');
         $this->loadModel('MOrganizations');
         $this->loadModel('MDepartment1s');
         $this->loadModel('MDepartment2s');

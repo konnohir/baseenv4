@@ -2,7 +2,7 @@
 
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\VOrganization[] $tableRows
+ * @var \App\Model\Entity\MOrganization[] $tableRows
  */
 ?>
 <section>

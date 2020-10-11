@@ -8,7 +8,6 @@ use Cake\Validation\Validator;
 use Cake\ORM\Query;
 
 /**
- * MDepartment1s Model
  * 部門（階層1）マスタ
  */
 class MDepartment1sTable extends AppTable

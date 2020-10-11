@@ -10,7 +10,6 @@ use Cake\Validation\Validator;
 
 /**
  * Tags Model
- *
  */
 class TagsTable extends AppTable
 {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 /**
- * RoleDetails Controller
  * 権限詳細マスタ
  * 
  * @property \App\Model\Table\RoleDetailsTable $RoleDetails

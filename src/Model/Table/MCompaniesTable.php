@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
- * MCompanies Model
  * 企業マスタ
  */
 class MCompaniesTable extends AppTable

@@ -20,12 +20,12 @@
         <dl class="row">
             <?php // アカウントロック ?>
             <dt class="col-md"><?= __('Users.account_lock') ?></dt>
-            <dd class="col-md"><?= h($user->login_failed_count >= 5 ? '〇' : '') ?></dd>
+            <dd class="col-md"><?= h($user->v_user_remark->is_account_locked ? '〇' : '') ?></dd>
         </dl>
         <dl class="row">
             <?php // パスワード発行 ?>
             <dt class="col-md"><?= __('Users.password_issue') ?></dt>
-            <dd class="col-md"><?= h($user->password_issue ? '〇' : '') ?></dd>
+            <dd class="col-md"><?= h($user->v_user_remark->is_password_issued ? '〇' : '') ?></dd>
         </dl>
     </div>
     <div class="btn-group my-2">

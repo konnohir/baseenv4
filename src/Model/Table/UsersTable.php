@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\User;
 use Cake\I18n\FrozenDate;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
@@ -31,6 +32,7 @@ class UsersTable extends AppTable
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Roles');
+        $this->hasOne('VUserRemarks');
     }
 
     /**
@@ -203,17 +205,7 @@ class UsersTable extends AppTable
         // $conditions: 検索条件の配列 (array)
         $conditions = $this->buildConditions($map, $option['filter'] ?? []);
 
-        return $query
-            ->select([
-                'Users.id',
-                'Users.email',
-                'Users.login_failed_count',
-                'Roles.name',
-                'Users__password_issue' => 'password is not null',
-                'Users.updated_at',
-            ])
-            ->contain(['Roles'])
-            ->where($conditions);
+        return $query->where($conditions);
     }
 
     /**
@@ -268,11 +260,11 @@ class UsersTable extends AppTable
     /**
      * エンティティ編集
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
      * @return Entity
      */
-    public function doEditEntity(Entity $entity, array $input = [])
+    public function doEditEntity(User $entity, array $input = [])
     {
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
@@ -289,11 +281,11 @@ class UsersTable extends AppTable
     /**
      * アカウントロック
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
      * @return Entity
      */
-    public function doLockAccount(Entity $entity, array $input = [])
+    public function doLockAccount(User $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // ログイン失敗回数
@@ -314,11 +306,11 @@ class UsersTable extends AppTable
     /**
      * アカウントロック解除
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
      * @return Entity
      */
-    public function doUnlockAccount(Entity $entity, array $input = [])
+    public function doUnlockAccount(User $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // ログイン失敗回数
@@ -339,11 +331,11 @@ class UsersTable extends AppTable
     /**
      * パスワード発行
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
      * @return Entity
      */
-    public function doIssuePassword(Entity $entity, array $input = [])
+    public function doIssuePassword(User $entity, array $input = [])
     {
         // 新しいパスワード
         $password = $this->makePassword();
@@ -373,11 +365,11 @@ class UsersTable extends AppTable
     /**
      * パスワード変更
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
      * @return Entity
      */
-    public function doChangePassword(Entity $entity, array $input = [])
+    public function doChangePassword(User $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // パスワード有効期限
@@ -401,11 +393,11 @@ class UsersTable extends AppTable
     /**
      * 削除
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
      * @return Entity
      */
-    public function doDeleteEntity(Entity $entity, array $input = [])
+    public function doDeleteEntity(User $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // 削除日時
@@ -426,11 +418,11 @@ class UsersTable extends AppTable
     /**
      * ログイン失敗回数リセット
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
      * @return Entity
      */
-    public function doResetLoginFailedCount(Entity $entity, array $input = [])
+    public function doResetLoginFailedCount(User $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // ログイン失敗回数
@@ -449,11 +441,11 @@ class UsersTable extends AppTable
     /**
      * ログイン失敗回数インクリメント
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
      * @return Entity
      */
-    public function doIncrementLoginFailedCount(Entity $entity, array $input = [])
+    public function doIncrementLoginFailedCount(User $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // ログイン失敗回数

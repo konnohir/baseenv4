@@ -79,8 +79,8 @@
                         <?= $this->Paginator->sort('Users.email', ['label' => __('Users.email')]) ?>
                     </th>
                     <th><?= $this->Paginator->sort('Roles.id', ['label' => __('Users.role_id')]) ?></th>
-                    <th><?= $this->Paginator->sort('Users.login_failed_count', ['label' => __('Users.account_lock')]) ?></th>
-                    <th><?= $this->Paginator->sort('Users.password_issue', ['label' => __('Users.password_issue')]) ?></th>
+                    <th><?= $this->Paginator->sort('VUserRemarks.is_account_locked', ['label' => __('Users.account_lock')]) ?></th>
+                    <th><?= $this->Paginator->sort('VUserRemarks.is_password_issued', ['label' => __('Users.password_issue')]) ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -89,8 +89,8 @@
                     <td><?= $this->Paginator->checkbox($user->id, $user->_lock) ?></td>
                     <td><?= $this->Html->link($user->email, ['action' => 'view', $user->id]) ?></td>
                     <td><?= h($user->role->name ?? null) ?></td>
-                    <td><?= h($user->login_failed_count >= 5 ? '〇' : '') ?></td>
-                    <td><?= h($user->password_issue ? '〇' : '') ?></td>
+                    <td><?= h($user->v_user_remark->is_account_locked ? '〇' : '') ?></td>
+                    <td><?= h($user->v_user_remark->is_password_issued ? '〇' : '') ?></td>
                 </tr>
                 <?php endforeach ?>
             </tbody>

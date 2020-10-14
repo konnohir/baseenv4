@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Controller;
 
 /**
- * Users Controller
  * ユーザーマスタ
  * 
  * @property \App\Model\Table\UsersTable $Users
  */
 class UsersController extends AppController
 {
+    /**
+     * @var string 画面タイトル
+     */
     public $title = 'ユーザー';
 
     /**
@@ -34,7 +36,11 @@ class UsersController extends AppController
             'passwordIssue' => ['requestTarget'],
         ]);
 
+        // ユーザーマスタ
         $this->loadModel('Users');
+
+        // 権限マスタ
+        $this->loadModel('Roles');
     }
 
     /**
@@ -46,11 +52,37 @@ class UsersController extends AppController
     {
         // $users: ユーザー一覧
         $users = $this->paginate($this->Users, [
-            'sortableFields' => [
+            // 取得カラム
+            'fields' => [
+                // 主キー
+                'Users.id',
+                // メールアドレス
                 'Users.email',
-                'Users.password_issue',
-                'Users.login_failed_count',
+                // 権限名称
+                'Roles.name',
+                // アカウントロックフラグ
+                'VUserRemarks.is_account_locked',
+                // パスワード発行フラグ
+                'VUserRemarks.is_password_issued',
+                // 更新日時
+                'Users.updated_at',
+            ],
+            // 整列可能カラム
+            'sortableFields' => [
+                'Users.id',
+                'Users.email',
                 'Roles.id',
+                'VUserRemarks.is_account_locked',
+                'VUserRemarks.is_password_issued',
+            ],
+            // 結合テーブル
+            'contain' => [
+                'Roles',
+                'VUserRemarks',
+            ],
+            // 並び順
+            'order' => [
+                'Users.id' => 'asc'
             ],
         ]);
 
@@ -60,14 +92,19 @@ class UsersController extends AppController
     /**
      * 詳細画面
      *
-     * @param string $id ユーザー id.
+     * @param string $id ユーザーID
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function view($id)
     {
         // $user: ユーザーエンティティ
-        $user = $this->Users->find('detail', compact('id'))->firstOrFail();
+        $user = $this->Users->get($id, [
+            // 結合テーブル
+            'contain' => [
+                'Roles',
+                'VUserRemarks',
+            ],
+        ]);
 
         $this->set(compact('user'));
     }
@@ -76,7 +113,6 @@ class UsersController extends AppController
      * 新規登録画面
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function add()
     {
@@ -86,23 +122,18 @@ class UsersController extends AppController
     /**
      * 編集画面
      *
-     * @param string|null $id ユーザー id.
+     * @param string|null $id ユーザーID
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function edit($id = null)
     {
         // $user: ユーザーエンティティ
-        if ($id === null) {
-            $user = $this->Users->newEmptyEntity();
-        } else {
-            $user = $this->Users->find('detail', compact('id'))->firstOrFail();
-        }
+        $user = $this->getEntity($id);
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {
             // エンティティ編集
-            $user = $this->Users->doEditEntity($user, $this->getRequest()->getData());
+            $this->Users->doEditEntity($user, $this->request->getData());
 
             // DB保存成功時: 詳細画面へ遷移
             if ($this->Users->save($user)) {
@@ -115,7 +146,7 @@ class UsersController extends AppController
         }
 
         // $roleList: 権限リスト
-        $roleList = $this->Users->Roles->find('list')->toArray();
+        $roleList = $this->Roles->find('list')->toArray();
 
         $this->set(compact('user', 'roleList'));
     }
@@ -124,21 +155,20 @@ class UsersController extends AppController
      * アカウントロックAPI
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function lockAccount()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $result: トランザクションの結果 (boolean)
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->Users->find('detail', compact('id'))->firstOrFail();
+                $user = $this->getEntity($id);
 
                 // アカウントロック
-                $user = $this->Users->doLockAccount($user, $requestData);
+                $this->Users->doLockAccount($user, $requestData);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Users->save($user)) {
@@ -160,20 +190,19 @@ class UsersController extends AppController
      * アカウントロック解除API
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function unlockAccount()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $result: トランザクションの結果 (boolean)
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $requestData) {
                 $user = $this->Users->find('detail', compact('id'))->firstOrFail();
 
-                // アカウントロック
-                $user = $this->Users->doUnlockAccount($user, $requestData);
+                // アカウントロック解除
+                $this->Users->doUnlockAccount($user, $requestData);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Users->save($user)) {
@@ -196,12 +225,11 @@ class UsersController extends AppController
      * 既にパスワード発行済みの場合、パスワードを上書き（再発行）する
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function passwordIssue()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $csv: CSV出力データの配列
         $csv = [];
@@ -210,12 +238,12 @@ class UsersController extends AppController
         $result = $this->Users->getConnection()->transactional(function () use ($targets, &$csv) {
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->Users->find('detail', compact('id'))->firstOrFail();
+                $user = $this->getEntity($id);
 
                 // パスワード発行
-                $user = $this->Users->doIssuePassword($user, $requestData);
+                $this->Users->doIssuePassword($user, $requestData);
 
-                // CSV へ出力
+                // CSV出力用にデータを退避
                 $csv[] = [$user->id, $user->email, $user->plain_password];
 
                 // DB保存成功時: 次の対象データの処理へ進む
@@ -236,7 +264,7 @@ class UsersController extends AppController
             // CSV ダウンロード
             $this->set('csv', $csv);
             $this->viewBuilder()->setClassName('Csv');
-            $this->setResponse($this->getResponse()->withDownload('password.csv')->withType('text/css'));
+            $this->setResponse($this->getResponse()->withDownload('password.csv')->withType('text/csv'));
             return;
         }
 
@@ -247,21 +275,20 @@ class UsersController extends AppController
      * 削除API
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function delete()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $result: トランザクションの結果 (boolean)
         $result = $this->Users->getConnection()->transactional(function () use ($targets) {
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->Users->find('detail', compact('id'))->firstOrFail();
+                $user = $this->getEntity($id);
 
                 // 削除
-                $user = $this->Users->doDeleteEntity($user, $requestData);
+                $this->Users->doDeleteEntity($user, $requestData);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Users->save($user)) {
@@ -277,5 +304,20 @@ class UsersController extends AppController
         });
 
         $this->set(compact('result'));
+    }
+
+    /**
+     * ユーザーエンティティを取得する.
+     * 
+     * @param mixed $id ユーザーID
+     * @return \App\Model\Entity\User
+     */
+    private function getEntity($id)
+    {
+        if ($id === null) {
+            return $this->Users->newEmptyEntity();
+        }
+        $user = $this->Users->get($id);
+        return $user;
     }
 }

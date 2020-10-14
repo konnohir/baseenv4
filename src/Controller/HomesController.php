@@ -58,7 +58,7 @@ class HomesController extends AppController
             return $this->loginSuccess($result->getData());
         }
 
-        if ($this->getRequest()->is('post') && !$result->isValid()) {
+        if ($this->request->is('post') && !$result->isValid()) {
             // ログイン失敗
             $this->loginFailed();
         }
@@ -73,7 +73,7 @@ class HomesController extends AppController
     public function profile()
     {
         // $user: ユーザー
-        $user = $this->getRequest()->getAttribute('identity');
+        $user = $this->request->getAttribute('identity');
         $user->role = $this->Users->Roles->find()->where(['id' => $user->role_id])->first();
 
         $this->set(compact('user'));
@@ -83,12 +83,11 @@ class HomesController extends AppController
      * パスワード変更画面
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function password()
     {
         // $id: ログイン中のユーザーのユーザーID
-        $id = $this->getRequest()->getAttribute('identity')->id;
+        $id = $this->request->getAttribute('identity')->id;
 
         // $user: ユーザー
         $user = $this->Users->find('detail', compact('id'))->firstOrFail();
@@ -96,7 +95,7 @@ class HomesController extends AppController
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {
             // パスワード変更
-            $user = $this->Users->doChangePassword($user, $this->getRequest()->getData());
+            $user = $this->Users->doChangePassword($user, $this->request->getData());
 
             // DB保存成功時: プロファイル画面へ遷移
             if ($this->Users->save($user)) {
@@ -190,7 +189,7 @@ class HomesController extends AppController
         // $user: ログインを試みたユーザー
         $user = $this->Users->find()
             ->select(['id', 'login_failed_count'])
-            ->where(['email' => $this->getRequest()->getData('email')])
+            ->where(['email' => $this->request->getData('email')])
             ->first();
 
         // アカウントロックチェック

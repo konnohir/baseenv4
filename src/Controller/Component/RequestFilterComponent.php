@@ -72,16 +72,8 @@ class RequestFilterComponent extends Component
         $this->getController()->setRequest($newRequest);
 
         // paginateプロパティをセット
-        $this->getController()->paginate = [
-            // 検索スコープ
-            'finder' => [
-                'overview' => ['filter' => $filterArgs]
-            ],
-            // 1ページ当たりの表示件数
-            'limit' => 20,
-            'maxLimit' => 20,
-            // 並び順
-            'order' => ['id' => 'asc']
+        $this->getController()->paginate['finder'] = [
+            'overview' => ['filter' => $filterArgs]
         ];
     }
 
@@ -123,9 +115,9 @@ class RequestFilterComponent extends Component
             throw new BadRequestException();
         }
 
-        // 各要素が配列でなければBadRequestExceptionをスローする
-        foreach($targets as $target) {
-            if (!is_array($target)) {
+        // キーが数値以外、または値が配列以外ならBadRequestExceptionをスローする
+        foreach($targets as $id => $target) {
+            if (!ctype_digit($id) || !is_array($target)) {
                 throw new BadRequestException();
             }
         }
@@ -134,26 +126,6 @@ class RequestFilterComponent extends Component
         $this->getController()->viewBuilder()
             ->setClassName('Json')
             ->setOption('serialize', true);
-    }
-
-    /**
-     * 組織IDフィルタ
-     * 第2引数, 第3引数が存在する場合、数値であるかチェックする
-     * 
-     * @throws Cake\Http\Exception\BadRequestException
-     * @return void
-     */
-    public function organizationIdFilter()
-    {
-        foreach([1, 2] as $key) {
-            // $id: URLの$key番目の引数
-            $id = $this->getRequest()->getParam('pass.' . $key);
-
-            // 数字以外(先頭0不可)ならBadRequestExceptionをスローする
-            if ($id !== null && !preg_match('/^[1-9]\d*$/', $id)) {
-                throw new BadRequestException();
-            }
-        }
     }
 
     /**

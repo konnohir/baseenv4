@@ -16,6 +16,9 @@ use Cake\Http\Exception\BadRequestException;
  */
 class OrganizationsController extends AppController
 {
+    /**
+     * @var string 画面タイトル
+     */
     public $title = '組織';
 
     /**
@@ -73,7 +76,6 @@ class OrganizationsController extends AppController
      *
      * @param string $mOrganizationId 組織id.
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function view($mOrganizationId)
     {
@@ -87,7 +89,6 @@ class OrganizationsController extends AppController
      * 新規登録画面
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function add()
     {
@@ -99,7 +100,6 @@ class OrganizationsController extends AppController
      *
      * @param string $ 組織id.
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function edit($mOrganizationId = null)
     {
@@ -130,13 +130,13 @@ class OrganizationsController extends AppController
             // エンティティ編集
             switch ($editType) {
                 case '1':
-                    $mOrganization = $this->MOrganizations->doEditDepartment1Entity($mOrganization, $this->getRequest()->getData());
+                    $mOrganization = $this->MOrganizations->doEditDepartment1Entity($mOrganization, $this->request->getData());
                     break;
                 case '2':
-                    $mOrganization = $this->MOrganizations->doEditDepartment2Entity($mOrganization, $this->getRequest()->getData());
+                    $mOrganization = $this->MOrganizations->doEditDepartment2Entity($mOrganization, $this->request->getData());
                     break;
                 case '3':
-                    $mOrganization = $this->MOrganizations->doEditDepartment3Entity($mOrganization, $this->getRequest()->getData());
+                    $mOrganization = $this->MOrganizations->doEditDepartment3Entity($mOrganization, $this->request->getData());
                     break;
                 default:
                     throw new BadRequestException();
@@ -170,12 +170,11 @@ class OrganizationsController extends AppController
      * 削除API
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function delete()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $result: トランザクションの結果 (boolean)
         $result = $this->MOrganizations->getConnection()->transactional(function () use ($targets) {

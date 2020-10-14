@@ -11,6 +11,9 @@ namespace App\Controller;
  */
 class MCompaniesController extends AppController
 {
+    /**
+     * @var string 画面タイトル
+     */
     public $title = '企業';
 
     /**
@@ -50,7 +53,7 @@ class MCompaniesController extends AppController
     /**
      * 詳細画面
      *
-     * @param string|null $id 企業マスタ id.
+     * @param string|null $id 企業マスタID
      * @return \Cake\Http\Response|null
      */
     public function view($id = null)
@@ -76,7 +79,7 @@ class MCompaniesController extends AppController
     /**
      * 編集画面
      *
-     * @param string|null $id 企業マスタ id.
+     * @param string|null $id 企業マスタID
      * @return \Cake\Http\Response|null
      */
     public function edit($id = null)
@@ -90,7 +93,7 @@ class MCompaniesController extends AppController
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['post', 'put', 'patch'])) {
-            $mCompany = $this->MCompanies->patchEntity($mCompany, $this->getRequest()->getData(), [
+            $mCompany = $this->MCompanies->patchEntity($mCompany, $this->request->getData(), [
                 'fields' => [
                     'code', 'name', 'tel_no', 'staff', 'established_date', 'note',
                     // associated
@@ -136,7 +139,7 @@ class MCompaniesController extends AppController
     public function addStaff()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $result: トランザクション実行結果 (boolean)
         $result = $this->MCompanies->getConnection()->transactional(function () use ($targets) {
@@ -188,7 +191,7 @@ class MCompaniesController extends AppController
     public function delete()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $result: トランザクション実行結果 (boolean)
         $result = $this->MCompanies->getConnection()->transactional(function () use ($targets) {

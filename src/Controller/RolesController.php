@@ -11,6 +11,9 @@ namespace App\Controller;
  */
 class RolesController extends AppController
 {
+    /**
+     * @var string 画面タイトル
+     */
     public $title = '権限';
 
     /**
@@ -49,9 +52,8 @@ class RolesController extends AppController
     /**
      * 詳細画面
      *
-     * @param string $id 権限 id.
+     * @param string $id 権限ID
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function view($id)
     {
@@ -68,7 +70,6 @@ class RolesController extends AppController
      * 新規登録画面
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function add()
     {
@@ -78,9 +79,8 @@ class RolesController extends AppController
     /**
      * 編集画面
      *
-     * @param string|null $id 権限 id.
+     * @param string|null $id 権限ID
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function edit($id = null)
     {
@@ -94,7 +94,7 @@ class RolesController extends AppController
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {
             // エンティティ編集
-            $role = $this->Roles->doEditEntity($role, $this->getRequest()->getData());
+            $role = $this->Roles->doEditEntity($role, $this->request->getData());
 
             // DB保存成功時: 詳細画面へ遷移
             if ($this->Roles->save($role)) {
@@ -116,12 +116,11 @@ class RolesController extends AppController
      * 削除API
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function delete()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $result: トランザクション実行結果 (boolean)
         $result = $this->Roles->getConnection()->transactional(function () use ($targets) {

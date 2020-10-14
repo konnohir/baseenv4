@@ -11,6 +11,9 @@ namespace App\Controller;
  */
 class RoleDetailsController extends AppController
 {
+    /**
+     * @var string 画面タイトル
+     */
     public $title = '権限詳細';
 
     /**
@@ -49,9 +52,8 @@ class RoleDetailsController extends AppController
     /**
      * 詳細画面
      *
-     * @param string $id 権限詳細 id.
+     * @param string $id 権限詳細ID
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function view($id)
     {
@@ -71,7 +73,6 @@ class RoleDetailsController extends AppController
      * 新規登録画面
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function add()
     {
@@ -81,9 +82,8 @@ class RoleDetailsController extends AppController
     /**
      * 編集画面
      *
-     * @param string|null $id 権限詳細 id.
+     * @param string|null $id 権限詳細ID
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function edit($id = null)
     {
@@ -97,7 +97,7 @@ class RoleDetailsController extends AppController
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['post', 'put', 'patch'])) {
             // エンティティ編集
-            $roleDetail = $this->RoleDetails->doEditEntity($roleDetail, $this->getRequest()->getData());
+            $roleDetail = $this->RoleDetails->doEditEntity($roleDetail, $this->request->getData());
 
             // DB保存成功時: 詳細画面へ遷移
             if ($this->RoleDetails->save($roleDetail)) {
@@ -125,12 +125,11 @@ class RoleDetailsController extends AppController
      * 削除API
      *
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function delete()
     {
         // $targets: 対象データの配列 (array)
-        $targets = $this->getRequest()->getData('targets');
+        $targets = $this->request->getData('targets');
 
         // $result: トランザクション実行結果 (boolean)
         $result = $this->RoleDetails->getConnection()->transactional(function () use ($targets) {

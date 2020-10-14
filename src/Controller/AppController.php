@@ -32,10 +32,10 @@ class AppController extends Controller
         $this->loadComponent('Authentication.Authentication');
         $this->loadComponent('Authorization.Authorization');
 
-        $user = $this->getRequest()->getAttribute('identity');
+        $user = $this->request->getAttribute('identity');
 
         // ajax通信時はログイン画面にリダイレクトせずに例外を発生させるfix
-        if (!isset($user) && $this->getRequest()->is('ajax')) {
+        if ($user === null && $this->request->is('ajax')) {
             throw new UnauthorizedException();
         }
 

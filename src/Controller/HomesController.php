@@ -14,6 +14,7 @@ class HomesController extends AppController
 {
     /**
      * @var アカウントロック閾値
+     *      (Note: 変更時、DBのv_user_remarksビュー定義も更新が必要)
      */
     const ACCOUNT_LOCK_VALUE = 5;
 
@@ -72,9 +73,11 @@ class HomesController extends AppController
      */
     public function profile()
     {
+        // $id: ログイン中のユーザーのユーザーID
+        $id = $this->Authentication->getIdentityData('id');
+
         // $user: ユーザー
-        $user = $this->request->getAttribute('identity');
-        $user->role = $this->Users->Roles->find()->where(['id' => $user->role_id])->first();
+        $user = $this->Users->find('detail', compact('id'))->firstOrFail();
 
         $this->set(compact('user'));
     }
@@ -87,18 +90,15 @@ class HomesController extends AppController
     public function password()
     {
         // $id: ログイン中のユーザーのユーザーID
-        $id = $this->request->getAttribute('identity')->id;
+        $id = $this->Authentication->getIdentityData('id');
 
         // $user: ユーザー
         $user = $this->Users->find('detail', compact('id'))->firstOrFail();
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {
-            // パスワード変更
-            $user = $this->Users->doChangePassword($user, $this->request->getData());
-
             // DB保存成功時: プロファイル画面へ遷移
-            if ($this->Users->save($user)) {
+            if ($this->Users->doChangePassword($user, $this->request->getData())) {
                 // I-PASSWORD-CHANGE: パスワードを変更しました。
                 $this->Flash->success(__('I-PASSWORD-CHANGE'));
                 return $this->redirect(['action' => 'profile']);
@@ -152,8 +152,7 @@ class HomesController extends AppController
             }
             if ($user->login_failed_count >= 1) {
                 // ログイン失敗回数が1回以上: ログイン失敗回数をリセットする
-                $user = $this->Users->doResetLoginFailedCount($user);
-                $this->Users->saveOrFail($user);
+                $this->Users->doResetLoginFailedCount($user);
             }
         }
 
@@ -196,8 +195,7 @@ class HomesController extends AppController
         if (isset($user->login_failed_count)) {
             if ($user->login_failed_count < self::ACCOUNT_LOCK_VALUE) {
                 // ログイン失敗回数が規定値未満: ログイン失敗回数をインクリメント
-                $user = $this->Users->doIncrementLoginFailedCount($user);
-                $this->Users->saveOrFail($user);
+                $this->Users->doIncrementLoginFailedCount($user);
             }
             if ($user->login_failed_count >= self::ACCOUNT_LOCK_VALUE) {
                 // ログイン失敗回数が規定値以上: アカウントロックメッセージ表示

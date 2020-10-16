@@ -132,11 +132,8 @@ class UsersController extends AppController
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {
-            // エンティティ編集
-            $this->Users->doEditEntity($user, $this->request->getData());
-
             // DB保存成功時: 詳細画面へ遷移
-            if ($this->Users->save($user)) {
+            if ($this->Users->doEditEntity($user, $this->request->getData())) {
                 $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $user->id]);
             }
@@ -158,20 +155,17 @@ class UsersController extends AppController
      */
     public function lockAccount()
     {
-        // $targets: 対象データの配列 (array)
-        $targets = $this->request->getData('targets');
-
         // $result: トランザクションの結果 (boolean)
-        $result = $this->Users->getConnection()->transactional(function () use ($targets) {
+        $result = $this->Users->getConnection()->transactional(function () {
+            // $targets: 対象データの配列 (array)
+            $targets = $this->request->getData('targets');
+
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
                 $user = $this->getEntity($id);
 
-                // アカウントロック
-                $this->Users->doLockAccount($user, $requestData);
-
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->Users->save($user)) {
+                if ($this->Users->doLockAccount($user, $requestData)) {
                     continue;
                 }
 
@@ -179,8 +173,8 @@ class UsersController extends AppController
                 return $this->failed($user);
             }
 
-            $this->Flash->success(__('I-LOCK-ACCOUNT'));
-            return true;
+            // 全データDB保存成功時: コミット
+            return $this->success('I-LOCK-ACCOUNT');
         });
 
         $this->set(compact('result'));
@@ -193,19 +187,17 @@ class UsersController extends AppController
      */
     public function unlockAccount()
     {
-        // $targets: 対象データの配列 (array)
-        $targets = $this->request->getData('targets');
-
         // $result: トランザクションの結果 (boolean)
-        $result = $this->Users->getConnection()->transactional(function () use ($targets) {
-            foreach ($targets as $id => $requestData) {
-                $user = $this->Users->find('detail', compact('id'))->firstOrFail();
+        $result = $this->Users->getConnection()->transactional(function () {
+            // $targets: 対象データの配列 (array)
+            $targets = $this->request->getData('targets');
 
-                // アカウントロック解除
-                $this->Users->doUnlockAccount($user, $requestData);
+            foreach ($targets as $id => $requestData) {
+                // $user: ユーザーエンティティ
+                $user = $this->getEntity($id);
 
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->Users->save($user)) {
+                if ($this->Users->doUnlockAccount($user, $requestData)) {
                     continue;
                 }
 
@@ -213,8 +205,8 @@ class UsersController extends AppController
                 return $this->failed($user);
             }
 
-            $this->Flash->success(__('I-UNLOCK-ACCOUNT'));
-            return true;
+            // 全データDB保存成功時: コミット
+            return $this->success('I-UNLOCK-ACCOUNT');
         });
 
         $this->set(compact('result'));
@@ -228,26 +220,22 @@ class UsersController extends AppController
      */
     public function passwordIssue()
     {
-        // $targets: 対象データの配列 (array)
-        $targets = $this->request->getData('targets');
-
         // $csv: CSV出力データの配列
         $csv = [];
 
         // $result: トランザクションの結果 (boolean)
-        $result = $this->Users->getConnection()->transactional(function () use ($targets, &$csv) {
+        $result = $this->Users->getConnection()->transactional(function () use (&$csv) {
+            // $targets: 対象データの配列 (array)
+            $targets = $this->request->getData('targets');
+
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
                 $user = $this->getEntity($id);
 
-                // パスワード発行
-                $this->Users->doIssuePassword($user, $requestData);
-
-                // CSV出力用にデータを退避
-                $csv[] = [$user->id, $user->email, $user->plain_password];
-
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->Users->save($user)) {
+                if ($this->Users->doIssuePassword($user, $requestData)) {
+                    // CSV出力用にデータを退避
+                    $csv[] = [$user->id, $user->email, $user->plain_password];
                     continue;
                 }
 
@@ -255,7 +243,8 @@ class UsersController extends AppController
                 return $this->failed($user);
             }
 
-            return true;
+            // 全データDB保存成功時: コミット
+            return $this->success();
         });
 
         if ($result) {
@@ -278,20 +267,17 @@ class UsersController extends AppController
      */
     public function delete()
     {
-        // $targets: 対象データの配列 (array)
-        $targets = $this->request->getData('targets');
-
         // $result: トランザクションの結果 (boolean)
-        $result = $this->Users->getConnection()->transactional(function () use ($targets) {
+        $result = $this->Users->getConnection()->transactional(function () {
+            // $targets: 対象データの配列 (array)
+            $targets = $this->request->getData('targets');
+
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
                 $user = $this->getEntity($id);
 
-                // 削除
-                $this->Users->doDeleteEntity($user, $requestData);
-
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->Users->save($user)) {
+                if ($this->Users->doDelete($user, $requestData)) {
                     continue;
                 }
 
@@ -299,8 +285,8 @@ class UsersController extends AppController
                 return $this->failed($user);
             }
 
-            $this->Flash->success(__('I-DELETE', __($this->title)));
-            return true;
+            // 全データDB保存成功時: コミット
+            return $this->success('I-DELETE');
         });
 
         $this->set(compact('result'));
@@ -309,8 +295,9 @@ class UsersController extends AppController
     /**
      * ユーザーエンティティを取得する.
      * 
-     * @param mixed $id ユーザーID
+     * @param int|string $id ユーザーID
      * @return \App\Model\Entity\User
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     private function getEntity($id)
     {

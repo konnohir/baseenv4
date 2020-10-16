@@ -262,11 +262,11 @@ class UsersTable extends AppTable
      * 
      * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\User|false
      */
     public function doEditEntity(User $entity, array $input = [])
     {
-        $entity = $this->patchEntity($entity, $input, [
+        $this->patchEntity($entity, $input, [
             'fields' => [
                 // user input
                 'email', 'role_id',
@@ -275,7 +275,7 @@ class UsersTable extends AppTable
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
@@ -283,7 +283,7 @@ class UsersTable extends AppTable
      * 
      * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\User|false
      */
     public function doLockAccount(User $entity, array $input = [])
     {
@@ -291,7 +291,7 @@ class UsersTable extends AppTable
             // ログイン失敗回数
             'login_failed_count' => 99,
         ]);
-        $entity = $this->patchEntity($entity, $input, [
+        $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'login_failed_count',
@@ -300,7 +300,7 @@ class UsersTable extends AppTable
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
@@ -308,7 +308,7 @@ class UsersTable extends AppTable
      * 
      * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\User|false
      */
     public function doUnlockAccount(User $entity, array $input = [])
     {
@@ -316,7 +316,7 @@ class UsersTable extends AppTable
             // ログイン失敗回数
             'login_failed_count' => 0,
         ]);
-        $entity = $this->patchEntity($entity, $input, [
+        $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'login_failed_count',
@@ -325,7 +325,7 @@ class UsersTable extends AppTable
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
@@ -333,7 +333,7 @@ class UsersTable extends AppTable
      * 
      * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\User|false
      */
     public function doIssuePassword(User $entity, array $input = [])
     {
@@ -348,7 +348,7 @@ class UsersTable extends AppTable
             // パスワード有効期限
             'password_expired' => $entity->created_at
         ]);
-        $entity = $this->patchEntity($entity, $input, [
+        $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'password',
@@ -359,7 +359,7 @@ class UsersTable extends AppTable
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
@@ -367,7 +367,7 @@ class UsersTable extends AppTable
      * 
      * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\User|false
      */
     public function doChangePassword(User $entity, array $input = [])
     {
@@ -375,7 +375,7 @@ class UsersTable extends AppTable
             // パスワード有効期限
             'password_expired' => (new FrozenDate())->addMonths(3)
         ]);
-        $entity = $this->patchEntity($entity, $input, [
+        $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'password_expired',
@@ -387,7 +387,7 @@ class UsersTable extends AppTable
             'associated' => [],
             'validate' => 'password',
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
@@ -395,7 +395,7 @@ class UsersTable extends AppTable
      * 
      * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\User|false
      */
     public function doDeleteEntity(User $entity, array $input = [])
     {
@@ -403,7 +403,7 @@ class UsersTable extends AppTable
             // 削除日時
             'deleted_at' => new FrozenTime(),
         ]);
-        $entity = $this->patchEntity($entity, $input, [
+        $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'deleted_at',
@@ -412,7 +412,7 @@ class UsersTable extends AppTable
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
@@ -420,7 +420,7 @@ class UsersTable extends AppTable
      * 
      * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\User|false
      */
     public function doResetLoginFailedCount(User $entity, array $input = [])
     {
@@ -428,14 +428,14 @@ class UsersTable extends AppTable
             // ログイン失敗回数
             'login_failed_count' => 0,
         ]);
-        $entity = $this->patchEntity($entity, $input, [
+        $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'login_failed_count',
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
@@ -443,7 +443,7 @@ class UsersTable extends AppTable
      * 
      * @param \App\Model\Entity\User $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\User|false
      */
     public function doIncrementLoginFailedCount(User $entity, array $input = [])
     {
@@ -451,14 +451,14 @@ class UsersTable extends AppTable
             // ログイン失敗回数
             'login_failed_count' => $entity->login_failed_count + 1,
         ]);
-        $entity = $this->patchEntity($entity, $input, [
+        $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'login_failed_count',
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**

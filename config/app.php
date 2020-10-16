@@ -165,6 +165,7 @@ return [
             Cake\Datasource\Exception\RecordNotFoundException::class,
             Cake\Http\Exception\ForbiddenException::class,
             Cake\Http\Exception\MissingControllerException::class,
+            Cake\Http\Exception\UnauthorizedException::class,
         ],
         'log' => true,
         'trace' => false,

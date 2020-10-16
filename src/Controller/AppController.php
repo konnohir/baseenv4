@@ -46,6 +46,20 @@ class AppController extends Controller
     }
 
     /**
+     * Util: 成功メッセージをセットする
+     * 
+     * @param mixed $successMessage メッセージ (可変長引数リスト)
+     * @return bool true
+     */
+    protected function success(...$successMessage)
+    {
+        if (!empty($successMessage)) {
+            $this->Flash->success(__(...$successMessage));
+        }
+        return true;
+    }
+
+    /**
      * Util: エラーメッセージをセットする
      * 
      * @param \Cake\Datasource\EntityInterface $entity エンティティ

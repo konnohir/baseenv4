@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Component;
@@ -31,7 +32,7 @@ class RequestFilterComponent extends Component
             return;
         }
 
-        foreach($filters as $method) {
+        foreach ($filters as $method) {
             $method .= 'Filter';
             if ($result = $this->$method()) {
                 $event->stopPropagation();
@@ -63,7 +64,7 @@ class RequestFilterComponent extends Component
             });
             return $this->getController()->redirect($routes);
         }
-            
+
         // $filterArgs: クエリ文字列(URLの?から後ろの部分)の配列
         $filterArgs = $this->getRequest()->getQuery();
 
@@ -116,12 +117,12 @@ class RequestFilterComponent extends Component
         }
 
         // キーが数値以外、または値が配列以外ならBadRequestExceptionをスローする
-        foreach($targets as $id => $target) {
-            if (!ctype_digit($id) || !is_array($target)) {
+        foreach ($targets as $id => $requestData) {
+            if (!is_int($id) || !is_array($requestData)) {
                 throw new BadRequestException();
             }
         }
-        
+
         // レスポンスをJSON形式にする
         $this->getController()->viewBuilder()
             ->setClassName('Json')

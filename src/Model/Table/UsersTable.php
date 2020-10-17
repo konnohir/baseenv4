@@ -7,7 +7,6 @@ namespace App\Model\Table;
 use App\Model\Entity\User;
 use Cake\I18n\FrozenDate;
 use Cake\I18n\FrozenTime;
-use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
@@ -221,11 +220,6 @@ class UsersTable extends AppTable
             $query->where([$this->getAlias() . '.id' => $option['id']]);
         }
         return $query
-            ->select($this)
-            ->select($this->Roles)
-            ->select([
-                'password_issue' => 'password is not null',
-            ])
             ->contain(['Roles']);
     }
 

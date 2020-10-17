@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\RoleDetail;
 use Cake\I18n\FrozenTime;
-use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
@@ -117,11 +117,11 @@ class RoleDetailsTable extends AppTable
     /**
      * エンティティ編集
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\RoleDetail $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\RoleDetail|false
      */
-    public function doEditEntity(Entity $entity, array $input = [])
+    public function doEditEntity(RoleDetail $entity, array $input = [])
     {
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
@@ -138,17 +138,17 @@ class RoleDetailsTable extends AppTable
                 ],
             ]
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
      * 削除
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\RoleDetail $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\RoleDetail|false
      */
-    public function doDeleteEntity(Entity $entity, array $input = [])
+    public function doDeleteEntity(RoleDetail $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // 削除日時
@@ -163,6 +163,6 @@ class RoleDetailsTable extends AppTable
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 }

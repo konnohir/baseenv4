@@ -130,19 +130,19 @@ class OrganizationsController extends AppController
             // エンティティ編集
             switch ($editType) {
                 case '1':
-                    $mOrganization = $this->MOrganizations->doEditDepartment1Entity($mOrganization, $this->request->getData());
+                    $result = $this->MOrganizations->doEditDepartment1Entity($mOrganization, $this->request->getData());
                     break;
                 case '2':
-                    $mOrganization = $this->MOrganizations->doEditDepartment2Entity($mOrganization, $this->request->getData());
+                    $result = $this->MOrganizations->doEditDepartment2Entity($mOrganization, $this->request->getData());
                     break;
                 case '3':
-                    $mOrganization = $this->MOrganizations->doEditDepartment3Entity($mOrganization, $this->request->getData());
+                    $result = $this->MOrganizations->doEditDepartment3Entity($mOrganization, $this->request->getData());
                     break;
                 default:
                     throw new BadRequestException();
             }
             // DB保存成功時: 詳細画面へ遷移
-            if ($this->MOrganizations->save($mOrganization)) {
+            if ($result) {
                 $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $mOrganization->id]);
             }
@@ -173,11 +173,11 @@ class OrganizationsController extends AppController
      */
     public function delete()
     {
-        // $targets: 対象データの配列 (array)
-        $targets = $this->request->getData('targets');
-
         // $result: トランザクションの結果 (boolean)
-        $result = $this->MOrganizations->getConnection()->transactional(function () use ($targets) {
+        $result = $this->MOrganizations->getConnection()->transactional(function () {
+            // $targets: 対象データの配列 (array)
+            $targets = $this->request->getData('targets');
+    
             // 削除対象のIDの配列
             $targetIds = [];
             foreach(array_keys($targets) as $id) {
@@ -203,11 +203,8 @@ class OrganizationsController extends AppController
                             continue;
                         }
 
-                        // 削除
-                        $relatedOrganization = $this->MOrganizations->doDeleteEntity($relatedOrganization, ['_lock' => $relatedOrganization->_lock]);
-        
                         // DB保存成功時: 次の対象データの処理へ進む
-                        if ($this->MOrganizations->save($relatedOrganization)) {
+                        if ($this->MOrganizations->doDeleteEntity($relatedOrganization, ['_lock' => $relatedOrganization->_lock])) {
                             continue;
                         }
         
@@ -216,11 +213,8 @@ class OrganizationsController extends AppController
                     }
                 }
 
-                // 削除
-                $mOrganization = $this->MOrganizations->doDeleteEntity($mOrganization, $requestData);
-
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->MOrganizations->save($mOrganization)) {
+                if ($this->MOrganizations->doDeleteEntity($mOrganization, $requestData)) {
                     continue;
                 }
 
@@ -228,8 +222,7 @@ class OrganizationsController extends AppController
                 return $this->failed($mOrganization);
             }
 
-            $this->Flash->success(__('I-DELETE', __($this->title)));
-            return true;
+            return $this->success('I-DELETE', $this->title);
         });
 
         $this->set(compact('result'));

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\MOrganization;
 use Cake\I18n\FrozenTime;
-use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\Validation\Validator;
 
@@ -91,11 +91,11 @@ class MOrganizationsTable extends AppTable
     /**
      * エンティティ編集 (部門階層1: 本部)
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\MOrganization $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\MOrganization
      */
-    public function doEditDepartment1Entity(Entity $entity, array $input = [])
+    public function doEditDepartment1Entity(MOrganization $entity, array $input = [])
     {
         $entity = $this->patchEntity($entity, $input, [
             'fields' => [
@@ -114,17 +114,17 @@ class MOrganizationsTable extends AppTable
                 ]
             ]
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
      * エンティティ編集 (部門階層2: 部店)
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\MOrganization $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\MOrganization
      */
-    public function doEditDepartment2Entity(Entity $entity, array $input = [])
+    public function doEditDepartment2Entity(MOrganization $entity, array $input = [])
     {
         // バリデーション用add
         $input['m_department2']['m_department1_id']
@@ -147,17 +147,17 @@ class MOrganizationsTable extends AppTable
                 ]
             ]
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
      * エンティティ編集 (部門階層3: 課)
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\MOrganization $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\MOrganization
      */
-    public function doEditDepartment3Entity(Entity $entity, array $input = [])
+    public function doEditDepartment3Entity(MOrganization $entity, array $input = [])
     {
         // バリデーション用add
         $input['m_department3']['m_department2_id']
@@ -181,17 +181,17 @@ class MOrganizationsTable extends AppTable
                 ]
             ]
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 
     /**
      * 削除
      * 
-     * @param \Cake\ORM\Entity $entity エンティティ
+     * @param \App\Model\Entity\MOrganization $entity エンティティ
      * @param array $input ユーザー入力
-     * @return Entity
+     * @return \App\Model\Entity\MOrganization
      */
-    public function doDeleteEntity(Entity $entity, array $input = [])
+    public function doDeleteEntity(MOrganization $entity, array $input = [])
     {
         $input = array_merge_recursive($input, [
             // 削除日時
@@ -206,6 +206,6 @@ class MOrganizationsTable extends AppTable
             ],
             'associated' => []
         ]);
-        return $entity;
+        return $this->save($entity);
     }
 }

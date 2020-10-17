@@ -96,11 +96,8 @@ class RoleDetailsController extends AppController
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['post', 'put', 'patch'])) {
-            // エンティティ編集
-            $roleDetail = $this->RoleDetails->doEditEntity($roleDetail, $this->request->getData());
-
             // DB保存成功時: 詳細画面へ遷移
-            if ($this->RoleDetails->save($roleDetail)) {
+            if ($this->RoleDetails->doEditEntity($roleDetail, $this->request->getData())) {
                 $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $roleDetail->id]);
             }
@@ -128,20 +125,17 @@ class RoleDetailsController extends AppController
      */
     public function delete()
     {
-        // $targets: 対象データの配列 (array)
-        $targets = $this->request->getData('targets');
-
         // $result: トランザクション実行結果 (boolean)
-        $result = $this->RoleDetails->getConnection()->transactional(function () use ($targets) {
+        $result = $this->RoleDetails->getConnection()->transactional(function () {
+            // $targets: 対象データの配列 (array)
+            $targets = $this->request->getData('targets');
+    
             foreach ($targets as $id => $requestData) {
                 // $roleDetail: 権限詳細エンティティ
                 $roleDetail = $this->RoleDetails->find('detail', compact('id'))->firstOrFail();
 
-                // 削除
-                $roleDetail = $this->RoleDetails->doDeleteEntity($roleDetail, $requestData);
-
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->RoleDetails->save($roleDetail)) {
+                if ($this->RoleDetails->doDeleteEntity($roleDetail, $requestData)) {
                     continue;
                 }
 
@@ -149,8 +143,7 @@ class RoleDetailsController extends AppController
                 return $this->failed($roleDetail);
             }
 
-            $this->Flash->success(__('I-DELETE', __($this->title)));
-            return true;
+            return $this->success('I-DELETE', $this->title);
         });
 
         $this->set(compact('result'));

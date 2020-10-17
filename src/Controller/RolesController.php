@@ -93,11 +93,8 @@ class RolesController extends AppController
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {
-            // エンティティ編集
-            $role = $this->Roles->doEditEntity($role, $this->request->getData());
-
             // DB保存成功時: 詳細画面へ遷移
-            if ($this->Roles->save($role)) {
+            if ($this->Roles->doEditEntity($role, $this->request->getData())) {
                 $this->Flash->success(__('I-SAVE', __($this->title)));
                 return $this->redirect(['action' => 'view', $role->id]);
             }
@@ -119,20 +116,17 @@ class RolesController extends AppController
      */
     public function delete()
     {
-        // $targets: 対象データの配列 (array)
-        $targets = $this->request->getData('targets');
-
         // $result: トランザクション実行結果 (boolean)
-        $result = $this->Roles->getConnection()->transactional(function () use ($targets) {
+        $result = $this->Roles->getConnection()->transactional(function () {
+            // $targets: 対象データの配列 (array)
+            $targets = $this->request->getData('targets');
+    
             foreach ($targets as $id => $requestData) {
                 // $role: 権限エンティティ
                 $role = $this->Roles->find('detail', compact('id'))->firstOrFail();
 
-                // 削除
-                $role = $this->Roles->doDeleteEntity($role, $requestData);
-
                 // DB保存成功時: 次の対象データの処理へ進む
-                if ($this->Roles->save($role)) {
+                if ($this->Roles->doDeleteEntity($role, $requestData)) {
                     continue;
                 }
 
@@ -140,8 +134,7 @@ class RolesController extends AppController
                 return $this->failed($role);
             }
 
-            $this->Flash->success(__('I-DELETE', __($this->title)));
-            return true;
+            return $this->success('I_DELETE', $this->title);
         });
 
         $this->set(compact('result'));

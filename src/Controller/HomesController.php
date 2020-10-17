@@ -171,6 +171,11 @@ class HomesController extends AppController
             }
         }
 
+        // Note: $userはDBのsessionsテーブルに保存されるため、不要なデータは削除する
+        unset($user->login_failed_count);
+        unset($user->password_expired);
+        unset($user->password);
+
         // 画面遷移：リダイレクト先URL、またはトップ画面
         return $this->redirect($this->Authentication->getLoginRedirect() ?? '/');
     }

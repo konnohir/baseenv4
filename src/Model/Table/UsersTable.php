@@ -224,16 +224,15 @@ class UsersTable extends AppTable
     }
 
     /**
-     * ログイン実行時に必要な要素を取得する
+     * ログイン実行時に必要な識別子を取得する
      * 
      * @param \Cake\ORM\Query $query クエリオブジェクト
      * @param array $option オプション
      * @return Query
      */
-    protected function findAuthentication(Query $query, array $option)
+    protected function findIdentifier(Query $query, array $option)
     {
         return $query
-            // Note: ここで取得したカラムは認証後、セッションに格納される
             ->select([
                 // プライマリーキー
                 'id',

@@ -141,7 +141,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ],
             'resolver' => [
                 'className' => 'Authentication.Orm',
-                'finder' => 'authentication'
+                'finder' => 'identifier'
             ],
         ]);
 

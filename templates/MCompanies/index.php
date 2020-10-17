@@ -6,8 +6,10 @@
 ?>
 <section>
     <h2 class="mb-2"><?= __('MCompanies') ?></h2>
+    <div class="row">
+    <div class="col-lg-4">
     <div class="card mb-2">
-        <div class="card-body py-1 w-50">
+        <div class="card-body py-1">
             <?= $this->Form->create() ?>
             <?= $this->Form->customControl('filter.id', ['label' => 'ID']) ?>
             <?= $this->Form->customControl('filter.code', ['label' => 'コード']) ?>
@@ -44,6 +46,9 @@
             <?= $this->Form->end() ?>
         </div>
     </div>
+    </div>
+    <div class="col-lg-8">
+
     <div class="btn-group mb-2">
         <?= $this->Form->customButton(__('BTN-ADD'), [
             // 新規作成
@@ -113,5 +118,7 @@
                 <?php endforeach ?>
             </tbody>
         </table>
+    </div>
+    </div>
     </div>
 </section>

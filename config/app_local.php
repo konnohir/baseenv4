@@ -15,6 +15,15 @@ return [
     'debug' => true,
 
     /**
+     * Application configuration.
+     */
+    'App' => [
+        'fullBaseUrlWhiteList' => [
+            'localhost:8765',
+        ],
+    ],
+
+    /**
      * DebugKit configuration.
      * 
      * DebugKit is enabled when both 'debug' and 'DebugKit.use' are true.

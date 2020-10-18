@@ -47,9 +47,6 @@ return [
         'wwwRoot' => WWW_ROOT,
         //'baseUrl' => env('SCRIPT_NAME'),
         'fullBaseUrl' => false,
-        'fullBaseUrlWhiteList' => [
-            'localhost:8765',
-        ],
         // 'imageBaseUrl' => 'img/',
         // 'cssBaseUrl' => 'css/',
         // 'jsBaseUrl' => 'js/',

@@ -158,7 +158,7 @@ class MDepartment2sTable extends AppTable
      * 
      * @param \Cake\ORM\Query $query クエリオブジェクト
      * @param array $option オプション
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     protected function findActiveRecord(Query $query, array $option)
     {

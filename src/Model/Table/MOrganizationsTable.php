@@ -25,9 +25,7 @@ class MOrganizationsTable extends AppTable
         parent::initialize($config);
 
         $this->setTable('m_organizations');
-        $this->setDisplayField(['id']);
         $this->setPrimaryKey('id');
-
         $this->belongsTo('MDepartment1s');
         $this->belongsTo('MDepartment2s');
         $this->belongsTo('MDepartment3s');
@@ -53,9 +51,9 @@ class MOrganizationsTable extends AppTable
      * 
      * @param \Cake\ORM\Query $query クエリオブジェクト
      * @param array $option オプション
-     * @return Query
+     * @return \Cake\ORM\Query
      */
-    protected function findOverview(Query $query, array $option)
+    protected function findFilteredData(Query $query, array $option)
     {
         // $map: 検索マッピング設定 (array)
         $map = [];
@@ -75,7 +73,7 @@ class MOrganizationsTable extends AppTable
      * 
      * @param \Cake\ORM\Query $query クエリオブジェクト
      * @param array $option オプション
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     protected function findDetail(Query $query, array $option)
     {
@@ -204,7 +202,6 @@ class MOrganizationsTable extends AppTable
                 // lock token
                 '_lock',
             ],
-            'associated' => []
         ]);
         return $this->save($entity);
     }

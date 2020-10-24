@@ -8,6 +8,7 @@ namespace App\Controller;
  * 権限マスタ
  * 
  * @property \App\Model\Table\RolesTable $Roles
+ * @property \App\Model\Table\RoleDetailsTable $RoleDetails
  */
 class RolesController extends AppController
 {
@@ -33,7 +34,11 @@ class RolesController extends AppController
             'delete' => ['requestTarget'],
         ]);
 
+        // 権限モデル
         $this->loadModel('Roles');
+
+        // 権限詳細モデル
+        $this->loadModel('RoleDetails');
     }
 
     /**
@@ -58,10 +63,10 @@ class RolesController extends AppController
     public function view($id)
     {
         // $role: 権限エンティティ
-        $role = $this->Roles->find('detail', compact('id'))->firstOrFail();
+        $role = $this->getEntity($id);
 
         // $roleDetails: 権限詳細エンティティの配列
-        $roleDetails = $this->Roles->RoleDetails->find('overview')->all();
+        $roleDetails = $this->RoleDetails->find('threaded')->all();
 
         $this->set(compact('role', 'roleDetails'));
     }
@@ -85,17 +90,16 @@ class RolesController extends AppController
     public function edit($id = null)
     {
         // $role: 権限エンティティ
-        if ($id === null) {
-            $role = $this->Roles->newEmptyEntity();
-        } else {
-            $role = $this->Roles->find('detail', compact('id'))->firstOrFail();
-        }
+        $role = $this->getEntity($id);
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {
+
             // DB保存成功時: 詳細画面へ遷移
             if ($this->Roles->doEditEntity($role, $this->request->getData())) {
-                $this->Flash->success(__('I-SAVE', __($this->title)));
+                // I-SAVE: 権限を保存しました。
+                $this->success('I-SAVE', $this->title);
+
                 return $this->redirect(['action' => 'view', $role->id]);
             }
 
@@ -104,7 +108,7 @@ class RolesController extends AppController
         }
 
         // $roleDetails: 権限詳細エンティティの配列
-        $roleDetails = $this->Roles->RoleDetails->find('overview')->all();
+        $roleDetails = $this->RoleDetails->find('threaded')->all();
 
         $this->set(compact('role', 'roleDetails'));
     }
@@ -134,9 +138,28 @@ class RolesController extends AppController
                 return $this->failed($role);
             }
 
+            // 全データDB保存成功時: コミット
             return $this->success('I_DELETE', $this->title);
         });
 
         $this->set(compact('result'));
+    }
+
+    /**
+     * 権限エンティティを取得する.
+     * 
+     * @param int|string $id 権限ID
+     * @return \App\Model\Entity\Role
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
+     */
+    private function getEntity($id)
+    {
+        if ($id === null) {
+            return $this->Roles->newEmptyEntity();
+        }
+        $role = $this->Roles->get($id, [
+            'contain' => ['RoleDetails']
+        ]);
+        return $role;
     }
 }

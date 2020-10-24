@@ -25,9 +25,7 @@ class MCompaniesTable extends AppTable
         parent::initialize($config);
 
         $this->setTable('m_companies');
-        $this->setDisplayField('name');
         $this->setPrimaryKey('id');
-
         $this->belongsToMany('Tags');
         $this->hasMany('Notices');
     }
@@ -115,7 +113,7 @@ class MCompaniesTable extends AppTable
      * @param array $input ユーザー入力
      * @return Entity
      */
-    protected function findOverview(Query $query, array $option)
+    protected function findFilteredData(Query $query, array $option)
     {
         // $map: 検索マッピング設定 (array)
         $map = [

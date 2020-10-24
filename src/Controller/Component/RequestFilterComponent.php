@@ -74,7 +74,7 @@ class RequestFilterComponent extends Component
 
         // paginateプロパティをセット
         $this->getController()->paginate['finder'] = [
-            'overview' => ['filter' => $filterArgs]
+            'filteredData' => ['filter' => $filterArgs]
         ];
     }
 

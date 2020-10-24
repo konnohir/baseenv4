@@ -77,7 +77,7 @@ class HomesController extends AppController
         $id = $this->Authentication->getIdentityData('id');
 
         // $user: ユーザー
-        $user = $this->Users->find('detail', compact('id'))->firstOrFail();
+        $user = $this->Users->get($id, ['contain' => 'Roles']);
 
         $this->set(compact('user'));
     }
@@ -93,7 +93,7 @@ class HomesController extends AppController
         $id = $this->Authentication->getIdentityData('id');
 
         // $user: ユーザー
-        $user = $this->Users->find('detail', compact('id'))->firstOrFail();
+        $user = $this->Users->get($id);
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is('post')) {

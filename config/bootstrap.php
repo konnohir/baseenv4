@@ -100,7 +100,7 @@ if (!$fullBaseUrl) {
         $s = 's';
     }
 
-    $httpHost = env('X-Forwarded-Host', env('HTTP_HOST'));
+    $httpHost = env('HTTP_HOST');
     if (isset($httpHost)) {
         if (in_array($httpHost, Configure::read('App.fullBaseUrlWhiteList'))) {
             $fullBaseUrl = 'http' . $s . '://' . $httpHost;

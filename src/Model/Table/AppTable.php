@@ -42,11 +42,12 @@ class AppTable extends Table
         foreach($this->getSchema()->columns() as $column) {
             $columnInfo = $this->getSchema()->getColumn($column);
             $isRequirePresence = ($columnInfo['null'] === false && $columnInfo['default'] === null && (!isset($columnInfo['autoIncrement']) || $columnInfo['autoIncrement'] === false));
+            $maxLength = $columnInfo['length'] ?? 0;
             if ($isRequirePresence) {
                 $validator->requirePresence($column, 'create', __('E-V-REQUIRED'));
             }
-            if ($columnInfo['null'] === true) {
-                $validator->allowEmptyFor($column);
+            if ($maxLength) {
+                $validator->maxLength($column, $maxLength);
             }
         }
         return $validator;

@@ -8,7 +8,6 @@ use App\Model\Entity\User;
 use Cake\I18n\FrozenDate;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
@@ -27,227 +26,9 @@ class UsersTable extends AppTable
         parent::initialize($config);
 
         $this->setTable('users');
-        $this->setDisplayField('email');
         $this->setPrimaryKey('id');
-
         $this->belongsTo('Roles');
         $this->hasOne('VUserRemarks');
-    }
-
-    /**
-     * バリデーションルール
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return Validator
-     */
-    public function validationDefault(Validator $validator): Validator
-    {
-        parent::validationDefault($validator);
-
-        // メールアドレス
-        $validator->add('email', [
-            // 入力有
-            'notBlank' => [
-                'message' => __('E-V-REQUIRED'),
-                'last' => true,
-            ],
-            // メールアドレス形式
-            'email' => [
-                'message' => __('E-V-EMAIL-FORMAT'),
-                'last' => true,
-            ],
-        ]);
-
-        // パスワード
-        $validator->add('password', [
-            // 入力有
-            'notBlank' => [
-                'message' => __('E-V-REQUIRED'),
-                'last' => true,
-            ],
-        ]);
-
-        // 権限
-        $validator->add('role_id', [
-            // 入力有
-            'notBlank' => [
-                'message' => __('E-V-REQUIRED'),
-                'last' => true,
-            ],
-        ]);
-
-        return $validator;
-    }
-
-    /**
-     * パスワード変更バリデーション
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return Validator
-     */
-    public function validationPassword(Validator $validator): Validator
-    {
-        $this->validationDefault($validator);
-
-        // パスワード変更時の必須入力項目
-        $validator->requirePresence([
-            'current_password',
-            'new_password',
-            'password',
-        ], 'update');
-
-        // パスワード
-        $validator->add('password', [
-            // 入力有
-            'notBlank' => [
-                'message' => __('E-V-REQUIRED'),
-                'last' => true,
-            ],
-            // 新しいパスワードと一致 [パスワード変更画面]
-            'compareFields' => [
-                'rule' => ['compareFields', 'new_password', '==='],
-                'message' => __('E-V-RETYPE-WRONG-PASSWORD'),
-                'last' => true,
-            ],
-        ]);
-
-        // 現在のパスワード
-        $validator->add('current_password', [
-            // 入力有
-            'notBlank' => [
-                'message' => __('E-V-REQUIRED'),
-                'last' => true,
-            ],
-        ]);
-
-        // 新しいパスワード
-        $validator->add('new_password', [
-            // 入力有
-            'notBlank' => [
-                'message' => __('E-V-REQUIRED'),
-                'last' => true,
-            ],
-            // 現在のパスワードと異なる
-            'compareFields' => [
-                'rule' => ['compareFields', 'current_password', '!=='],
-                'message' => __('E-V-SAME-PASSWORD'),
-                'last' => true,
-            ],
-        ]);
-
-        return $validator;
-    }
-
-    /**
-     * ルール構築
-     * DBのデータを使ったルールを定義する
-     */
-    public function buildRules(RulesChecker $rules): RulesChecker
-    {
-        // メールアドレス
-        $rules->add(function ($entity, $option) {
-            if (!$entity->isDirty('email')) {
-                return true;
-            }
-            $model = $option['repository'];
-
-            // 削除済みのデータを含めて既に登録済みのメールアドレスでないこと
-            if ($model->find('withInactive')->where(['email' => $entity->email])->count()) {
-                return __('E-V-UNIQUE', __('Users.email'));
-            }
-            return true;
-        }, ['errorField' => 'email']);
-
-        // 現在のパスワード
-        $rules->add(function ($entity) {
-            if (!$entity->isDirty('current_password')) {
-                return true;
-            }
-
-            // 現在のパスワードが一致すること
-            if (!$entity->comparePassword($entity->current_password)) {
-                return __('E-V-WRONG-PASSWORD');
-            }
-            return true;
-        }, ['errorField' => 'current_password']);
-
-        // 新しいパスワード
-        $rules->add(function ($entity) {
-            if (!$entity->isDirty('password')) {
-                return true;
-            }
-
-            // 新しいパスワードがメールアドレスと異なること
-            if ($entity->retype_password == $entity->email) {
-                return __('E-V-SAME-PASSWORD-MAIL');
-            }
-            return true;
-        }, ['errorField' => 'password']);
-
-        return $rules;
-    }
-
-    /**
-     * モデルの概要を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return Query
-     */
-    protected function findOverview(Query $query, array $option)
-    {
-        // $map: 検索マッピング設定 (array)
-        $map = [
-            'email' => ['type' => 'like'],
-        ];
-
-        // $conditions: 検索条件の配列 (array)
-        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
-
-        return $query->where($conditions);
-    }
-
-    /**
-     * モデルの詳細を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return Query
-     */
-    protected function findDetail(Query $query, array $option)
-    {
-        if (isset($option['id'])) {
-            $query->where([$this->getAlias() . '.id' => $option['id']]);
-        }
-        return $query
-            ->contain(['Roles']);
-    }
-
-    /**
-     * ログイン実行時に必要な識別子を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return Query
-     */
-    protected function findIdentifier(Query $query, array $option)
-    {
-        return $query
-            ->select([
-                // プライマリーキー
-                'id',
-                // 認証のため、email、passwordは必須
-                'email',
-                'password',
-                // アカウントロック判定用
-                'login_failed_count',
-                // パスワード有効期限判定用
-                'password_expired',
-                // 認可のため、role_idは必須
-                'role_id',
-            ])
-            // パスワード未発行のユーザーはログイン不可
-            ->where(['password is not null']);
     }
 
     /**
@@ -266,7 +47,7 @@ class UsersTable extends AppTable
                 // lock token
                 '_lock',
             ],
-            'associated' => []
+            'validate' => 'edit',
         ]);
         return $this->save($entity);
     }
@@ -291,7 +72,6 @@ class UsersTable extends AppTable
                 // lock token
                 '_lock',
             ],
-            'associated' => []
         ]);
         return $this->save($entity);
     }
@@ -316,7 +96,6 @@ class UsersTable extends AppTable
                 // lock token
                 '_lock',
             ],
-            'associated' => []
         ]);
         return $this->save($entity);
     }
@@ -350,7 +129,6 @@ class UsersTable extends AppTable
                 // lock token
                 '_lock',
             ],
-            'associated' => []
         ]);
         return $this->save($entity);
     }
@@ -366,18 +144,25 @@ class UsersTable extends AppTable
     {
         $input = array_merge_recursive($input, [
             // パスワード有効期限
-            'password_expired' => (new FrozenDate())->addMonths(3)
+            'password_expired' => (new FrozenDate())->addMonths(3),
+            // メールアドレス (バリデーションチェック用)
+            '_email' => $entity->email,
+            // パスワード (バリデーションチェック用)
+            '_password' => $entity->password,
         ]);
         $this->patchEntity($entity, $input, [
             'fields' => [
                 // application input
                 'password_expired',
+                '_email',
+                '_password',
                 // user input
-                'current_password', 'new_password', 'password',
+                'current_password',
+                'new_password',
+                'password',
                 // lock token
                 '_lock',
             ],
-            'associated' => [],
             'validate' => 'password',
         ]);
         return $this->save($entity);
@@ -403,7 +188,6 @@ class UsersTable extends AppTable
                 // lock token
                 '_lock',
             ],
-            'associated' => []
         ]);
         return $this->save($entity);
     }
@@ -426,7 +210,6 @@ class UsersTable extends AppTable
                 // application input
                 'login_failed_count',
             ],
-            'associated' => []
         ]);
         return $this->save($entity);
     }
@@ -449,9 +232,176 @@ class UsersTable extends AppTable
                 // application input
                 'login_failed_count',
             ],
-            'associated' => []
         ]);
         return $this->save($entity);
+    }
+
+    /**
+     * 編集時バリデーションルール
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return Validator
+     */
+    protected function validationEdit(Validator $validator): Validator
+    {
+        // デフォルトバリデーション適用
+        $this->validationDefault($validator);
+
+        // メールアドレス
+        $validator->add('email', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+            // メールアドレス形式
+            'email' => [
+                'message' => __('E-V-EMAIL-FORMAT'),
+                'last' => true,
+            ],
+            // 未重複
+            'uniqueEmail' => [
+                'message' => __('E-V-UNIQUE'),
+                'last' => true,
+            ],
+        ]);
+
+        // パスワード
+        $validator->add('password', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        // 権限
+        $validator->add('role_id', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        return $validator;
+    }
+
+    /**
+     * パスワード変更時バリデーション
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return Validator
+     */
+    public function validationPassword(Validator $validator): Validator
+    {
+        // デフォルトバリデーション適用
+        $this->validationDefault($validator);
+
+        // パスワード変更時の必須入力項目
+        $validator->requirePresence([
+            'current_password',
+            'new_password',
+            'password',
+        ]);
+
+        // 現在のパスワード
+        $validator->add('current_password', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+            // DBから取得したパスワードと一致
+            'sameCurrentPassword' => [
+                'message' => __('E-V-WRONG-PASSWORD'),
+                'last' => true,
+            ],
+        ]);
+
+        // 新しいパスワード
+        $validator->add('new_password', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+            // 現在のパスワードと異なる
+            'compareFields' => [
+                'rule' => ['compareFields', 'current_password', '!=='],
+                'message' => __('E-V-SAME-PASSWORD'),
+                'last' => true,
+            ],
+        ]);
+
+        // パスワード
+        $validator->add('password', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+            // 新しいパスワードと一致
+            'compareFields' => [
+                'rule' => ['compareFields', 'new_password', '==='],
+                'message' => __('E-V-RETYPE-WRONG-PASSWORD'),
+                'last' => true,
+            ],
+            // メールアドレスと異なる
+            'notSameEmail' => [
+                'message' => __('E-V-SAME-PASSWORD-MAIL'),
+                'last' => true,
+            ],
+        ]);
+
+        return $validator;
+    }
+
+    /**
+     * 検索条件
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return \Cake\ORM\Query
+     */
+    protected function findFilteredData(Query $query, array $option): Query
+    {
+        // $map: 検索マッピング設定 (array)
+        $map = [
+            'email' => ['type' => 'like'],
+        ];
+
+        // $conditions: 検索条件の配列 (array)
+        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
+
+        return $query->where($conditions);
+    }
+
+    /**
+     * ログイン実行時に必要な識別子を取得する
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return \Cake\ORM\Query
+     */
+    protected function findIdentifier(Query $query): Query
+    {
+        return $query
+            ->select([
+                // プライマリーキー
+                'id',
+                // 認証のため、email、passwordは必須
+                'email',
+                'password',
+                // アカウントロック判定用
+                'login_failed_count',
+                // パスワード有効期限判定用
+                'password_expired',
+                // 認可のため、role_idは必須
+                'role_id',
+            ])
+            // パスワード未発行のユーザーはログイン不可
+            ->where(['password is not null']);
     }
 
     /**

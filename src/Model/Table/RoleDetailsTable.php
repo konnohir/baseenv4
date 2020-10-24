@@ -26,9 +26,7 @@ class RoleDetailsTable extends AppTable
         parent::initialize($config);
 
         $this->setTable('role_details');
-        $this->setDisplayField('name');
         $this->setPrimaryKey('id');
-
         $this->belongsToMany('Roles');
         $this->belongsToMany('Acos', [
             'joinTable' => 'role_details_acos'
@@ -66,9 +64,9 @@ class RoleDetailsTable extends AppTable
      * 
      * @param \Cake\ORM\Query $query クエリオブジェクト
      * @param array $option オプション
-     * @return Query
+     * @return \Cake\ORM\Query
      */
-    protected function findOverview(Query $query, array $option)
+    protected function findFilteredData(Query $query, array $option)
     {
         // $map: 検索マッピング設定 (array)
         $map = [];
@@ -84,7 +82,7 @@ class RoleDetailsTable extends AppTable
      * 
      * @param \Cake\ORM\Query $query クエリオブジェクト
      * @param array $option オプション
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     protected function findDetail(Query $query, array $option)
     {
@@ -99,7 +97,7 @@ class RoleDetailsTable extends AppTable
      * 
      * @param \Cake\ORM\Query $query クエリオブジェクト
      * @param array $option オプション
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     protected function findParentList(Query $query, array $option)
     {
@@ -161,7 +159,6 @@ class RoleDetailsTable extends AppTable
                 // lock token
                 '_lock',
             ],
-            'associated' => []
         ]);
         return $this->save($entity);
     }

@@ -8,6 +8,7 @@ namespace App\Controller;
  * ユーザーマスタ
  * 
  * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\RolesTable $Roles
  */
 class UsersController extends AppController
 {
@@ -162,7 +163,7 @@ class UsersController extends AppController
 
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->getEntity($id);
+                $user = $this->Users->get($id);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Users->doLockAccount($user, $requestData)) {
@@ -194,7 +195,7 @@ class UsersController extends AppController
 
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->getEntity($id);
+                $user = $this->Users->get($id);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Users->doUnlockAccount($user, $requestData)) {
@@ -230,7 +231,7 @@ class UsersController extends AppController
 
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->getEntity($id);
+                $user = $this->Users->get($id);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Users->doIssuePassword($user, $requestData)) {
@@ -274,7 +275,7 @@ class UsersController extends AppController
 
             foreach ($targets as $id => $requestData) {
                 // $user: ユーザーエンティティ
-                $user = $this->getEntity($id);
+                $user = $this->Users->get($id);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Users->doDelete($user, $requestData)) {

@@ -7,6 +7,7 @@ namespace App\Controller;
 /**
  * 権限詳細マスタ
  * 
+ * @property \App\Model\Table\AcosTable $Acos
  * @property \App\Model\Table\RoleDetailsTable $RoleDetails
  */
 class RoleDetailsController extends AppController
@@ -33,7 +34,11 @@ class RoleDetailsController extends AppController
             'delete' => ['requestTarget'],
         ]);
 
+        // 権限詳細マスタ
         $this->loadModel('RoleDetails');
+
+        // ACOマスタ
+        $this->loadModel('Acos');
     }
 
     /**
@@ -44,7 +49,31 @@ class RoleDetailsController extends AppController
     public function index()
     {
         // $roleDetails: 権限詳細一覧
-        $roleDetails = $this->paginate($this->RoleDetails);
+        $roleDetails = $this->paginate($this->RoleDetails, [
+            // 取得カラム
+            'fields' => [
+                // 主キー
+                'RoleDetails.id',
+                // 親権限詳細ID　(threaded用)
+                'RoleDetails.parent_id',
+                // 権限詳細名称
+                'RoleDetails.name',
+                // 説明文
+                'RoleDetails.description',
+                // 更新日時
+                'RoleDetails.updated_at',
+            ],
+            // 整列可能カラム
+            'sortableFields' => [
+                'RoleDetails.id',
+                'RoleDetails.name',
+                'RoleDetails.description',
+            ],
+            // 並び順
+            'order' => [
+                'RoleDetails.id' => 'asc'
+            ],
+        ]);
 
         $this->set(compact('roleDetails'));
     }
@@ -58,13 +87,15 @@ class RoleDetailsController extends AppController
     public function view($id)
     {
         // $roleDetail: 権限詳細エンティティ
-        $roleDetail = $this->RoleDetails->find('detail', compact('id'))->firstOrFail();
+        $roleDetail = $this->RoleDetails->get($id, [
+            'contain' => [
+                'Acos',
+                'ParentRoleDetails'
+            ],
+        ]);
 
         // $acos: コントローラー／アクション(Access Control Object)のリスト (スレッド形式)
-        $acos = $this->RoleDetails->Acos->find('threaded')->all();
-        $acos = array_filter($acos->first()->children ?? [], function ($row) {
-            return !empty($row->children);
-        });
+        $acos = $this->Acos->find('threadedActions')->all();
 
         $this->set(compact('roleDetail', 'acos'));
     }
@@ -91,14 +122,18 @@ class RoleDetailsController extends AppController
         if ($id === null) {
             $roleDetail = $this->RoleDetails->newEmptyEntity();
         } else {
-            $roleDetail = $this->RoleDetails->find('detail', compact('id'))->firstOrFail();
+            $roleDetail = $this->RoleDetails->get($id, [
+                'contain' => [
+                    'Acos',
+                ],
+            ]);
         }
 
         // POST送信された(保存ボタンが押された)場合
         if ($this->request->is(['post', 'put', 'patch'])) {
             // DB保存成功時: 詳細画面へ遷移
             if ($this->RoleDetails->doEditEntity($roleDetail, $this->request->getData())) {
-                $this->Flash->success(__('I-SAVE', __($this->title)));
+                $this->success('I-SAVE',$this->title);
                 return $this->redirect(['action' => 'view', $roleDetail->id]);
             }
 
@@ -107,13 +142,10 @@ class RoleDetailsController extends AppController
         }
 
         // $parentRoleDetailList: 親権限詳細リスト
-        $parentRoleDetailList = $this->RoleDetails->find('parentList', ['exclude' => $id])->toArray();
+        $parentRoleDetailList = $this->RoleDetails->find('parentList', ['excludeId' => $id])->toArray();
 
         // $acos: コントローラー／アクション(Access Control Object)のリスト (スレッド形式)
-        $acos = $this->RoleDetails->Acos->find('threaded')->all();
-        $acos = array_filter($acos->first()->children ?? [], function ($row) {
-            return !empty($row->children);
-        });
+        $acos = $this->Acos->find('threadedActions')->all();
 
         $this->set(compact('roleDetail', 'parentRoleDetailList', 'acos'));
     }
@@ -132,7 +164,7 @@ class RoleDetailsController extends AppController
     
             foreach ($targets as $id => $requestData) {
                 // $roleDetail: 権限詳細エンティティ
-                $roleDetail = $this->RoleDetails->find('detail', compact('id'))->firstOrFail();
+                $roleDetail = $this->RoleDetails->get($id);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->RoleDetails->doDeleteEntity($roleDetail, $requestData)) {
@@ -143,6 +175,7 @@ class RoleDetailsController extends AppController
                 return $this->failed($roleDetail);
             }
 
+            // 全データDB保存成功時: コミット
             return $this->success('I-DELETE', $this->title);
         });
 

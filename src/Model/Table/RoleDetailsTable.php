@@ -7,7 +7,6 @@ namespace App\Model\Table;
 use App\Model\Entity\RoleDetail;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
@@ -38,81 +37,6 @@ class RoleDetailsTable extends AppTable
     }
 
     /**
-     * バリデーションルール
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return Validator
-     */
-    public function validationDefault(Validator $validator): Validator
-    {
-        parent::validationDefault($validator);
-
-        // 名称
-        $validator->add('name', [
-            // 入力有
-            'notBlank' => [
-                'message' => __('E-V-REQUIRED'),
-                'last' => true,
-            ],
-        ]);
-
-        return $validator;
-    }
-
-    /**
-     * モデルの概要を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return \Cake\ORM\Query
-     */
-    protected function findFilteredData(Query $query, array $option)
-    {
-        // $map: 検索マッピング設定 (array)
-        $map = [];
-
-        // $conditions: 検索条件の配列 (array)
-        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
-
-        return $query->find('threaded')->where($conditions);
-    }
-
-    /**
-     * モデルの詳細を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return \Cake\ORM\Query
-     */
-    protected function findDetail(Query $query, array $option)
-    {
-        if (isset($option['id'])) {
-            $query->where([$this->getAlias() . '.id' => $option['id']]);
-        }
-        return $query->contain(['Roles', 'Acos', 'ParentRoleDetails']);
-    }
-
-    /**
-     * モデルの親権限詳細一覧を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return \Cake\ORM\Query
-     */
-    protected function findParentList(Query $query, array $option)
-    {
-        // $exclude_id: リストから除外する権限詳細のID
-        $exclude_id = $option['exclude'] ?? null;
-
-        $query->find('list')->where(['parent_id IS' => null]);
-        if (isset($exclude_id)) {
-            $query->where(['id NOT IN' => $exclude_id]);
-        }
-
-        return $query;
-    }
-
-    /**
      * エンティティ編集
      * 
      * @param \App\Model\Entity\RoleDetail $entity エンティティ
@@ -134,7 +58,8 @@ class RoleDetailsTable extends AppTable
                 'Acos' => [
                     'onlyIds' => true
                 ],
-            ]
+            ],
+            'validate' => 'edit',
         ]);
         return $this->save($entity);
     }
@@ -161,5 +86,66 @@ class RoleDetailsTable extends AppTable
             ],
         ]);
         return $this->save($entity);
+    }
+
+    /**
+     * 編集バリデーションルール
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return Validator
+     */
+    public function validationEdit(Validator $validator): Validator
+    {
+        // デフォルトバリデーション適用
+        $this->validationDefault($validator);
+
+        // 名称
+        $validator->add('name', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        return $validator;
+    }
+
+    /**
+     * 検索条件
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return \Cake\ORM\Query
+     */
+    protected function findFilteredData(Query $query, array $option)
+    {
+        // $map: 検索マッピング設定 (array)
+        $map = [];
+
+        // $conditions: 検索条件の配列 (array)
+        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
+
+        return $query->find('threaded')->where($conditions);
+    }
+
+    /**
+     * 親権限詳細の一覧を取得する
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return \Cake\ORM\Query
+     */
+    protected function findParentList(Query $query, array $option)
+    {
+        // $exclude_id: リストから除外する権限詳細のID
+        $excludeId = $option['excludeId'] ?? null;
+
+        $query->find('list')->where(['parent_id IS' => null]);
+        if (isset($excludeId)) {
+            $query->where(['id NOT IN' => $excludeId]);
+        }
+
+        return $query;
     }
 }

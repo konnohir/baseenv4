@@ -6,7 +6,6 @@ namespace App\Model\Table;
 
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
@@ -107,7 +106,7 @@ class MCompaniesTable extends AppTable
     }
 
     /**
-     * モデルの概要を取得する
+     * 検索条件
      * 
      * @param \Cake\ORM\Entity $entity エンティティ
      * @param array $input ユーザー入力

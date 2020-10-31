@@ -53,6 +53,27 @@ class OrganizationsController extends AppController
     {
         // $tableRows: 組織一覧
         $tableRows = $this->paginate($this->MOrganizations, [
+            // 取得カラム
+            'fields' => [
+                // 主キー
+                'MOrganizations.id',
+                // 結合キー
+                'MOrganizations.m_department1_id',
+                'MOrganizations.m_department2_id',
+                'MOrganizations.m_department3_id',
+                // 本部
+                'MDepartment1s.name',
+                'MDepartment1s.code',
+                // 部店
+                'MDepartment2s.name',
+                'MDepartment2s.code',
+                // 課
+                'MDepartment3s.name',
+                'MDepartment3s.code',
+                // 更新日時
+                'MOrganizations.updated_at',
+            ],
+            // 整列可能カラム
             'sortableFields' => [
                 'MDepartment1s.name',
                 'MDepartment1s.code',
@@ -61,6 +82,13 @@ class OrganizationsController extends AppController
                 'MDepartment3s.name',
                 'MDepartment3s.code',
             ],
+            // 結合テーブル
+            'contain' => [
+                'MDepartment1s',
+                'MDepartment2s',
+                'MDepartment3s',
+            ],
+            // 並び順
             'order' => [
                 'MDepartment1s.code' => 'asc',
                 'MDepartment2s.code' => 'asc',

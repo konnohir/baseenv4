@@ -34,10 +34,10 @@ class RolesController extends AppController
             'delete' => ['requestTarget'],
         ]);
 
-        // 権限モデル
+        // 権限マスタ
         $this->loadModel('Roles');
 
-        // 権限詳細モデル
+        // 権限詳細マスタ
         $this->loadModel('RoleDetails');
     }
 
@@ -49,7 +49,29 @@ class RolesController extends AppController
     public function index()
     {
         // $roles: 権限一覧
-        $roles = $this->paginate($this->Roles);
+        $roles = $this->paginate($this->Roles, [
+            // 取得カラム
+            'fields' => [
+                // 主キー
+                'Roles.id',
+                // 権限名称
+                'Roles.name',
+                // 説明文
+                'Roles.description',
+                // 更新日時
+                'Roles.updated_at',
+            ],
+            // 整列可能カラム
+            'sortableFields' => [
+                'Roles.id',
+                'Roles.name',
+                'Roles.description',
+            ],
+            // 並び順
+            'order' => [
+                'Roles.id' => 'asc'
+            ],
+        ]);
 
         $this->set(compact('roles'));
     }
@@ -127,7 +149,7 @@ class RolesController extends AppController
     
             foreach ($targets as $id => $requestData) {
                 // $role: 権限エンティティ
-                $role = $this->Roles->find('detail', compact('id'))->firstOrFail();
+                $role = $this->Roles->get($id);
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Roles->doDeleteEntity($role, $requestData)) {
@@ -139,7 +161,7 @@ class RolesController extends AppController
             }
 
             // 全データDB保存成功時: コミット
-            return $this->success('I_DELETE', $this->title);
+            return $this->success('I-DELETE', $this->title);
         });
 
         $this->set(compact('result'));

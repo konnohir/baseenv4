@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\MOrganization;
+use Cake\Collection\Collection;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\Validation\Validator;
@@ -32,61 +33,6 @@ class MOrganizationsTable extends AppTable
     }
 
     /**
-     * バリデーションルール
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return Validator
-     */
-    public function validationDefault(Validator $validator): Validator
-    {
-        parent::validationDefault($validator);
-
-        $validator->requirePresence('m_department1_id', false);
-
-        return $validator;
-    }
-
-    /**
-     * モデルの概要を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return \Cake\ORM\Query
-     */
-    protected function findFilteredData(Query $query, array $option)
-    {
-        // $map: 検索マッピング設定 (array)
-        $map = [];
-
-        // $conditions: 検索条件の配列 (array)
-        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
-
-        return $query
-            ->contain('MDepartment1s')
-            ->contain('MDepartment2s')
-            ->contain('MDepartment3s')
-            ->where($conditions);
-    }
-
-    /**
-     * モデルの詳細を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return \Cake\ORM\Query
-     */
-    protected function findDetail(Query $query, array $option)
-    {
-        if (isset($option['id'])) {
-            $query->where([$this->getAlias() . '.id' => $option['id']]);
-        }
-        return $query
-            ->contain('MDepartment1s')
-            ->contain('MDepartment2s')
-            ->contain('MDepartment3s');
-    }
-
-    /**
      * エンティティ編集 (部門階層1: 本部)
      * 
      * @param \App\Model\Entity\MOrganization $entity エンティティ
@@ -110,7 +56,8 @@ class MOrganizationsTable extends AppTable
                         'code', 'name',
                     ]
                 ]
-            ]
+            ],
+            'validate' => 'edit',
         ]);
         return $this->save($entity);
     }
@@ -143,7 +90,8 @@ class MOrganizationsTable extends AppTable
                         'code', 'name',
                     ],
                 ]
-            ]
+            ],
+            'validate' => 'edit',
         ]);
         return $this->save($entity);
     }
@@ -177,7 +125,8 @@ class MOrganizationsTable extends AppTable
                         'code', 'name',
                     ]
                 ]
-            ]
+            ],
+            'validate' => 'edit',
         ]);
         return $this->save($entity);
     }
@@ -205,4 +154,85 @@ class MOrganizationsTable extends AppTable
         ]);
         return $this->save($entity);
     }
+
+    /**
+     * 編集バリデーションルール
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return Validator
+     */
+    public function validationEdit(Validator $validator): Validator
+    {
+        // デフォルトバリデーション適用
+        $this->validationDefault($validator);
+
+        $validator->requirePresence('m_department1_id', false);
+
+        return $validator;
+    }
+    /**
+     * 検索条件
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return \Cake\ORM\Query
+     */
+    protected function findFilteredData(Query $query, array $option)
+    {
+        // $map: 検索マッピング設定 (array)
+        $map = [];
+
+        // $conditions: 検索条件の配列 (array)
+        $conditions = $this->buildConditions($map, $option['filter'] ?? []);
+
+        // $query->formatResults(function ($results) {
+        //     $results = $results->toArray();
+        //     $prevMDepartment1Id = 0;
+        //     $prevMDepartment2Id = 0;
+        //     $index1 = 0;
+        //     $index2 = 0;
+        //     foreach($results as $index => $row) {
+        //         if ($row->m_department2_id === $prevMDepartment2Id) {
+        //             $results[$index2]->m_department2->rowspan++;
+        //         }else {
+        //             if (!isset($results[$index]->m_department2)) {
+        //                 $results[$index]->m_department2 = new \stdClass();
+        //             }
+        //             $results[$index]->m_department2->rowspan = 1;
+        //             $prevMDepartment2Id = $row->m_department2_id;
+        //             $index2 = $index;
+        //         }
+        //         if ($row->m_department1_id === $prevMDepartment1Id) {
+        //             $results[$index1]->m_department1->rowspan++;
+        //         }else {
+        //             $results[$index]->m_department1->rowspan = 1;
+        //             $prevMDepartment1Id = $row->m_department1_id;
+        //             $index1 = $index;
+        //         }
+        //     }
+
+        //     return new Collection($results);
+        // });
+
+        return $query->where($conditions);
+    }
+
+    /**
+     * モデルの詳細を取得する
+     * 
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $option オプション
+     * @return \Cake\ORM\Query
+     */
+    protected function findDetail(Query $query, array $option)
+    {
+        if (isset($option['id'])) {
+            $query->where([$this->getAlias() . '.id' => $option['id']]);
+        }
+        return $query
+            ->contain('MDepartment1s')
+            ->contain('MDepartment2s')
+            ->contain('MDepartment3s');
+    }
+
 }

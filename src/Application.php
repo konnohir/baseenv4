@@ -19,7 +19,6 @@ declare(strict_types=1);
 namespace App;
 
 use Cake\Core\Configure;
-use Cake\Core\Exception\MissingPluginException;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
@@ -57,7 +56,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         parent::bootstrap();
 
         if (PHP_SAPI === 'cli') {
-            // $this->bootstrapCli();
+            // $this->addOptionalPlugin('Bake');
+            // $this->addOptionalPlugin('Migrations');
         }
 
         /*
@@ -67,8 +67,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (Configure::read('debug') && Configure::read('DebugKit.use')) {
             $this->addPlugin('DebugKit');
         }
-        $this->addPlugin('Authentication');
-        $this->addPlugin('Authorization');
+        
+        // $this->addPlugin('Authentication');
+        // $this->addPlugin('Authorization');
     }
 
     /**
@@ -94,23 +95,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
-     * Bootrapping for CLI application.
-     *
-     * That is when running commands.
-     *
-     * @return void
-     */
-    protected function bootstrapCli(): void
-    {
-        try {
-            $this->addPlugin('Bake');
-            $this->addPlugin('Migrations');
-        } catch (MissingPluginException $e) {
-            // Do not halt if the plugin is missing
-        }
-    }
-
-    /**
      * Return authentication service provider instance.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Request
@@ -118,12 +102,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
+        $useRedirect = ($request->getServerParams()['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest';
         $service = new AuthenticationService([
-            'unauthenticatedRedirect' => '/login',
+            'unauthenticatedRedirect' => $useRedirect ? '/login' : null,
             'queryParam' => 'redirect',
         ]);
-
-        // Load the authenticators, you want session first
         $service->loadAuthenticator('Authentication.Session');
         $service->loadAuthenticator('Authentication.Form', [
             'fields' => [
@@ -132,8 +115,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ],
             'loginUrl' => '/login',
         ]);
-
-        // Load identifiers
         $service->loadIdentifier('Authentication.Password', [
             'fields' => [
                 'username' => 'email',

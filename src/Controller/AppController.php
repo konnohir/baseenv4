@@ -7,7 +7,6 @@ namespace App\Controller;
 use Cake\Core\Configure;
 use Cake\Controller\Controller;
 use Cake\Datasource\EntityInterface;
-use Cake\Http\Exception\UnauthorizedException;
 use Cake\I18n\I18n;
 use Konnohir\Controller\PaginateTrait;
 
@@ -33,11 +32,6 @@ class AppController extends Controller
         $this->loadComponent('Authorization.Authorization');
 
         $user = $this->request->getAttribute('identity');
-
-        // ajax通信時はログイン画面にリダイレクトせずに例外を発生させるfix
-        if ($user === null && $this->request->is('ajax')) {
-            throw new UnauthorizedException();
-        }
 
         // 言語設定
         if (isset($user->language)) {

@@ -171,8 +171,8 @@ class OrganizationsController extends AppController
             }
             // DB保存成功時: 詳細画面へ遷移
             if ($result) {
-                $this->Flash->success(__('I-SAVE', __($this->title)));
-                return $this->redirect(['action' => 'view', $mOrganization->id]);
+                // I-SAVE: 組織を保存しました。
+                return $this->success('I-SAVE', __($this->title), ['action' => 'view', $mOrganization->id]);
             }
 
             // DB保存失敗時: 画面を再表示

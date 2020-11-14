@@ -120,9 +120,7 @@ class RolesController extends AppController
             // DB保存成功時: 詳細画面へ遷移
             if ($this->Roles->doEditEntity($role, $this->request->getData())) {
                 // I-SAVE: 権限を保存しました。
-                $this->success('I-SAVE', $this->title);
-
-                return $this->redirect(['action' => 'view', $role->id]);
+                return $this->success('I-SAVE', __($this->title), ['action' => 'view', $role->id]);
             }
 
             // DB保存失敗時: 画面を再表示

@@ -135,8 +135,8 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             // DB保存成功時: 詳細画面へ遷移
             if ($this->Users->doEditEntity($user, $this->request->getData())) {
-                $this->Flash->success(__('I-SAVE', __($this->title)));
-                return $this->redirect(['action' => 'view', $user->id]);
+                // I-SAVE: ユーザーを保存しました。
+                return $this->success('I-SAVE', __($this->title), ['action' => 'view', $user->id]);
             }
 
             // DB保存失敗時: 画面を再表示
@@ -221,11 +221,11 @@ class UsersController extends AppController
      */
     public function passwordIssue()
     {
-        // $csv: CSV出力データの配列
-        $csv = [];
+        // $users: CSV出力データの配列
+        $users = [];
 
         // $result: トランザクションの結果 (boolean)
-        $result = $this->Users->getConnection()->transactional(function () use (&$csv) {
+        $result = $this->Users->getConnection()->transactional(function () use (&$users) {
             // $targets: 対象データの配列 (array)
             $targets = $this->request->getData('targets');
 
@@ -235,8 +235,8 @@ class UsersController extends AppController
 
                 // DB保存成功時: 次の対象データの処理へ進む
                 if ($this->Users->doIssuePassword($user, $requestData)) {
-                    // CSV出力用にデータを退避
-                    $csv[] = [$user->id, $user->email, $user->plain_password];
+                    // CSV出力用にデータを退避する
+                    $users[] = $user;
                     continue;
                 }
 
@@ -249,15 +249,11 @@ class UsersController extends AppController
         });
 
         if ($result) {
-            // CSVヘッダ
-            array_unshift($csv, ['ID', 'Email', 'Password']);
             // CSV ダウンロード
-            $this->set('csv', $csv);
             $this->viewBuilder()->setClassName('Csv');
-            $this->setResponse($this->getResponse()->withDownload('password.csv')->withType('text/csv'));
+            $this->set(compact('users'));
             return;
         }
-
         $this->set(compact('result'));
     }
 

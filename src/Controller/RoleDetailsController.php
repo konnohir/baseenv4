@@ -133,8 +133,8 @@ class RoleDetailsController extends AppController
         if ($this->request->is(['post', 'put', 'patch'])) {
             // DB保存成功時: 詳細画面へ遷移
             if ($this->RoleDetails->doEditEntity($roleDetail, $this->request->getData())) {
-                $this->success('I-SAVE',$this->title);
-                return $this->redirect(['action' => 'view', $roleDetail->id]);
+                // I-SAVE: 権限詳細を保存しました。
+                return $this->success('I-SAVE', __($this->title), ['action' => 'view', $roleDetail->id]);
             }
 
             // DB保存失敗時: 画面を再表示

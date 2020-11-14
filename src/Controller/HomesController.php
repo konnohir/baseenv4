@@ -67,7 +67,6 @@ class HomesController extends AppController
 
     /**
      * プロファイル画面
-     * ユーザー情報はセッションから取得する
      *
      * @return \Cake\Http\Response|null
      */
@@ -77,7 +76,10 @@ class HomesController extends AppController
         $id = $this->Authentication->getIdentityData('id');
 
         // $user: ユーザー
-        $user = $this->Users->get($id, ['contain' => 'Roles']);
+        $user = $this->Users->get($id, [
+            // 結合テーブル
+            'contain' => 'Roles'
+        ]);
 
         $this->set(compact('user'));
     }
@@ -100,8 +102,7 @@ class HomesController extends AppController
             // DB保存成功時: プロファイル画面へ遷移
             if ($this->Users->doChangePassword($user, $this->request->getData())) {
                 // I-PASSWORD-CHANGE: パスワードを変更しました。
-                $this->Flash->success(__('I-PASSWORD-CHANGE'));
-                return $this->redirect(['action' => 'profile']);
+                return $this->success('I-PASSWORD-CHANGE', ['action' => 'profile']);
             }
 
             // DB保存失敗時: 画面を再表示

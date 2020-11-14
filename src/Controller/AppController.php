@@ -42,15 +42,24 @@ class AppController extends Controller
     /**
      * Util: 成功メッセージをセットする
      * 
-     * @param mixed $successMessage メッセージ (可変長引数リスト)
+     * @param mixed $successMessage メッセージ (可変長引数リスト), 遷移先 (オプション)
      * @return bool true
      */
     protected function success(...$successMessage)
     {
+        // 引数の末尾を取得
+        $route = end($successMessage);
+        if (is_array($route)) {
+            array_pop($successMessage);
+        }
+
+        // フラッシュメッセージ出力
         if (!empty($successMessage)) {
             $this->Flash->success(__(...$successMessage));
         }
-        return true;
+        
+        // 引数の末尾が配列(route)ならリダイレクトする
+        return is_array($route) ? $this->redirect($route) : true;
     }
 
     /**
@@ -80,10 +89,12 @@ class AppController extends Controller
 
         // デバッグログ
         if (Configure::read('debug')) {
-            $this->log(var_export($entity->getErrors(), true), 'debug');
+            $this->log($this->name . '.' . $this->request->getParam('action') . ' validation error:' . PHP_EOL . var_export($entity->getErrors(), true), 'debug');
         }
         
+        // フラッシュメッセージ出力
         $this->Flash->error($errorMessage);
+
         return false;
     }
 }

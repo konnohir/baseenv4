@@ -47,8 +47,6 @@ class MOrganizationsTable extends AppTable
                 '_lock',
                 // association
                 'm_department1',
-                'm_department1s',
-                'MDepartment1s',
             ],
             'associated' => [
                 'MDepartment1s' => [
@@ -215,24 +213,6 @@ class MOrganizationsTable extends AppTable
         // });
 
         return $query->where($conditions);
-    }
-
-    /**
-     * モデルの詳細を取得する
-     * 
-     * @param \Cake\ORM\Query $query クエリオブジェクト
-     * @param array $option オプション
-     * @return \Cake\ORM\Query
-     */
-    protected function findDetail(Query $query, array $option)
-    {
-        if (isset($option['id'])) {
-            $query->where([$this->getAlias() . '.id' => $option['id']]);
-        }
-        return $query
-            ->contain('MDepartment1s')
-            ->contain('MDepartment2s')
-            ->contain('MDepartment3s');
     }
 
 }

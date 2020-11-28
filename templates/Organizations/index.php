@@ -2,7 +2,7 @@
 
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\MOrganization[] $tableRows
+ * @var \App\Model\Entity\MOrganization[] $mOrganizations
  */
 ?>
 <section>
@@ -71,7 +71,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($tableRows as $mOrganization) : ?>
+                <?php foreach ($mOrganizations as $mOrganization) : ?>
                     <tr>
                         <td>
                             <?php
@@ -91,7 +91,7 @@
                         <td>
                             <?php
                             // 部店名
-                            if ($mOrganization->m_department2_id !== null) {
+                            if ($mOrganization->m_department2 !== null) {
                                 echo $this->Html->link($mOrganization->m_department2->name, [
                                     'action' => 'view',
                                     $mOrganization->id,
@@ -102,7 +102,7 @@
                         <td>
                             <?php
                             // 課名
-                            if ($mOrganization->m_department3_id != null) {
+                            if ($mOrganization->m_department3 != null) {
                                 echo $this->Html->link($mOrganization->m_department3->name, [
                                     'action' => 'view',
                                     $mOrganization->id,

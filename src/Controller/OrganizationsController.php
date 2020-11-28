@@ -51,16 +51,12 @@ class OrganizationsController extends AppController
      */
     public function index()
     {
-        // $tableRows: 組織一覧
-        $tableRows = $this->paginate($this->MOrganizations, [
+        // $mOrganizations: 組織一覧
+        $mOrganizations = $this->paginate($this->MOrganizations, [
             // 取得カラム
             'fields' => [
                 // 主キー
                 'MOrganizations.id',
-                // 結合キー
-                'MOrganizations.m_department1_id',
-                'MOrganizations.m_department2_id',
-                'MOrganizations.m_department3_id',
                 // 本部
                 'MDepartment1s.name',
                 'MDepartment1s.code',
@@ -96,7 +92,7 @@ class OrganizationsController extends AppController
             ],
         ]);
 
-        $this->set(compact('tableRows'));
+        $this->set(compact('mOrganizations'));
     }
 
     /**
@@ -108,7 +104,14 @@ class OrganizationsController extends AppController
     public function view($mOrganizationId)
     {
         // $mOrganization: 組織エンティティ
-        $mOrganization = $this->MOrganizations->find('detail', ['id' => $mOrganizationId])->firstOrFail();
+        $mOrganization = $this->MOrganizations->get($mOrganizationId, [
+            // 結合テーブル
+            'contain' => [
+                'MDepartment1s',
+                'MDepartment2s',
+                'MDepartment3s',
+            ],
+        ]);
 
         $this->set(compact('mOrganization'));
     }
@@ -132,13 +135,14 @@ class OrganizationsController extends AppController
     public function edit($mOrganizationId = null)
     {
         if ($mOrganizationId !== null) {
-            $mOrganization = $this->MOrganizations->find()
-                ->contain('MDepartment1s')
-                ->contain('MDepartment2s')
-                ->contain('MDepartment3s')
-                ->where([
-                    'MOrganizations.id' => $mOrganizationId
-                ])->firstOrFail();
+            $mOrganization = $this->MOrganizations->get($mOrganizationId, [
+                // 結合テーブル
+                'contain' => [
+                    'MDepartment1s',
+                    'MDepartment2s',
+                    'MDepartment3s',
+                ],
+            ]);
         } else {
             $mOrganization = $this->MOrganizations->newEmptyEntity();
         }
@@ -205,10 +209,10 @@ class OrganizationsController extends AppController
         $result = $this->MOrganizations->getConnection()->transactional(function () {
             // $targets: 対象データの配列 (array)
             $targets = $this->request->getData('targets');
-    
+
             // 削除対象のIDの配列
             $targetIds = [];
-            foreach(array_keys($targets) as $id) {
+            foreach (array_keys($targets) as $id) {
                 $targetIds[$id] = $id;
             }
 
@@ -235,7 +239,7 @@ class OrganizationsController extends AppController
                         if ($this->MOrganizations->doDeleteEntity($relatedOrganization, ['_lock' => $relatedOrganization->_lock])) {
                             continue;
                         }
-        
+
                         // DB保存失敗時: ロールバック
                         return $this->failed($relatedOrganization);
                     }

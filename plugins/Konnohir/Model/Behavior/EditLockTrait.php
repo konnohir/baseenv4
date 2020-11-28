@@ -63,8 +63,8 @@ trait EditLockTrait
             ->set($data)
             ->where($primaryKey);
 
-        if (!empty($entity->_lock)) {
-            $query->where([$this->getAlias() . '.updated_at' => $entity->_lock]);
+        if (!empty($entity->_lockReadonly)) {
+            $query->where([$this->getAlias() . '.updated_at' => $entity->_lockReadonly]);
         }
 
         $statement = $query->execute();
@@ -72,7 +72,7 @@ trait EditLockTrait
         $success = false;
         if ($statement->errorCode() === '00000') {
             if ($statement->rowCount()) {
-                $entity->_lock = null;
+                $entity->_lock = '';
                 $success = $entity;
             } else {
                 $entity->setError('_lock', __('E-V-LOCK'));

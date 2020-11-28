@@ -27,9 +27,6 @@ class TimestampBehavior extends Behavior
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         if (!$entity->isDirty('updated_at')) {
-            if (!isset($entity->_lock)) {
-                $entity->_lock = '';
-            }
             $entity->updated_at = new FrozenTime();
         }
         return $entity;

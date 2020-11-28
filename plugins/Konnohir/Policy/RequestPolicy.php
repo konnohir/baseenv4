@@ -17,14 +17,9 @@ use Cake\Core\Configure;
 class RequestPolicy implements RequestPolicyInterface
 {
     /**
-     * @var string
+     * @var string Public controller name
      */
-    public static $publicController = 'Homes';
-
-    /**
-     * @var \Cake\Datasource\EntityInterface
-     */
-    protected static $model = null;
+    public const PUBLIC_CONTROLLER = 'Homes';
 
     /**
      * @var array Cache storage
@@ -40,21 +35,27 @@ class RequestPolicy implements RequestPolicyInterface
      */
     public function canAccess($identity, ServerRequest $request)
     {
-        if (!isset($identity)) {
-            // Authentication middleware handle this request
+        if ($identity === null) {
+            // Authentication middleware will handle this request
             return true;
         }
 
-        if (Configure::read('debug')) {
-            // Allow DebugKit plugin access
-            if ($request->getParam('plugin') === 'DebugKit') {
-                return true;
-            }
+        if ($request->getParam('plugin') === 'DebugKit') {
+            // Allow DebugKit plugin access if debug mode
+            return Configure::read('debug');
+        }
+
+        $controller = $request->getParam('controller');
+        $action = $request->getParam('action');
+
+        if (!is_callable('App\\Controller\\' . $controller . 'Controller::' . $action)) {
+            // will be raised NotFoundException
+            return true;
         }
 
         return $this->check($identity->role_id, [
-            'controller' => $request->getParam('controller'),
-            'action' => $request->getParam('action'),
+            'controller' => $controller,
+            'action' => $action,
         ]);
     }
 
@@ -62,56 +63,37 @@ class RequestPolicy implements RequestPolicyInterface
      * Permission check
      *
      * @param int $roleId
-     * @param array $routes
+     * @param array $route
      * @return bool
      */
-    public static function check(int $roleId, array $routes)
+    public static function check(int $roleId, array $route)
     {
-        if (Configure::read('debug')) {
-            // Allow access by special role
-            if ($roleId === 1) {
-                // return true;
-            }
-        }
-
-        $controller = $routes['controller'] ?? '';
-        $action = $routes['action'] ?? 'index';
-
-        if ($controller === static::$publicController) {
+        $controller = $route['controller'] ?? '';
+        if ($controller === self::PUBLIC_CONTROLLER) {
             // Allow access to basic actions
             return true;
         }
-
-        if (!is_callable('App\\Controller\\' . $controller . 'Controller::' . $action)) {
-            // will be raised NotFoundException
-            return true;
-        }
-
-        if (isset(self::$cache[$controller][$action])) {
-            // Return cache data
-            return self::$cache[$controller][$action];
-        }
-
-        if (!isset(self::$model)) {
-            self::$model = TableRegistry::getTableLocator()->get('VPermissions');
-        }
-
-        $count = self::$model->find()
-            ->where([
-                'role_id' => $roleId,
-                'OR' => [
-                    [
-                        'controller' => $controller,
-                        'action' => $action,
-                    ],
-                    [
-                        'controller' => 'controllers',
-                        'action' => $controller,
+        $action = $route['action'] ?? 'index';
+        
+        if (!isset(self::$cache[$controller][$action])) {
+            $count = TableRegistry::getTableLocator()->get('VPermissions')->find()
+                ->where([
+                    'role_id' => $roleId,
+                    'OR' => [
+                        [
+                            'controller' => $controller,
+                            'action' => $action,
+                        ],
+                        [
+                            'controller' => 'controllers',
+                            'action' => $controller,
+                        ]
                     ]
-                ]
-            ])
-            ->count();
+                ])
+                ->count();
+            self::$cache[$controller][$action] = ($count > 0);
+        }
 
-        return self::$cache[$controller][$action] = ($count > 0);
+        return self::$cache[$controller][$action];
     }
 }

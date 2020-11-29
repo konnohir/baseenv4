@@ -38,6 +38,6 @@ if (Configure::read('debug')) : ?>
         <?= __('LABEL-SYSTEM-ERROR') ?>
     </p>
     <small>
-        <?= $code ?> <?= __d('cake', $message) ?>
+        <?= h($code) ?> <?= h($message) ?>
     </small>
 </section>

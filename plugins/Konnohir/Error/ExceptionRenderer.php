@@ -55,7 +55,7 @@ class ExceptionRenderer extends BaseExceptionRenderer
     {
         foreach($this->redirectToNotFoundExceptions as $item) {
             if ($exception instanceof $item) {
-                return __d('cake', 'Not Found');
+                return 'Not Found';
             }
         }
         return parent::_message($exception, $code);

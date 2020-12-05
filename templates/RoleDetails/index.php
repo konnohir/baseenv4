@@ -6,8 +6,8 @@
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
-    <div class="btn-group mb-2">
+    <h2><?= __('RoleDetails') ?></h2>
+    <div class="btn-group">
         <?php
         // 新規作成
         echo $this->Form->customButton(__('BTN-ADD'), [
@@ -26,12 +26,12 @@
         ]);
         ?>
     </div>
-    <div class="pagination-wrap mb-2">
+    <div class="pagination-wrap">
         <ul class="pagination pagination-sm">
             <?= $this->Paginator->counter() ?>
         </ul>
     </div>
-    <div class="table-wrap mb-2">
+    <div class="table-wrap">
         <table>
             <thead>
                 <tr>

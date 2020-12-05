@@ -6,13 +6,13 @@
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('Users') ?></h2>
+    <h2><?= __('Users') ?></h2>
     <?= $this->Form->create($user, ['type' => 'post']) ?>
     <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');
     ?>
-    <div class="dl-wrap dl-wrap-form mb-4">
+    <div class="dl-wrap dl-wrap-form">
         <dl class="row">
             <dt class="col-md required">
                 <?= $this->Form->label('email', __('Users.email')) ?>

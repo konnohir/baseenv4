@@ -6,8 +6,8 @@
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('MCompanies') ?></h2>
-    <div class="dl-wrap mb-4">
+    <h2><?= __('MCompanies') ?></h2>
+    <div class="dl-wrap">
         <dl class="row">
             <dt class="col-md"><?= __('コード') ?></dt>
             <dd class="col-md"><?= h($mCompany->code) ?></dd>
@@ -49,7 +49,7 @@
             </td>
         </tr>
     </table>
-    <div class="btn-group my-2">
+    <div class="btn-group">
         <?= $this->Form->customButton(__('BTN-BACK'), [
             // 戻る
             'data-action' => ['action' => 'index'],

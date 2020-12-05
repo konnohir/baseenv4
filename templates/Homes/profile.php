@@ -5,8 +5,10 @@
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('Profile') ?></h2>
-    <div class="dl-wrap mb-2">
+    <!-- タイトル -->
+    <h2><?= __('Profile') ?></h2>
+    <!-- データ出力領域-->
+    <div class="dl-wrap">
         <?php
             // メールアドレス
             echo $this->element('dl', [
@@ -21,7 +23,8 @@
             ]);
         ?>
     </div>
-    <div class="btn-group my-2">
+    <!-- ボタン表示領域 -->
+    <div class="btn-group">
         <?php
             // パスワード変更
             echo $this->Form->customButton(__('BTN-PASSWORD-CHANGE'), [

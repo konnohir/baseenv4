@@ -11,7 +11,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
 
 ?>
 <section>
-    <h2 class="mb-2"><?= __('Organizations') ?></h2>
+    <h2><?= __('Organizations') ?></h2>
 
     <?php
     // 編集種別選択
@@ -55,7 +55,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         // 組織編集区分 (1: 本部、2: 部店、3: 課)
         echo $this->Form->hidden('edit_type', ['value' => 1]);
         ?>
-        <div class="dl-wrap dl-wrap-form mb-4">
+        <div class="dl-wrap dl-wrap-form">
             <dl class="row">
                 <dt class="col-md required">
                     <?= $this->Form->label('MDepartment1s.code', __('MDepartment1s.code')) ?>
@@ -109,7 +109,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         // 組織編集区分 (1: 本部、2: 部店、3: 課)
         echo $this->Form->hidden('edit_type', ['value' => 2]);
         ?>
-        <div class="dl-wrap dl-wrap-form mb-4">
+        <div class="dl-wrap dl-wrap-form">
             <dl class="row">
                 <dt class="col-md required">
                     <?= $this->Form->label('MDepartment2s.m_department1_id', __('MOrganizations.m_department1_id')) ?>
@@ -180,7 +180,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
         // 組織編集区分 (1: 本部、2: 部店、3: 課)
         echo $this->Form->hidden('edit_type', ['value' => 3]);
         ?>
-        <div class="dl-wrap dl-wrap-form mb-4">
+        <div class="dl-wrap dl-wrap-form">
             <dl class="row">
                 <dt class="col-md required">
                     <?= $this->Form->label('MDepartment3s.m_department1_id', __('MOrganizations.m_department1_id')) ?>

@@ -5,8 +5,8 @@
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('Users') ?></h2>
-    <div class="dl-wrap mb-4">
+    <h2><?= __('Users') ?></h2>
+    <div class="dl-wrap">
         <dl class="row">
             <?php // メールアドレス ?>
             <dt class="col-md"><?= __('Users.email') ?></dt>
@@ -28,7 +28,7 @@
             <dd class="col-md"><?= h($user->v_user_remark->is_password_issued ? '〇' : '') ?></dd>
         </dl>
     </div>
-    <div class="btn-group my-2">
+    <div class="btn-group">
         <?php
             // 戻る
             echo $this->Form->customButton(__('BTN-BACK'), [

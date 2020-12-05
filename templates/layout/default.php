@@ -9,7 +9,7 @@
         $this->Html->css('vendor/bootstrap.min'),
         $this->Html->css('vendor/material-design-icons/material-design-icons'),
         $this->Html->css('common/common'),
-        // ページ毎のスタイルシート
+        // ページ固有のスタイルシート
         $this->fetch('css')
     ?>
 
@@ -20,18 +20,16 @@
         <h1><a href="/" class="navbar-brand"><?= __('BaseEnv4') ?></a></h1>
         <?= $this->element('navbar') ?>
     </header>
-    <main class="container-fluid">
-        <div class="<?= $this->getName() ?> <?= $this->getRequest()->getParam('action') ?> mx-auto py-3">
-            <?php 
-                // DB接続エラー時に発生する例外を抑制するfix
-                try {
-                    echo $this->Flash->render();
-                }catch(Exception $e) {
-                    // pass
-                }
-            ?>
-            <?= $this->fetch('content') ?>
-        </div>
+    <main class="<?= $this->getName(), ' ', $this->getRequest()->getParam('action') ?> mx-auto p-3">
+        <?php 
+            // DB接続エラー時に発生する例外を抑制するfix
+            try {
+                echo $this->Flash->render();
+            }catch(Exception $e) {
+                // pass
+            }
+        ?>
+        <?= $this->fetch('content') ?>
     </main>
     <footer>
         <p class="text-center border-top">© 2020 konnohir</p>
@@ -44,7 +42,7 @@
         $this->Html->script('vendor/jquery-3.4.1.min'),
         $this->Html->script('vendor/bootstrap.bundle.min'),
         $this->Html->script('common/common'),
-        // ページ毎のJavaScript
+        // ページ固有のJavaScript
         $this->fetch('script')
     ?>
 

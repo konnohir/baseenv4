@@ -5,7 +5,7 @@
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('MCompanies') ?></h2>
+    <h2><?= __('MCompanies') ?></h2>
     <div class="row">
     <div class="col-lg-4">
     <div class="card mb-2">
@@ -49,7 +49,7 @@
     </div>
     <div class="col-lg-8">
 
-    <div class="btn-group mb-2">
+    <div class="btn-group">
         <?= $this->Form->customButton(__('BTN-ADD'), [
             // 新規作成
             'data-action' => ['action' => 'add'],
@@ -81,7 +81,7 @@
         ])
         ?>
     </div>
-    <div class="pagination-wrap mb-2">
+    <div class="pagination-wrap">
         <ul class="pagination pagination-sm">
             <?= $this->Paginator->counter() ?>
             <?= $this->Paginator->first() ?>
@@ -89,7 +89,7 @@
             <?= $this->Paginator->last() ?>
         </ul>
     </div>
-    <div class="table-wrap mb-2">
+    <div class="table-wrap">
         <table>
             <thead>
                 <tr>

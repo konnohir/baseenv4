@@ -6,7 +6,7 @@
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('MCompanies') ?></h2>
+    <h2><?= __('MCompanies') ?></h2>
     <div class="form">
         <?= $this->Form->create($mCompany) ?>
         <?= $this->Form->hidden('_lock') ?>

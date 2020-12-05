@@ -23,6 +23,7 @@ ul {
     -webkit-overflow-scrolling: touch;
     border: solid 1px black;
     min-height: 584px;
+    margin-bottom: 1.5rem;
 }
 
 .table-wrap table {
@@ -77,6 +78,7 @@ ul {
 
 .pagination-wrap {
     float: right;
+    margin-bottom: .5rem;
 }
 
 .pagination-wrap+* {
@@ -91,6 +93,7 @@ ul {
 
 .dl-wrap {
     border-top: solid 1px rgb(222, 226, 230);
+    margin-bottom: 1.5rem;
 }
 
 .dl-wrap dl {
@@ -113,6 +116,10 @@ ul {
 }
 
 /** Button field wrap */
+
+.btn-group {
+    margin-bottom: .5rem;
+}
 
 .button-wrap {
     text-align: center;

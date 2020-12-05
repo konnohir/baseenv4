@@ -9,8 +9,8 @@ $acoIds = array_column((array) $roleDetail->acos, 'id', 'id');
 $this->Html->script('role-details/role-details', ['block' => true]);
 ?>
 <section>
-    <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
-    <div class="dl-wrap mb-4">
+    <h2><?= __('RoleDetails') ?></h2>
+    <div class="dl-wrap">
         <dl class="row">
             <?php // 親権限 ?>
             <dt class="col-md"><?= __('RoleDetails.parent_id') ?></dt>
@@ -77,7 +77,7 @@ $this->Html->script('role-details/role-details', ['block' => true]);
             </dd>
         </dl>
     </div>
-    <div class="btn-group my-2">
+    <div class="btn-group">
         <?php
         // 戻る
         echo $this->Form->customButton(__('BTN-BACK'), [

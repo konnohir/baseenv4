@@ -5,61 +5,36 @@
  */
 ?>
 <section>
-    <h2 class="mb-2"><?= __('Password') ?></h2>
-    <?= $this->Form->create($user, ['type' => 'post']) ?>
+    <!-- タイトル -->
+    <h2><?= __('Password') ?></h2>
+    <!-- データ入力領域-->
+    <?= $this->Form->create($user, ['type' => 'post', 'templates' => $this->Form->formTemplates]) ?>
     <?= $this->Form->hidden('_lock') ?>
-    <div class="dl-wrap dl-wrap-form mb-4">
-        <dl class="row">
-            <dt class="col-md required">
-                <?php
-                    // 現在のパスワード
-                    echo $this->Form->label('password', __('Users.current_password'));
-                ?>
-            </dt>
-            <dd class="col-md">
-                <?php
-                    echo $this->Form->customControl('current_password', [
-                        'type' => 'password',
-                        'label' => false,
-                    ]);
-                ?>
-            </dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-md required">
-                <?php
-                    // 新しいパスワード
-                    echo $this->Form->label('new_password', __('Users.new_password'));
-                ?>
-            </dt>
-            <dd class="col-md">
-                <?php
-                    echo $this->Form->customControl('new_password', [
-                        'type' => 'password',
-                        'label' => false,
-                    ]);
-                ?>
-            </dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-md required">
-                <?php
-                    // 新しいパスワード（再入力）
-                    echo $this->Form->label('password', __('Users.password.2'));
-                ?>
-            </dt>
-            <dd class="col-md">
-                <?php
-                    echo $this->Form->customControl('password', [
-                        'type' => 'password',
-                        'label' => false,
-                        'value' => '',
-                    ]);
-                ?>
-            </dd>
-        </dl>
+    <div class="dl-wrap dl-wrap-form">
+        <?php
+            // 現在のパスワード
+            echo $this->Form->customControl('current_password', [
+                'type' => 'password',
+                'label' => __('Users.current_password'),
+                'required' => true,
+            ]);
+            // 新しいパスワード
+            echo $this->Form->customControl('new_password', [
+                'type' => 'password',
+                'label' => __('Users.new_password'),
+                'required' => true,
+            ]);
+            // 新しいパスワード（再入力）
+            echo $this->Form->customControl('password', [
+                'type' => 'password',
+                'label' => __('Users.password.2'),
+                'value' => '',
+                'required' => true,
+            ]);
+        ?>
     </div>
-    <div class="button-wrap py">
+    <!-- ボタン表示領域 -->
+    <div class="button-wrap">
         <?php
             // キャンセル
             echo $this->Form->customButton(__('BTN-CANCEL'), [

@@ -7,13 +7,13 @@
 $this->Html->script('role-details/role-details', ['block' => true]);
 ?>
 <section>
-    <h2 class="mb-2"><?= __('RoleDetails') ?></h2>
+    <h2><?= __('RoleDetails') ?></h2>
     <?= $this->Form->create($roleDetail, ['type' => 'post']) ?>
     <?php
         // 排他制御用フィールド
         echo $this->Form->hidden('_lock');
     ?>
-    <div class="dl-wrap dl-wrap-form mb-4">
+    <div class="dl-wrap dl-wrap-form">
         <dl class="row">
             <dt class="col-md required">
                 <?= $this->Form->label('parent_id', __('RoleDetails.parent_id')) ?>

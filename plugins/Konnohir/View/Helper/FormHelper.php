@@ -45,6 +45,12 @@ class FormHelper extends Helper
      */
     public $helpers = ['Url', 'Html', 'Permission'];
 
+    public $formTemplates = [
+        'formGroup' => '<dt class="col-md">{{label}}</dt><dd class="col-md">{{input}}{{error}}</dd>',
+        'inputContainer' => '<dl class="row{{required}}">{{content}}</dl>',
+        'inputContainerError' => '<dl class="row{{required}} error">{{content}}</dl>',
+    ];
+
     public function __construct(View $view, array $config = [])
     {
         $this->_defaultConfig['autoSetCustomValidity'] = false;
@@ -73,8 +79,12 @@ class FormHelper extends Helper
 
     public function customControl(string $fieldName, array $options = []): string
     {
-        $options['templates'] = [];
-        $options['templateVars'] = [];
+        if (!isset($options['templates'])) {
+            $options['templates'] = [];
+        }
+        if (!isset($options['templateVars'])) {
+            $options['templateVars'] = [];
+        }
 
         if (isset($options['customButton'])) {
             $label = $options['customButton']['label'] ?? '';

@@ -64,17 +64,19 @@
         </div>
         <?= $this->Form->customButton(__('追加'), ['class' => 'btn-success', 'onclick' => '$("#noticeAddForm").removeClass("d-none");$("#noticeAddForm input").prop("disabled", false);$(this).addClass("d-none");']) ?>
 
-        <div class="form-group text-center py-4">
-            <?= $this->Form->customButton(__('BTN-CANCEL'), [
-                // キャンセル
-                'data-action' => ['action' => 'index'],
-                'class' => 'btn-secondary btn-cancel'
-            ]) ?>
-            <?= $this->Form->customButton(__('BTN-SAVE'), [
-                // 保存
-                'class' => 'btn-primary btn-submit'
-            ]) ?>
-        </div>
+        <div class="button-wrap">
+        <?php
+        // キャンセル
+        echo $this->Form->customButton(__('BTN-CANCEL'), [
+            'data-action' => ['action' => 'index'],
+            'class' => 'btn-secondary btn-cancel',
+        ]);
+        // 保存
+        echo $this->Form->customButton(__('BTN-SAVE'), [
+            'class' => 'btn-primary btn-submit',
+        ]);
+        ?>
+    </div>
         <?= $this->Form->end() ?>
     </div>
 </section>

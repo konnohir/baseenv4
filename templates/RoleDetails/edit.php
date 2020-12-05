@@ -98,16 +98,18 @@ $this->Html->script('role-details/role-details', ['block' => true]);
             </dd>
         </dl>
     </div>
-    <div class="form-group text-center py-4">
-        <?= $this->Form->customButton(__('BTN-CANCEL'), [
-            // キャンセル
+    <div class="button-wrap">
+        <?php
+        // キャンセル
+        echo $this->Form->customButton(__('BTN-CANCEL'), [
             'data-action' => ['action' => 'index'],
-            'class' => 'btn-secondary btn-cancel'
-        ]) ?>
-        <?= $this->Form->customButton(__('BTN-SAVE'), [
-            // 保存
-            'class' => 'btn-primary btn-submit'
-        ]) ?>
+            'class' => 'btn-secondary btn-cancel',
+        ]);
+        // 保存
+        echo $this->Form->customButton(__('BTN-SAVE'), [
+            'class' => 'btn-primary btn-submit',
+        ]);
+        ?>
     </div>
     <?= $this->Form->end() ?>
 </section>

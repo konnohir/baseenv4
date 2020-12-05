@@ -61,7 +61,7 @@ class HtmlHelper extends Helper
      * @return string An `<a />` element.
      * @link https://book.cakephp.org/4/en/views/helpers/html.html#creating-links
      */
-    public function customLink($title, $url = null, array $options = []): string
+    public function link($title, $url = null, array $options = []): string
     {
         if (is_array($url)) {
             if (!$this->Permission->check($url)) {
@@ -69,7 +69,7 @@ class HtmlHelper extends Helper
             }
         }
 
-        return $this->link($title, $url, $options);
+        return parent::link($title, $url, $options);
     }
 
 }

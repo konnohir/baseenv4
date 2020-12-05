@@ -59,7 +59,7 @@
             </dd>
         </dl>
     </div>
-    <div class="button-wrap my-2">
+    <div class="button-wrap py">
         <?php
             // キャンセル
             echo $this->Form->customButton(__('BTN-CANCEL'), [

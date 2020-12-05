@@ -31,7 +31,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
 
     <div id="EditForm0">
         <?= $this->Form->create(null, ['type' => 'post']) ?>
-        <div class="button-wrap py-4">
+        <div class="button-wrap">
             <?php
             // キャンセル
             echo $this->Form->customButton(__('BTN-CANCEL'), [
@@ -85,7 +85,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 </dd>
             </dl>
         </div>
-        <div class="button-wrap py-4">
+        <div class="button-wrap">
             <?php
             // キャンセル
             echo $this->Form->customButton(__('BTN-CANCEL'), [
@@ -156,7 +156,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 </dd>
             </dl>
         </div>
-        <div class="button-wrap py-4">
+        <div class="button-wrap">
             <?php
             // キャンセル
             echo $this->Form->customButton(__('BTN-CANCEL'), [
@@ -245,7 +245,7 @@ $this->Html->script('organizations/organizations', ['block' => true]);
                 </dd>
             </dl>
         </div>
-        <div class="button-wrap py-4">
+        <div class="button-wrap">
             <?php
             // キャンセル
             echo $this->Form->customButton(__('BTN-CANCEL'), [

@@ -28,11 +28,12 @@ class PermissionHelper extends Helper
 {
     public function check(array $routes = []): bool
     {
+        $request = $this->getView()->getRequest();
         $routes += [
-            'controller' => $this->getView()->getRequest()->getParam('controller'),
+            'controller' => $request->getParam('controller'),
             'action' => 'index',
         ];
-        $identity = $this->_View->getRequest()->getAttribute('identity');
+        $identity = $request->getAttribute('identity');
 
         return RequestPolicy::check($identity->role_id, $routes);
     }

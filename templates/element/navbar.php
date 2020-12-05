@@ -16,7 +16,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // 企業マスタ
-                echo $this->Html->customLink('<i class="material-icons">location_city</i>' . __('MCompanies'), ['controller' => 'MCompanies', 'action' => 'index'], [
+                echo $this->Html->link('<i class="material-icons">location_city</i>' . __('MCompanies'), ['controller' => 'MCompanies', 'action' => 'index'], [
                     'class' => 'nav-link',
                     'escape' => false,
                 ]);
@@ -25,7 +25,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // 組織マスタ
-                echo $this->Html->customLink('<i class="material-icons">format_list_bulleted</i>' . __('Organizations'), ['controller' => 'Organizations', 'action' => 'index'], [
+                echo $this->Html->link('<i class="material-icons">format_list_bulleted</i>' . __('Organizations'), ['controller' => 'Organizations', 'action' => 'index'], [
                     'class' => 'nav-link',
                     'escape' => false,
                 ]);
@@ -34,7 +34,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // ユーザーマスタ
-                echo $this->Html->customLink('<i class="material-icons">person</i>' . __('Users'), ['controller' => 'Users', 'action' => 'index'], [
+                echo $this->Html->link('<i class="material-icons">person</i>' . __('Users'), ['controller' => 'Users', 'action' => 'index'], [
                     'class' => 'nav-link',
                     'escape' => false,
                 ]);
@@ -43,7 +43,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // 権限マスタ
-                echo $this->Html->customLink('<i class="material-icons">group</i>' . __('Roles'), ['controller' => 'Roles', 'action' => 'index'], [
+                echo $this->Html->link('<i class="material-icons">group</i>' . __('Roles'), ['controller' => 'Roles', 'action' => 'index'], [
                     'class' => 'nav-link',
                     'escape' => false,
                 ]);
@@ -52,7 +52,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // 権限詳細マスタ
-                echo $this->Html->customLink('<i class="material-icons">settings</i>' . __('RoleDetails'), ['controller' => 'RoleDetails', 'action' => 'index'], [
+                echo $this->Html->link('<i class="material-icons">settings</i>' . __('RoleDetails'), ['controller' => 'RoleDetails', 'action' => 'index'], [
                     'class' => 'nav-link',
                     'escape' => false,
                 ]);
@@ -64,7 +64,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // キャッシュクリア (デバッグ用)
-                echo $this->Html->customLink('🔄', ['controller' => 'Homes', 'action' => 'refresh'], [
+                echo $this->Html->link('🔄', ['controller' => 'Homes', 'action' => 'refresh'], [
                     'class' => 'nav-link'
                 ]);
             ?>
@@ -73,7 +73,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // プロファイル
-                echo $this->Html->customLink($this->Identity->get('email'), ['controller' => 'Homes', 'action' => 'profile'], [
+                echo $this->Html->link($this->Identity->get('email'), ['controller' => 'Homes', 'action' => 'profile'], [
                     'class' => 'nav-link'
                 ]);
             ?>
@@ -81,7 +81,7 @@ use Cake\Core\Configure;
         <li class="nav-item">
             <?php
                 // ログアウト
-                echo $this->Html->customLink('<i class="material-icons">power_settings_new</i>', ['controller' => 'Homes', 'action' => 'logout'], [
+                echo $this->Html->link('<i class="material-icons">power_settings_new</i>', ['controller' => 'Homes', 'action' => 'logout'], [
                     'class' => 'nav-link',
                     'escape' => false,
                 ]);

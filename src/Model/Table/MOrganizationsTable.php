@@ -55,7 +55,7 @@ class MOrganizationsTable extends AppTable
                     ]
                 ]
             ],
-            'validate' => 'edit',
+            'validate' => 'edit1',
         ]);
         return $this->save($entity);
     }
@@ -89,7 +89,7 @@ class MOrganizationsTable extends AppTable
                     ],
                 ]
             ],
-            'validate' => 'edit',
+            'validate' => 'edit2',
         ]);
         return $this->save($entity);
     }
@@ -124,7 +124,7 @@ class MOrganizationsTable extends AppTable
                     ]
                 ]
             ],
-            'validate' => 'edit',
+            'validate' => 'edit3',
         ]);
         return $this->save($entity);
     }
@@ -159,7 +159,7 @@ class MOrganizationsTable extends AppTable
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return Validator
      */
-    public function validationEdit(Validator $validator): Validator
+    public function validationEdit1(Validator $validator): Validator
     {
         // デフォルトバリデーション適用
         $this->validationDefault($validator);
@@ -168,6 +168,62 @@ class MOrganizationsTable extends AppTable
 
         return $validator;
     }
+
+    /**
+     * 編集バリデーションルール
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return Validator
+     */
+    public function validationEdit2(Validator $validator): Validator
+    {
+        // デフォルトバリデーション適用
+        $this->validationDefault($validator);
+
+        // 本部ID
+        $validator->add('m_department1_id', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        return $validator;
+    }
+
+    /**
+     * 編集バリデーションルール
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return Validator
+     */
+    public function validationEdit3(Validator $validator): Validator
+    {
+        // デフォルトバリデーション適用
+        $this->validationDefault($validator);
+
+        // 本部ID
+        $validator->add('m_department1_id', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        // 部店ID
+        $validator->add('m_department2_id', [
+            // 入力有
+            'notBlank' => [
+                'message' => __('E-V-REQUIRED'),
+                'last' => true,
+            ],
+        ]);
+
+        return $validator;
+    }
+
     /**
      * 検索条件
      * 

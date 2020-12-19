@@ -192,8 +192,15 @@ class OrganizationsController extends AppController
         // $mDepartment2List: 部店リスト
         $mDepartment2List = $this->MDepartment2s
             ->find('activeRecord')
-            ->find('list')
-            ->all();
+            ->distinct(['code, name'])
+            ->all()
+            ->map(function ($value, $key) {
+                return [
+                    'value' => $value->id,
+                    'text' => $value->name,
+                    'data-m-department1' => $value->_matchingData['MOrganizations']->m_department1_id,
+                ];
+            });
 
         $this->set(compact('editType', 'mOrganization', 'mDepartment1List', 'mDepartment2List'));
     }

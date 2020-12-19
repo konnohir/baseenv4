@@ -192,7 +192,7 @@ class OrganizationsController extends AppController
         // $mDepartment2List: 部店リスト
         $mDepartment2List = $this->MDepartment2s
             ->find('activeRecord')
-            ->distinct(['code, name'])
+            ->select(['id', 'name', 'MOrganizations.m_department1_id'])
             ->all()
             ->map(function ($value, $key) {
                 return [
